@@ -8,3 +8,13 @@ type Note @model @auth(rules: [ { allow: public } ] ){
   description: String
   image: String
 }
+
+type Member @model @auth(rules: [{allow:owner}]) {
+  forename: String,
+  surname: String,
+  dateOfBirth: AWSDate,
+  addressLine1: String,
+  addressLine2: String,
+  town: String,
+  postCode: String,
+}

@@ -46,3 +46,63 @@ export const deleteNote = /* GraphQL */ `
     }
   }
 `;
+export const createMember = /* GraphQL */ `
+  mutation CreateMember(
+    $input: CreateMemberInput!
+    $condition: ModelMemberConditionInput
+  ) {
+    createMember(input: $input, condition: $condition) {
+      forename
+      surname
+      dateOfBirth
+      addressLine1
+      addressLine2
+      town
+      postCode
+      id
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateMember = /* GraphQL */ `
+  mutation UpdateMember(
+    $input: UpdateMemberInput!
+    $condition: ModelMemberConditionInput
+  ) {
+    updateMember(input: $input, condition: $condition) {
+      forename
+      surname
+      dateOfBirth
+      addressLine1
+      addressLine2
+      town
+      postCode
+      id
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteMember = /* GraphQL */ `
+  mutation DeleteMember(
+    $input: DeleteMemberInput!
+    $condition: ModelMemberConditionInput
+  ) {
+    deleteMember(input: $input, condition: $condition) {
+      forename
+      surname
+      dateOfBirth
+      addressLine1
+      addressLine2
+      town
+      postCode
+      id
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;

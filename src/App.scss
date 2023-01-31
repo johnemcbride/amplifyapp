@@ -1,0 +1,56 @@
+$theme-colors: (
+    "info": tomato,
+    "danger": teal
+);
+
+$body-bg: #fff;
+
+$theme-colors: (
+    "primary": #036A32,
+    "danger": #ff4136,
+    "secondary":#FFC314
+);
+$enable-shadows: true;
+$input-bg: gray;
+$input-color: #036A32;
+// These are the defaults, but you can override any values
+$font-family-sans-serif: "Josefin Sans", -apple-system, system-ui, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif !default;
+$font-family-serif: Georgia, "Times New Roman", Times, serif !default;
+$font-family-monospace: Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-family-base: $font-family-sans-serif !default;
+
+
+@import "~bootstrap/scss/bootstrap";
+
+$navbar-dark-color: $white;
+$navbar-dark-hover-color: $white;
+
+.navbar-brand {
+    color: #036A32,
+}
+
+
+.nav-link {
+    color: #FFC314
+}
+
+.nav-link {
+    color: #FFC314
+}
+
+.active {
+    color: #FFC314
+}
+
+.hover {
+    color: #FFC314
+}
+
+.navbar-nav .nav-item .nav-link {
+    color: red;
+}
+
+.navbar-nav .nav-item.active .nav-link,
+.navbar-nav .nav-item:hover .nav-link {
+    color: pink;
+}

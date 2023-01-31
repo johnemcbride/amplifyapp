@@ -24,6 +24,12 @@
   color: white;
 }
 
+input[type="text"] {
+  background-color: cyan;
+  padding: 10px 15px;
+  border-radius: 3px;
+}
+
 .App-link {
   color: #61dafb;
 }
@@ -32,6 +38,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

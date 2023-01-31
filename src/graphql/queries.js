@@ -32,3 +32,44 @@ export const listNotes = /* GraphQL */ `
     }
   }
 `;
+export const getMember = /* GraphQL */ `
+  query GetMember($id: ID!) {
+    getMember(id: $id) {
+      forename
+      surname
+      dateOfBirth
+      addressLine1
+      addressLine2
+      town
+      postCode
+      id
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listMembers = /* GraphQL */ `
+  query ListMembers(
+    $filter: ModelMemberFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listMembers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        forename
+        surname
+        dateOfBirth
+        addressLine1
+        addressLine2
+        town
+        postCode
+        id
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;

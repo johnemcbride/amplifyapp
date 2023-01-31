@@ -37,3 +37,63 @@ export const onDeleteNote = /* GraphQL */ `
     }
   }
 `;
+export const onCreateMember = /* GraphQL */ `
+  subscription OnCreateMember(
+    $filter: ModelSubscriptionMemberFilterInput
+    $owner: String
+  ) {
+    onCreateMember(filter: $filter, owner: $owner) {
+      forename
+      surname
+      dateOfBirth
+      addressLine1
+      addressLine2
+      town
+      postCode
+      id
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateMember = /* GraphQL */ `
+  subscription OnUpdateMember(
+    $filter: ModelSubscriptionMemberFilterInput
+    $owner: String
+  ) {
+    onUpdateMember(filter: $filter, owner: $owner) {
+      forename
+      surname
+      dateOfBirth
+      addressLine1
+      addressLine2
+      town
+      postCode
+      id
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteMember = /* GraphQL */ `
+  subscription OnDeleteMember(
+    $filter: ModelSubscriptionMemberFilterInput
+    $owner: String
+  ) {
+    onDeleteMember(filter: $filter, owner: $owner) {
+      forename
+      surname
+      dateOfBirth
+      addressLine1
+      addressLine2
+      town
+      postCode
+      id
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
