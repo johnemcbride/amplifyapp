@@ -18,3 +18,5 @@ type Member @model @auth(rules: [{allow:owner}]) {
   town: String,
   postCode: String,
 }
+
+

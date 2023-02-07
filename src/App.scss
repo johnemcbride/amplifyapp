@@ -10,6 +10,8 @@ $theme-colors: (
     "danger": #ff4136,
     "secondary":#FFC314
 );
+
+
 $enable-shadows: true;
 $input-bg: gray;
 $input-color: #036A32;
@@ -22,35 +24,64 @@ $font-family-base: $font-family-sans-serif !default;
 
 @import "~bootstrap/scss/bootstrap";
 
-$navbar-dark-color: $white;
-$navbar-dark-hover-color: $white;
 
-.navbar-brand {
+:root {
+    --amplify-primary-color: #036A32;
+    --amplify-primary-tint: #3f6060;
+    --amplify-primary-shade: #FFC314;
+    --amplify-background-color: black;
+}
+
+.navbar-brand,
+.navbar-brand .navbar-brand.active,
+.navbar-brand:hover {
     color: #036A32,
 }
 
-
-.nav-link {
+.nav-link,
+.nav-link:hover,
+.nav-link:focus,
+.nav-link:active {
     color: #FFC314
 }
 
-.nav-link {
-    color: #FFC314
+.navbar-nav .nav-link.active {
+    color: white
 }
+
 
 .active {
     color: #FFC314
 }
 
-.hover {
-    color: #FFC314
+
+
+
+input[type="text"],
+input[type="date"] select.form-control {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #000000;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-radius: 0;
 }
 
-.navbar-nav .nav-item .nav-link {
-    color: red;
+input[type="text"]:focus,
+input[type="date"]:focus,
+select.form-control:focus {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    background: transparent;
 }
 
-.navbar-nav .nav-item.active .nav-link,
-.navbar-nav .nav-item:hover .nav-link {
-    color: pink;
+input[type="text"],
+input[type="date"],
+select.form-control {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #000000;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-radius: 0;
 }
