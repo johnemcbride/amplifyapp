@@ -9,7 +9,9 @@ import { ThemeProvider } from '@mui/material/styles';
 import "@fontsource/josefin-sans";
 import { API, Amplify } from 'aws-amplify';
 import { listMembers } from "./graphql/queries";
-import NewMember from "./components/NewMember"
+import ELCBNewMember from "./components/ELCBNewMember"
+import { Routes, Route } from "react-router-dom"
+import CssBaseline from "@mui/material/CssBaseline";
 
 import {
   createTheme
@@ -37,7 +39,14 @@ let theme = createTheme({
     ].join(','),
     grid: {
       height: "100%"
-    }
+    },
+    overrides: {
+      MuiAppBar: {
+        colorDefault: {
+          backgroundColor: "black",
+        },
+      },
+    },
   }
 });
 
@@ -59,8 +68,15 @@ const App = ({ signOut }) => {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <Box height="100vh" display="flex" flexDirection="column">     <ELCBHeader signOut={signOut} />
-          <ELCBLanding />
+        <CssBaseline />
+        <Box height="100vh" display="flex" flexDirection="column">
+          <ELCBHeader signOut={signOut} />
+          <Routes>
+
+            <Route path="/newmember" element={<ELCBNewMember />} />
+            <Route path="/" element={<ELCBLanding />} />
+          </Routes>
+
 
 
           <ELCBFooter />

@@ -6,27 +6,32 @@ import Typography from "@mui/material/Typography";
 import Grid from '@mui/material/Grid'
 import Container from '@mui/material/Container'
 import TextField from '@mui/material/TextField'
-import FormControl from "@mui/material/FormControl";
+import FormControl, { formControlClasses } from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel"
+import Checkbox from "@mui/material/Checkbox"
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import MemberShipPicker from "./MemberShipPicker";
+
 
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import "@fontsource/josefin-sans";
-import { API } from 'aws-amplify';
-import {
-    createMember as createMemberMutation
-} from "../graphql/mutations";
+
 import { Formik, ErrorMessage, Field } from 'formik';
 import * as yup from "yup";
 import { FormHelperText } from "@mui/material";
-import { create } from "yup/lib/Reference";
 
+
+
+//  for radio group questions
+import FormLabel from "@mui/material/FormLabel"
+import FormControlLabel from "@mui/material/FormControlLabel"
+import RadioGroup from "@mui/material/RadioGroup"
+import Radio from "@mui/material/Radio"
+import { SettingsEthernetSharp } from "@mui/icons-material";
 
 
 
@@ -64,306 +69,633 @@ const schema = yup.object().shape({
 });
 
 const AddUpdateMember = () => {
+    const [formObject, setFormObject] = useState({})
+    const [step, setStep] = useState(0)
 
-    async function createMember(values) {
 
-
-        console.log(values.dateofbirth)
-        const data = {
-            forename: values.forename,
-            surname: values.surname,
-            dateOfBirth: values.dateofbirth.format('YYYY-MM-DDZ'),
-            addressLine1: values.addressLine1,
-            addressLine2: values.addressLine2,
-            town: values.town,
-            postCode: values.postcode,
-        };
-        try {
-            await API.graphql({
-                query: createMemberMutation,
-                variables: { input: data },
-                authMode: "AMAZON_COGNITO_USER_POOLS"
-            });
-        }
-        catch (e) {
-            console.log(e)
-            // handler later
-
-        }
-
-    }
 
     return (
-        <Formik
-            validationSchema={schema}
-            initialValues={{
-                forename: '',
-                surname: '',
-                addressLine1: '',
-                addressLine2: '',
-                town: '',
-                postcode: '',
-                instruments: [],
-                //
-                //  forename: 'bla'  - for pre-filled
-
-            }}
-            onSubmit={(values, actions) => {
-
-                createMember(values).then(actions.setSubmitting(false))
+        <Container height="100vh" component="main" maxWidth="">
+            <CssBaseline />
+            <Typography variant="h6">
+                New Members Registration
+            </Typography>
 
 
-            }}
-        >
-            {({
-                handleSubmit,
-                handleChange,
-                handleBlur,
-                values,
-                touched,
-                isValid,
-                errors,
-                validateForm,
-                setFieldValue
-            }) =>
-            (
-                <ThemeProvider theme={theme}>
-                    <LocalizationProvider dateAdapter={AdapterMoment}>
+            {(() => {
+                switch (step) {
 
-                        <MemberShipPicker />
-                        <Container component="main" maxWidth="xs">
-                            <CssBaseline />
-                            <Typography variant="h5">
-                                New Members Registration
-                            </Typography>
-                            <Typography variant="h6">
-                                Sign Up & Pay For You & Your Family's Term Membership
-                            </Typography>
-                            <Box
-                                sx={{
-                                    marginTop: 8,
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                }}>
+                    case 0:
+                    default:
+                        console.log('default')
+                        return <YouOrThemForm
+                            formObject={formObject}
+                            handleYouOrThem={
+                                (youOrThem) => {
+                                    setFormObject({
+                                        ...formObject,
+                                        'youOrThem': youOrThem
+                                    })
+                                    setStep(1)
+                                    console.log('Setting step 1')
+                                }} />
 
-                                <Box component="form" sx={{ mt: 3 }} onSubmit={handleSubmit}>
-                                    <Grid container spacing={2}>
-
-                                        <Grid item xs={12} >
-                                            <FormControl fullWidth>
-                                                <InputLabel id="demo-simple-select-label">Membership Type</InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    value={values.type}
-                                                    label="Membership Type"
-                                                    onChange={handleChange}
-                                                    onBlur={handleBlur}
-                                                >
-                                                    <MenuItem value={'fullover30'}>£105.00 - Adult Over 30 Membership Of Multiple Bands</MenuItem>
-                                                    <MenuItem value={'halfover30'}>£52.50 - Adult Over 30 Membership Of One Small Band</MenuItem>
-                                                    <MenuItem value={'fullunder30'}>£52.50 - Adult Under 30 Membership Of Multiple Bands</MenuItem>
-                                                    <MenuItem value={'halfunder30'}>£26.25 - Adult Under 30 Membership Of One Small Band</MenuItem>
-                                                    <MenuItem value={'siblingunder30'}>£26.25 - Siblings Of Young Persons Under 30</MenuItem>
-                                                </Select>
-                                            </FormControl>
-                                        </Grid>
-
-
-                                        <Grid item xs={12} sm={6}>
-
-                                            <TextField
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                name="forename"
-                                                label="First Name"
-                                                value={values.forename.capitalize()}
-                                                autoFocus
-                                                autocomplete='off'
-                                                fullWidth
-                                                isInvalid={errors.forename && touched.forename}
-                                                type="text" />
-                                            <FormHelperText error="true" type="invalid">
-                                                <ErrorMessage name="forename" />
-                                            </FormHelperText>
-
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
-
-                                            <TextField
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                name="forename"
-                                                label="First Name"
-                                                value={values.forename.capitalize()}
-                                                autoFocus
-                                                autocomplete='off'
-                                                fullWidth
-                                                isInvalid={errors.forename && touched.forename}
-                                                type="text" />
-                                            <FormHelperText error="true" type="invalid">
-                                                <ErrorMessage name="forename" />
-                                            </FormHelperText>
-
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
-
-                                            <TextField
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                value={values.surname}
-                                                name="surname"
-                                                label="Surname"
-                                                autocomplete='off'
-                                                value={values.surname.capitalize()}
-                                                fullWidth
-                                                isInvalid={errors.surname && touched.surname}
-                                                type="text" />
-                                            <FormHelperText error="true" type="invalid">
-                                                <ErrorMessage name="surname" />
-                                            </FormHelperText>
+                    case 1:
+                        return <CaptureName
+                            formObject={formObject}
+                            handleBack={() => {
+                                console.log('Back from names')
+                                setStep(0)
+                            }}
+                            handleForward={
+                                (values) => {
+                                    setFormObject({
+                                        ...formObject,
+                                        ...values
+                                    })
+                                    setStep(2)
+                                    console.log('Setting step 2')
+                                }} />
+                    case 2:
+                        return <CaptureDOB
+                            formObject={formObject}
+                            handleBack={() => setStep(1)}
+                            handleForward={
+                                (values) => {
+                                    setFormObject({
+                                        ...formObject,
+                                        ...values
+                                    })
+                                    setStep(3)
+                                    console.log('Setting step 3')
+                                }} />
+                    case 3:
+                        return <ChooseMultiBand
+                            formObject={formObject}
+                            handleBack={() => setStep(2)}
+                            handleForward={
+                                (values) => {
+                                    setFormObject({
+                                        ...formObject,
+                                        ...values
+                                    })
+                                    setStep(4)
+                                    console.log('Setting step 4')
+                                }} />
+                    case 4:
+                        return <ChooseBands
+                            formObject={formObject}
+                            handleBack={() => setStep(2)}
+                            handleForward={
+                                (values) => {
+                                    setFormObject({
+                                        ...formObject,
+                                        ...values
+                                    })
+                                    setStep(5)
+                                    console.log('Setting step 5')
+                                }} />
 
 
-                                        </Grid>
-                                        <Grid item xs={12}>
+                }
+            })()
 
-                                            <DatePicker
-                                                onChange={(value) => setFieldValue("dateofbirth", value, true)}
-                                                onBlur={handleBlur}
-                                                inputFormat="Do MMM yyyy"
-                                                label="Date Of Birth"
-                                                autocomplete='off'
-                                                value={values.dateofbirth || null}
-                                                fullWidth
-                                                renderInput={(params) =>
-                                                    <TextField
-                                                        fullWidth
-                                                        name="dateofbirth"
-
-                                                        {...params} />}
-                                                isInvalid={errors.dateofbirth && touched.dateofbirth}
-                                            />
-
-                                            <FormHelperText error="true" type="invalid">
-                                                <ErrorMessage name="dateofbirth" />
-                                            </FormHelperText>
-
-
-                                        </Grid>
-                                        <Grid item xs={12} >
-
-
-                                            <TextField
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                name="addressLine1"
-                                                autocomplete='off'
-                                                label="Address Line 1"
-                                                value={values.addressLine1.capitalize()}
-                                                fullWidth
-                                                isInvalid={errors.addressLine1 && touched.addressLine1}
-                                                type="text" />
-
-                                            <FormHelperText error="true" type="invalid">
-                                                <ErrorMessage name="addressLine1" />
-                                            </FormHelperText>
-
-
-                                        </Grid>
-                                        <Grid item xs={12} >
-
-
-                                            <TextField
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                name="addressLine2"
-                                                label="Address Line 2"
-                                                autocomplete='off'
-                                                value={values.addressLine2.capitalize()}
-                                                fullWidth
-                                                isInvalid={errors.addressLine2 && touched.addressLine2}
-                                                type="text" />
-
-                                            <FormHelperText error="true" type="invalid">
-                                                <ErrorMessage name="addressLine2" />
-                                            </FormHelperText>
-
-                                        </Grid>
-                                        <Grid item xs={12} >
-
-                                            <TextField
-                                                onChange={handleChange}
-                                                onBlur={handleBlur}
-                                                name="town"
-                                                label="Town"
-                                                autocomplete='off'
-                                                value={values.town.capitalize()}
-                                                fullWidth
-                                                isInvalid={errors.town && touched.town}
-                                                type="text" />
-                                            <FormHelperText error="true" type="invalid">
-                                                <ErrorMessage name="town" />
-                                            </FormHelperText>
-
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
-
-                                            <TextField
-                                                onChange={handleChange}
-                                                className="bg-light"
-                                                onBlur={handleBlur}
-                                                name="postcode"
-                                                label="Post Code"
-                                                fullWidth
-                                                autocomplete='off'
-                                                value={values.postcode.toUpperCase()}
-                                                isInvalid={errors.postcode && touched.postcode}
-                                                type="text" />
-
-                                            <FormHelperText error="true" type="invalid">
-                                                <ErrorMessage name="postcode" />
-                                            </FormHelperText>
-
-
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
-                                            {/* <FormControl fullWidth>
-                                                <InputLabel id="demo-simple-select-label">Instruments</InputLabel>
-                                                <Select
-                                                    labelId="demo-simple-select-label"
-                                                    id="demo-simple-select"
-                                                    multiple="true"
-                                                    label="Age"
-                                                    onChange={handleChange}
-                                                    name="instruments"
-                                                >
-                                                    <MenuItem value={10}>Ten</MenuItem>
-                                                    <MenuItem value={20}>Twenty</MenuItem>
-                                                    <MenuItem value={30}>Thirty</MenuItem>
-                                                </Select>
-                                            </FormControl> */}
-
-                                        </Grid>
-                                        <Grid item xs={12} sm={6}>
-                                            <Button
-                                                fullWidth
-                                                disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object)}
-                                                variant="contained" type="submit">
-                                                Add Member
-                                            </Button>
-                                        </Grid>
-                                    </Grid>
-
-                                </Box>
-                            </Box>
-                        </Container>
-                    </LocalizationProvider>
-                </ThemeProvider >)
             }
-        </Formik >
+            {JSON.stringify(formObject)}
+
+        </Container >
     );
 };
 
 
+function YouOrThemForm({ formObject, handleYouOrThem }) {
+    let touched = null
+    if (formObject.youOrThem != null) {
+        console.log('you or them is not null, you know')
+        touched = ['youOrThem']
+    }
+
+    return (
+        <Formik
+            validationSchema={
+                yup.object().shape({
+                    youOrThem: yup.string().required("Please select an option")
+                })}
+
+            initialTouched={touched}
+
+            initialValues={{
+                youOrThem: formObject.youOrThem || ''
+            }}
+            onSubmit={(values) => { console.log('submitting!!'); console.log(values); handleYouOrThem(values.youOrThem) }}
+        >
+            {({
+                handleSubmit,
+                values,
+                touched,
+                isValid,
+                errors,
+                setFieldValue,
+                setFieldTouched
+            }) =>
+            (
+                <>
+                    <Typography color={'green'} variant="h7">
+                        Are you completing this form for yourself or someone else?
+                    </Typography>
+                    <Grid container direction="column" justiyContent='space-between' component="form" spacing={2} onSubmit={handleSubmit}>
+
+                        <Grid item xs={12} >
+                            <FormControl   >
+                                <RadioGroup
+                                    name={"youOrThem"}
+                                    value={values.youOrThem.toString()}
+                                    isInvalid={errors.youOrThem}
+                                    onChange={(event) => {
+                                        console.log(event)
+                                        setFieldValue('youOrThem', event.target.value.toString(), true)
+                                        setFieldTouched('youOrThem', true, false)
+                                    }}>
+                                    <FormControlLabel value="you" control={<Radio />} label="Yourself" />
+                                    <FormControlLabel value="them" control={<Radio />} label="Someone Else" />
+                                </RadioGroup>
+                            </FormControl>
+                            <FormHelperText>
+                                <ErrorMessage name={"youOrThem"} />
+                            </FormHelperText>
+                        </Grid>
+                        <Grid item xs={12} >
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object)}>
+                                Next
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </>
+            )
+            }
+        </Formik >
+
+    )
+}
+
+
+function CaptureName({ formObject, handleBack, handleForward }) {
+    let touched = null
+    if (formObject.forename != null) {
+        touched = ['forename']
+    }
+    return (
+        <Formik
+
+            //initialTouched={formObject.forename == '' ? true : false}
+            //initialValid={formObject.forename == '' ? true : false}
+
+            validationSchema={
+                yup.object().shape({
+                    forename: yup.string().required("Required"),
+                    surname: yup.string().required("Required"),
+                })
+            }
+
+            initialTouched={touched}
+            initialValues={{
+                forename: formObject.forename || '',
+                surname: formObject.surname || ''
+            }
+            }
+            onSubmit={(values) => {
+                console.log('submitting name!!');
+                console.log(values);
+                handleForward(values)
+            }}
+        >
+            {({
+                handleSubmit,
+                values,
+                touched,
+                isValid,
+                errors,
+                handleChange,
+                handleBlur,
+                setFieldValue,
+                setFieldTouched
+            }) =>
+            (<>
+                <Typography color={'green'} variant="h7" variant="h7">
+                    What is {formObject.youOrThem == 'you' ? 'your' : 'their'} name?
+                </Typography>
+                <Grid container component="form" spacing={2} marginTop={2} onSubmit={handleSubmit}>
+
+                    <Grid item xs={6} >
+
+                        <TextField
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            name="forename"
+                            label="First Name"
+                            value={values.forename.capitalize()}
+                            autoFocus
+                            autocomplete='off'
+                            fullWidth
+                            isInvalid={errors.forename && touched.forename}
+                            type="text" />
+                        <FormHelperText error="true" type="invalid">
+                            <ErrorMessage name="forename" />
+                        </FormHelperText>
+
+                    </Grid>
+                    <Grid item xs={6}>
+
+                        <TextField
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            name="surname"
+                            label="Family Name"
+                            value={values.surname.capitalize()}
+
+                            autocomplete='off'
+                            fullWidth
+                            isInvalid={errors.surname && touched.surname}
+                            type="text" />
+                        <FormHelperText error="true" type="invalid">
+                            <ErrorMessage name="surname" />
+                        </FormHelperText>
+
+                    </Grid>
+                </Grid>
+
+                <Grid container marginTop={'10px'} spacing={1}>
+                    <Grid item xs={6}>
+                        <Button
+                            fullWidth
+                            onClick={handleBack}
+                            variant="outlined"
+                        >
+                            Go Back
+                        </Button>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Button
+                            fullWidth
+                            onClick={handleSubmit}
+                            variant="contained"
+                            disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object)}>
+                            Next
+                        </Button>
+                    </Grid>
+                </Grid>
+
+            </>
+            )
+            }
+        </Formik >
+
+    )
+}
+
+
+
+function CaptureDOB({ formObject, handleBack, handleForward }) {
+    const minDate = new Date(new Date(new Date().setFullYear(new Date().getFullYear() - 100)).setDate(1))
+    console.log(minDate)
+    console.log(formObject.dateofbirth)
+    let touched = null
+    if (formObject.dateofbirth != null) {
+        touched = ['dateofbirth']
+    }
+    return (
+        <Formik
+            validationSchema={
+                yup.object().shape({
+                    dateofbirth: yup
+                        .date()
+                        .max(new Date(), "Date must be in the past")
+                        .min(minDate, "Check the year....")
+                        .required("Required")
+                        .typeError('Invalid Date - Expecting date in the format e.g "26th September 2001"'),
+                })}
+
+            initialTouched={touched}
+
+
+            isTouched={(formObject.dateofbirth == null ? false : true)
+            }
+            initialValues={{
+                dateofbirth: formObject.dateofbirth || ''
+
+            }
+            }
+            onSubmit={(values) => {
+                console.log('submitting dob!!');
+                console.log(values);
+                handleForward(values)
+            }}
+        >
+            {({
+                handleSubmit,
+                values,
+                touched,
+                isValid,
+                errors,
+                handleChange,
+                handleBlur,
+                setFieldValue,
+                setFieldTouched
+            }) =>
+            (<>
+                <Typography color={'green'} variant="h7" variant="h7">
+                    What is {formObject.youOrThem == 'you' ? 'your' : 'their'} date of birth? <br />
+                </Typography>
+                <Grid container component="form" spacing={2} marginTop={2} onSubmit={handleSubmit}>
+
+                    <Grid item xs={12}>
+                        <LocalizationProvider dateAdapter={AdapterMoment}>
+
+                            <DatePicker
+                                onChange={(value) => {
+                                    setFieldValue("dateofbirth", value, true)
+                                    setFieldTouched('dateofbirth', true, false)
+                                }}
+                                inputFormat="Do MMMM yyyy"
+                                label="Date Of Birth"
+                                autocomplete='off'
+                                value={values.dateofbirth || null}
+                                fullWidth
+                                renderInput={(params) =>
+                                    <TextField
+
+
+
+                                        onBlur={(value) => {
+                                            setFieldTouched('dateofbirth', true, false)
+                                        }}
+
+
+                                        fullWidth
+                                        name="dateofbirth"
+                                        isInvalid={errors.dateofbirth && touched.dateofbirth}
+
+                                        {...params} />}
+
+                            />
+                        </LocalizationProvider>
+
+                        <FormHelperText error="true" type="invalid">
+                            <ErrorMessage name="dateofbirth" />
+                        </FormHelperText>
+
+
+                    </Grid>
+                </Grid>
+
+                <Grid container marginTop={'10px'} spacing={1}>
+                    <Grid item xs={6}>
+                        <Button
+                            fullWidth
+                            onClick={handleBack}
+                            variant="outlined"
+                        >
+                            Go Back
+                        </Button>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Button
+                            fullWidth
+                            onClick={handleSubmit}
+                            variant="contained"
+                            disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object)}
+                        >
+                            Next
+                        </Button>
+                    </Grid>
+                </Grid>
+
+            </>
+            )
+            }
+        </Formik >
+
+    )
+}
+
+
+function ChooseMultiBand({ formObject, handleBack, handleForward }) {
+
+    let isTouched = null
+    let ageInYears = -1 * formObject.dateofbirth.diff(Date()) / (60 * 60 * 24 * 365.2425 * 1000)
+    console.log(ageInYears)
+    let youOrName = formObject.youOrThem == 'you' ? 'you' : formObject.forename
+    let youOrThey = formObject.youOrThem == 'you' ? 'you' : 'they'
+    let areIs = formObject.youOrThem == 'you' ? 'are' : 'is'
+    if (formObject.multiBand != null) {
+        isTouched = ['multiBand']
+    }
+    return (
+        <Formik
+            validationSchema={
+                yup.object().shape({
+                    multiBand: yup.string().required("Required"),
+                })}
+
+            initialTouched={isTouched}
+            initialValues={{
+                multiBand: formObject.multiBand || ''
+
+            }}
+            onSubmit={(values) => {
+                console.log('submitting multibanb!!');
+                console.log(values);
+                handleForward(values)
+            }}
+        >
+            {({
+                handleSubmit,
+                values,
+                touched,
+                isValid,
+                errors,
+                handleChange,
+                handleBlur,
+                setFieldValue,
+                setFieldTouched
+            }) =>
+            (<>
+                <Typography color={'green'} variant="h7" >
+                    {ageInYears < 30 ?
+                        'As an adult under 30, ' + youOrName + ' ' + areIs + ' entitled to a half-price discount (£52.50).  '
+                        + youOrThey.capitalize() + ' are further entitled to an additional half-price discount if  ' + youOrThey + '  only sign up for one band.' :
+                        'As an adult over 30,  ' + youOrName + ' eligible for full price membership only (£105.00).\
+                        However, if '+ youOrThey + ' opt to join only one band,  ' + youOrName + ' ' + areIs + '  entitled to a half-price discount.'}
+                    <br /> Please choose whether {youOrName} would like to sign up for one band or have full membership.
+                </Typography>
+                <Grid container component="form" spacing={2} onSubmit={handleSubmit}>
+
+                    <Grid item xs={12} >
+                        <FormControl   >
+                            <RadioGroup
+                                name={"multiBand"}
+                                value={values.multiBand.toString()}
+                                isInvalid={errors.multiBand}
+                                onChange={(event) => {
+                                    console.log(event)
+                                    setFieldValue('multiBand', event.target.value.toString(), true)
+                                    setFieldTouched('multiBand', true, false)
+                                }}>
+                                <FormControlLabel value="singleband" control={<Radio />} label="One Band Only" />
+                                <FormControlLabel value="multiband" control={<Radio />} label="Multiple Bands" />
+                            </RadioGroup>
+                        </FormControl>
+                        <FormHelperText>
+                            <ErrorMessage name={"multiBand"} />
+                        </FormHelperText>
+                    </Grid>
+
+                </Grid>
+
+                <Grid container marginTop={'10px'} spacing={1}>
+                    <Grid item xs={6}>
+                        <Button
+                            fullWidth
+                            onClick={handleBack}
+                            variant="outlined"
+                        >
+                            Go Back
+                        </Button>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Button
+                            fullWidth
+                            onClick={handleSubmit}
+                            variant="contained"
+                            disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object)}
+                        >
+                            Next
+                        </Button>
+                    </Grid>
+                </Grid>
+
+            </>
+            )
+            }
+        </Formik >
+
+    )
+}
+
+
+function ChooseBands({ formObject, handleBack, handleForward }) {
+    let touched = null
+    let ageInYears = -1 * formObject.dateofbirth.diff(Date()) / (60 * 60 * 24 * 365.2425 * 1000)
+    console.log(ageInYears)
+    let youOrName = formObject.youOrThem == 'you' ? 'you' : formObject.forename
+    let youOrThey = formObject.youOrThem == 'you' ? 'you' : 'they'
+    let areIs = formObject.youOrThem == 'you' ? 'are' : 'is'
+
+
+    const options = [
+        {
+            label: "Uno",
+            value: "one"
+        },
+        {
+            label: "Dos",
+            value: "two"
+        },
+        {
+            label: "Tres",
+            value: "three"
+        }
+    ];
+
+    return (
+        <Formik
+            validationSchema={
+                yup.object().shape({
+                    bands: yup.array().of(yup.string()).required("Required"),
+                })}
+            initialValues={{
+                bands: formObject.bands || []
+
+            }}
+            onSubmit={(values) => {
+                console.log('submitting multibanb!!');
+                console.log(values);
+                handleForward(values)
+            }}
+        >
+            {({
+                handleSubmit,
+                values,
+                touched,
+                isValid,
+                errors,
+                handleChange,
+                handleBlur,
+                setFieldValue,
+                setFieldTouched
+            }) =>
+            (<>
+                <Typography color={'green'} variant="h7">
+                    {formObject.multiBand == 'multiband' ?
+                        'Choose which bands ' + youOrName + ' would like to attend, or select "Don\'t Know Yet".' :
+                        'Choose which band ' + youOrName + ' would like to attend, or select "Don\'t Know Yet".'}
+                </Typography>
+                <Grid container component="form" spacing={2} onSubmit={handleSubmit}>
+
+                    <Grid item xs={12} >
+                        <FormControl   >
+
+                            {options.map(opt => (
+                                <Field
+                                    type="checkbox"
+                                    control={Checkbox}
+                                    name="bands"
+                                    key={opt.value}
+                                    value={opt.value}
+                                    label='boo' />
+                            ))}
+
+                        </FormControl>
+                        <FormHelperText>
+                            <ErrorMessage name={"bands"} />
+                            <pre>{JSON.stringify(values, 0, 2)}</pre>
+
+                        </FormHelperText>
+                    </Grid>
+
+                </Grid>
+
+                <Grid container marginY={'auto'} spacing={1}>
+                    <Grid item xs={6}>
+                        <Button
+                            fullWidth
+                            onClick={handleBack}
+                            variant="outlined"
+                        >
+                            Go Back
+                        </Button>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <Button
+                            fullWidth
+                            onClick={handleSubmit}
+                            variant="contained"
+                            disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object)}
+                        >
+                            Next
+                        </Button>
+                    </Grid>
+                </Grid>
+
+            </>
+            )
+            }
+        </Formik >
+
+    )
+}
 export default AddUpdateMember;

@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
+import { Link } from "react-router-dom";
 
 export default function Header() {
 
@@ -30,7 +31,16 @@ export default function Header() {
                             East London Community Band
                         </Typography>
 
-                        <Button align="center" variant="outline" > Register </Button>
+
+
+                        <Button
+                            align="center"
+                            variant="outline"
+                            component={Link}
+                            to="/newmember"> Register </Button>
+
+
+
                     </Grid>
                     <Grid
                         height='50vh'
