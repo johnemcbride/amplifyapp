@@ -40,6 +40,15 @@ let theme = createTheme({
     grid: {
       height: "100%"
     },
+    palette: {
+      mode: 'light',
+      primary: {
+        main: '#e65100',
+      },
+      secondary: {
+        main: '#f50057',
+      },
+    },
     overrides: {
       MuiAppBar: {
         colorDefault: {
@@ -70,6 +79,7 @@ const App = ({ signOut }) => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Box height="100vh" display="flex" flexDirection="column">
+
           <ELCBHeader signOut={signOut} />
           <Routes>
 

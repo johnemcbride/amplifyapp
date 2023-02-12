@@ -11,6 +11,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel"
 import Checkbox from "@mui/material/Checkbox"
+import ToggleButton from "@mui/material/ToggleButton"
+import GroupAdd from "@mui/icons-material/GroupAdd"
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 
@@ -23,7 +25,7 @@ import "@fontsource/josefin-sans";
 import { Formik, ErrorMessage, Field } from 'formik';
 import * as yup from "yup";
 import { FormHelperText } from "@mui/material";
-
+import moment from 'moment';
 
 
 //  for radio group questions
@@ -33,7 +35,13 @@ import RadioGroup from "@mui/material/RadioGroup"
 import Radio from "@mui/material/Radio"
 import { SettingsEthernetSharp } from "@mui/icons-material";
 
+function isUnder30(momentDate) {
+    if (momentDate instanceof moment) {
+        return (-1 * momentDate.diff(Date()) / (60 * 60 * 24 * 365.2425 * 1000) < 30)
 
+    }
+    else return false
+}
 
 String.prototype.capitalize = function (lower) {
     return (lower ? this.toLowerCase() : this)
@@ -78,7 +86,7 @@ const AddUpdateMember = () => {
         <Container height="100vh" component="main" maxWidth="">
             <CssBaseline />
             <Typography variant="h6">
-                New Members Registration
+                New Member Registration
             </Typography>
 
 
@@ -86,21 +94,21 @@ const AddUpdateMember = () => {
                 switch (step) {
 
                     case 0:
-                    default:
-                        console.log('default')
-                        return <YouOrThemForm
-                            formObject={formObject}
-                            handleYouOrThem={
-                                (youOrThem) => {
-                                    setFormObject({
-                                        ...formObject,
-                                        'youOrThem': youOrThem
-                                    })
-                                    setStep(1)
-                                    console.log('Setting step 1')
-                                }} />
+                    // console.log('default')
+                    // return <YouOrThemForm
+                    //     formObject={formObject}
+                    //     handleYouOrThem={
+                    //         (youOrThem) => {
+                    //             setFormObject({
+                    //                 ...formObject,
+                    //                 'youOrThem': youOrThem
+                    //             })
+                    //             setStep(1)
+                    //             console.log('Setting step 1')
+                    //         }} />
 
                     case 1:
+                    default:
                         return <CaptureName
                             formObject={formObject}
                             handleBack={() => {
@@ -113,35 +121,35 @@ const AddUpdateMember = () => {
                                         ...formObject,
                                         ...values
                                     })
-                                    setStep(2)
+                                    setStep(4)
                                     console.log('Setting step 2')
                                 }} />
-                    case 2:
-                        return <CaptureDOB
-                            formObject={formObject}
-                            handleBack={() => setStep(1)}
-                            handleForward={
-                                (values) => {
-                                    setFormObject({
-                                        ...formObject,
-                                        ...values
-                                    })
-                                    setStep(3)
-                                    console.log('Setting step 3')
-                                }} />
-                    case 3:
-                        return <ChooseMultiBand
-                            formObject={formObject}
-                            handleBack={() => setStep(2)}
-                            handleForward={
-                                (values) => {
-                                    setFormObject({
-                                        ...formObject,
-                                        ...values
-                                    })
-                                    setStep(4)
-                                    console.log('Setting step 4')
-                                }} />
+                    // case 2:
+                    //     return <CaptureDOB
+                    //         formObject={formObject}
+                    //         handleBack={() => setStep(1)}
+                    //         handleForward={
+                    //             (values) => {
+                    //                 setFormObject({
+                    //                     ...formObject,
+                    //                     ...values
+                    //                 })
+                    //                 setStep(4)
+                    //                 console.log('Setting step 3')
+                    //             }} />
+                    //case 3:
+                    // return <ChooseMultiBand
+                    //     formObject={formObject}
+                    //     handleBack={() => setStep(2)}
+                    //     handleForward={
+                    //         (values) => {
+                    //             setFormObject({
+                    //                 ...formObject,
+                    //                 ...values
+                    //             })
+                    //             setStep(4)
+                    //             console.log('Setting step 4')
+                    //         }} />
                     case 4:
                         return <ChooseBands
                             formObject={formObject}
@@ -161,7 +169,9 @@ const AddUpdateMember = () => {
             })()
 
             }
-            {JSON.stringify(formObject)}
+            {
+                console.log(formObject)}
+
 
         </Container >
     );
@@ -244,6 +254,28 @@ function YouOrThemForm({ formObject, handleYouOrThem }) {
 
 
 function CaptureName({ formObject, handleBack, handleForward }) {
+
+    const minDate = new Date(new Date(new Date().setFullYear(new Date().getFullYear() - 100)).setDate(1))
+    const ethnicGroups = [
+        'Indian',
+        'Pakistani',
+        'Bangladeshi',
+        'Chinese',
+        'Any other Asian background',
+        'Caribbean',
+        'African',
+        'Any other Black, Black British, or Caribbean background',
+        'White and Black Caribbean',
+        'White and Black African',
+        'White and Asian',
+        'White - English, Welsh, Scottish, Northern Irish or British',
+        'White - Irish',
+        'White - Gypsy or Irish Traveller',
+        'White - Roma',
+        'Any other White background',
+        'Arab',
+        'Any other ethnic group'
+    ]
     let touched = null
     if (formObject.forename != null) {
         touched = ['forename']
@@ -258,13 +290,27 @@ function CaptureName({ formObject, handleBack, handleForward }) {
                 yup.object().shape({
                     forename: yup.string().required("Required"),
                     surname: yup.string().required("Required"),
+                    ethnicGroup: yup.string().required("Please advise ethnic group for inclusion monitoring purposes"),
+                    dateofbirth: yup
+                        .date()
+                        .max(new Date(), "Date must be in the past")
+                        .min(minDate, "Check the year....")
+                        .required("Required")
+                        .typeError('Invalid Date - Expecting date in the format e.g "26th September 2001"'),
                 })
             }
 
             initialTouched={touched}
             initialValues={{
                 forename: formObject.forename || '',
-                surname: formObject.surname || ''
+                surname: formObject.surname || '',
+                ethnicGroup: formObject.ethnicgroup || '',
+                dateofbirth: formObject.dateofbirth || '',
+                siblings: false,
+                isUnder30: false,
+                siblingforename: '',
+                siblingsurname: ''
+
             }
             }
             onSubmit={(values) => {
@@ -286,7 +332,7 @@ function CaptureName({ formObject, handleBack, handleForward }) {
             }) =>
             (<>
                 <Typography color={'green'} variant="h7" variant="h7">
-                    What is {formObject.youOrThem == 'you' ? 'your' : 'their'} name?
+                    About the member's personal details.
                 </Typography>
                 <Grid container component="form" spacing={2} marginTop={2} onSubmit={handleSubmit}>
 
@@ -326,6 +372,144 @@ function CaptureName({ formObject, handleBack, handleForward }) {
                         </FormHelperText>
 
                     </Grid>
+
+
+                    <Grid item xs={12}>
+                        <LocalizationProvider dateAdapter={AdapterMoment}>
+
+                            <DatePicker
+                                onChange={(value) => {
+                                    setFieldValue("dateofbirth", value, true)
+                                    setFieldTouched('dateofbirth', true, false)
+                                    setFieldValue("isUnder30", isUnder30(value), false)
+                                }}
+                                inputFormat="Do MMMM yyyy"
+                                label="Date Of Birth"
+                                autocomplete='off'
+                                value={values.dateofbirth || null}
+                                fullWidth
+                                renderInput={(params) =>
+                                    <TextField
+                                        onBlur={(value) => {
+                                            setFieldTouched('dateofbirth', true, false)
+                                        }}
+                                        fullWidth
+                                        name="dateofbirth"
+                                        isInvalid={errors.dateofbirth && touched.dateofbirth}
+                                        {...params} />}
+
+                            />
+                        </LocalizationProvider>
+
+                        <FormHelperText error="true" type="invalid">
+                            <ErrorMessage name="dateofbirth" />
+                        </FormHelperText>
+
+
+                    </Grid>
+
+
+                    {(values.isUnder30) ?
+
+                        <Grid item xs={12}>
+                            <Typography color={'green'} variant="h7" variant="h7">
+                                If there are there any siblings under the age of 30 who are also members of the band, click to add details below.<br />
+                            </Typography>
+                            <ToggleButton
+                                fullWidth
+                                value="check"
+                                selected={values.siblings}
+                                onChange={() => {
+
+                                    setFieldValue("siblings", !values.siblings, true)
+                                    setFieldTouched("siblings", true, true)
+                                }}
+                            >
+                                <GroupAdd />&nbsp; Add Sibling
+                            </ToggleButton>
+
+
+                        </Grid> : null}
+
+                    {values.siblings & isUnder30(values.dateofbirth) ?
+
+                        <>
+                            <Grid item xs={12}>  <Typography color={'green'} variant="h7" >
+                                Name of sibling (name of only one sibling required). <br />
+                            </Typography></Grid>
+
+
+                            <Grid item xs={6} >
+
+                                <TextField
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    name="siblingforename"
+                                    label="First Name"
+                                    value={values.siblingforename.capitalize()}
+                                    autoFocus
+                                    autocomplete='off'
+                                    fullWidth
+                                    isInvalid={errors.siblingforename && touched.siblingforename}
+                                    type="text" />
+                                <FormHelperText error="true" type="invalid">
+                                    <ErrorMessage name="forename" />
+                                </FormHelperText>
+
+                            </Grid>
+                            <Grid item xs={6}>
+
+                                <TextField
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    name="siblingsurname"
+                                    label="Family Name"
+                                    value={values.siblingsurname.capitalize()}
+
+                                    autocomplete='off'
+                                    fullWidth
+                                    isInvalid={errors.siblingsurname && touched.siblingsurname}
+                                    type="text" />
+                                <FormHelperText error="true" type="invalid">
+                                    <ErrorMessage name="surname" />
+                                </FormHelperText>
+
+                            </Grid></>
+                        : null}
+
+
+
+                    <Grid item xs={12} >
+                        <FormControl fullWidth >
+                            <InputLabel id="ethnicitylabel">Which ethnic group you belong to?</InputLabel>
+
+
+                            <Select
+                                component="Select"
+                                labelId="ethnicitylabel"
+                                label="Which ethnic group you belong to?"
+                                name="ethnicGroup"
+                                value={values.ethnicGroup}
+                                // You need to set the new field value
+                                fullWidth
+                                onChange={handleChange}
+                                onBlur={handleBlur('ethnicGroup')}
+                                multiple={false}
+                            >
+                                {ethnicGroups.map(s => (
+                                    <MenuItem key={s} value={s}>
+                                        {s}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+
+                            <FormHelperText error="true" type="invalid">
+                                <ErrorMessage name={"ethnicGroup"} />
+
+                            </FormHelperText>
+                        </FormControl>
+
+                    </Grid>
                 </Grid>
 
                 <Grid container marginTop={'10px'} spacing={1}>
@@ -360,17 +544,19 @@ function CaptureName({ formObject, handleBack, handleForward }) {
 
 
 function CaptureDOB({ formObject, handleBack, handleForward }) {
+
     const minDate = new Date(new Date(new Date().setFullYear(new Date().getFullYear() - 100)).setDate(1))
-    console.log(minDate)
-    console.log(formObject.dateofbirth)
+
     let touched = null
     if (formObject.dateofbirth != null) {
         touched = ['dateofbirth']
     }
+
     return (
         <Formik
             validationSchema={
                 yup.object().shape({
+                    //todo conditional validation for sibling name
                     dateofbirth: yup
                         .date()
                         .max(new Date(), "Date must be in the past")
@@ -385,8 +571,11 @@ function CaptureDOB({ formObject, handleBack, handleForward }) {
             isTouched={(formObject.dateofbirth == null ? false : true)
             }
             initialValues={{
-                dateofbirth: formObject.dateofbirth || ''
-
+                dateofbirth: formObject.dateofbirth || '',
+                siblings: false,
+                isUnder30: false,
+                siblingforename: '',
+                siblingsurname: ''
             }
             }
             onSubmit={(values) => {
@@ -407,9 +596,6 @@ function CaptureDOB({ formObject, handleBack, handleForward }) {
                 setFieldTouched
             }) =>
             (<>
-                <Typography color={'green'} variant="h7" variant="h7">
-                    What is {formObject.youOrThem == 'you' ? 'your' : 'their'} date of birth? <br />
-                </Typography>
                 <Grid container component="form" spacing={2} marginTop={2} onSubmit={handleSubmit}>
 
                     <Grid item xs={12}>
@@ -419,6 +605,7 @@ function CaptureDOB({ formObject, handleBack, handleForward }) {
                                 onChange={(value) => {
                                     setFieldValue("dateofbirth", value, true)
                                     setFieldTouched('dateofbirth', true, false)
+                                    setFieldValue("isUnder30", isUnder30(value), false)
                                 }}
                                 inputFormat="Do MMMM yyyy"
                                 label="Date Of Birth"
@@ -427,18 +614,12 @@ function CaptureDOB({ formObject, handleBack, handleForward }) {
                                 fullWidth
                                 renderInput={(params) =>
                                     <TextField
-
-
-
                                         onBlur={(value) => {
                                             setFieldTouched('dateofbirth', true, false)
                                         }}
-
-
                                         fullWidth
                                         name="dateofbirth"
                                         isInvalid={errors.dateofbirth && touched.dateofbirth}
-
                                         {...params} />}
 
                             />
@@ -450,6 +631,79 @@ function CaptureDOB({ formObject, handleBack, handleForward }) {
 
 
                     </Grid>
+
+
+                    {(values.isUnder30) ?
+
+                        <Grid item xs={12}>
+                            <Typography color={'green'} variant="h7" variant="h7">
+                                If there are there any siblings under the age of 30 who are also members of the band, click to add details below.<br />
+                            </Typography>
+                            <ToggleButton
+                                fullWidth
+                                value="check"
+                                selected={values.siblings}
+                                onChange={() => {
+
+                                    setFieldValue("siblings", !values.siblings, true)
+                                    setFieldTouched("siblings", true, true)
+                                }}
+                            >
+                                <GroupAdd />&nbsp; Add Sibling
+                            </ToggleButton>
+
+
+                        </Grid> : null}
+
+                    {values.siblings & isUnder30(values.dateofbirth) ?
+
+                        <>
+                            <Grid item xs={12}>  <Typography color={'green'} variant="h7" >
+                                Name of sibling (name of only one sibling required). <br />
+                            </Typography></Grid>
+
+
+                            <Grid item xs={6} >
+
+                                <TextField
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    name="siblingforename"
+                                    label="First Name"
+                                    value={values.siblingforename.capitalize()}
+                                    autoFocus
+                                    autocomplete='off'
+                                    fullWidth
+                                    isInvalid={errors.siblingforename && touched.siblingforename}
+                                    type="text" />
+                                <FormHelperText error="true" type="invalid">
+                                    <ErrorMessage name="forename" />
+                                </FormHelperText>
+
+                            </Grid>
+                            <Grid item xs={6}>
+
+                                <TextField
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                    name="siblingsurname"
+                                    label="Family Name"
+                                    value={values.siblingsurname.capitalize()}
+
+                                    autocomplete='off'
+                                    fullWidth
+                                    isInvalid={errors.siblingsurname && touched.siblingsurname}
+                                    type="text" />
+                                <FormHelperText error="true" type="invalid">
+                                    <ErrorMessage name="surname" />
+                                </FormHelperText>
+
+                            </Grid></>
+                        : null}
+
+
+
+
                 </Grid>
 
                 <Grid container marginTop={'10px'} spacing={1}>
@@ -597,19 +851,77 @@ function ChooseBands({ formObject, handleBack, handleForward }) {
 
 
     const options = [
-        {
-            label: "Uno",
-            value: "one"
-        },
-        {
-            label: "Dos",
-            value: "two"
-        },
-        {
-            label: "Tres",
-            value: "three"
-        }
-    ];
+        { 'id': 'stompers', 'description': 'Stompers' },
+        { 'id': 'early', 'description': 'Early Music' },
+        { 'id': 'main', 'description': 'Main Band' },
+        { 'id': 'jazz', 'description': 'Jazz' },
+        { 'id': 'premier', 'description': 'Premier' },
+    ]
+
+    const instruments = ['Piano',
+        'Flute',
+        'Veena',
+        'Drums',
+        'Mridangam',
+        'Violin',
+        'Guitar',
+        'Triangle',
+        'Trumpet',
+        'Saxophone',
+        'Mouth organ',
+        'Cello',
+        'Xylophone',
+        'Clap box',
+        'Electric guitar',
+        'Bass guitar',
+        'Bugle',
+        'Harp',
+        'Harmonium',
+        'Oboe',
+        'Maracas',
+        'Cymbal',
+        'Accordion',
+        'Bongo drums',
+        'Bell',
+        'French horn',
+        'Banjo',
+        'Conga drums',
+        'Keyboard',
+        'Gong',
+        'Pipe organ',
+        'Comet',
+        'Tambourine',
+        'Trombone',
+        'Ukulele',
+        'Electronic drums',
+        'Drum pad',
+        'Clarinet',
+        'Harmonica',
+        'Tuba',
+        'Bass drum',
+        'Snare drum',
+        'Euphonium',
+        'Piccolo',
+        'Lute',
+        'Marimba',
+        'Bassoon',
+        'Cornet',
+        'Celesta',
+        'Spinet',
+        'Oud',
+        'Yueqin',
+        'Dholak',
+        'Tabla',
+        'Damru',
+        'Sarangi',
+        'Sitar',
+        'Gu-zheng',
+        'Ektara',
+        'Shehnai',
+        'Sarod',
+        'Pungi',
+        'Gramophone',
+        'Tubular Chimes']
 
     return (
         <Formik
@@ -618,7 +930,8 @@ function ChooseBands({ formObject, handleBack, handleForward }) {
                     bands: yup.array().of(yup.string()).required("Required"),
                 })}
             initialValues={{
-                bands: formObject.bands || []
+                bands: formObject.bands || [],
+                instruments: formObject.instruments || [],
 
             }}
             onSubmit={(values) => {
@@ -647,24 +960,65 @@ function ChooseBands({ formObject, handleBack, handleForward }) {
                 <Grid container component="form" spacing={2} onSubmit={handleSubmit}>
 
                     <Grid item xs={12} >
-                        <FormControl   >
+                        <FormControl fullWidth >
+                            <InputLabel id="bands">Which bands do you wish to enrol in this term?</InputLabel>
 
-                            {options.map(opt => (
-                                <Field
-                                    type="checkbox"
-                                    control={Checkbox}
-                                    name="bands"
-                                    key={opt.value}
-                                    value={opt.value}
-                                    label='boo' />
-                            ))}
+                            <Select
+                                component="Select"
+                                name="bands"
+                                value={values.bands}
+                                label="Which bands do you wish to enrol in this term?"
+                                labelId="bands"
+                                // You need to set the new field value
+                                onChange={handleChange}
+                                onBlur={handleBlur('bands')}
+                                multiple={true}
+                                fullWidth
+                            >
+                                {options.map(s => (
+                                    <MenuItem key={s.id} value={s.description}>
+                                        {s.description}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            <FormHelperText>
+                                <ErrorMessage name={"bands"} />
 
+                            </FormHelperText>
                         </FormControl>
-                        <FormHelperText>
-                            <ErrorMessage name={"bands"} />
-                            <pre>{JSON.stringify(values, 0, 2)}</pre>
+                    </Grid>
 
-                        </FormHelperText>
+                </Grid>
+
+                <Grid container component="form" spacing={2} onSubmit={handleSubmit}>
+
+                    <Grid item xs={12} marginTop={2}>
+                        <FormControl fullWidth >
+                            <InputLabel id="instruments">Which instruments do you play?</InputLabel>
+
+                            <Select
+                                label="Which instruments do you play?"
+                                component="Select"
+                                name="instruments"
+                                fullWidth
+                                id="instruments"
+                                value={values.instruments}
+                                // You need to set the new field value
+                                onChange={handleChange}
+                                onBlur={handleBlur('instruments')}
+                                multiple={true}
+                            >
+                                {instruments.map(s => (
+                                    <MenuItem key={s} value={s}>
+                                        {s}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            <FormHelperText>
+                                <ErrorMessage name={"instruments"} />
+
+                            </FormHelperText>
+                        </FormControl>
                     </Grid>
 
                 </Grid>

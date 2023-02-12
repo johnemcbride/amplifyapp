@@ -8,6 +8,7 @@ import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import IconButton from '@mui/material/IconButton'
 
+import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { Typography } from '@mui/material';
 
@@ -39,7 +40,10 @@ function ELCBHeader({ signOut }) {
                                 paddingX: 0,
                             }}
                             spacing={0} height={'100%'} container justifyContent={'center'} flexDirection={'column'} xs={6}>
-                            <Typography height={'100%'} justifyContent={'center'} marginY={0} color={"orange"} fontWeight={'bold'} flexWrap={'wrap'}>EAST LONDON COMMUNITY BAND</Typography>
+                            <Typography height={'100%'} justifyContent={'center'} marginY={0} color={"orange"} fontWeight={'bold'} flexWrap={'wrap'}>
+                                <Link style={{ textDecoration: 'none' }} to="/">
+                                    <Button variant="text" color="primary">
+                                        EAST LONDON COMMUNITY BAND</Button></Link></Typography>
                         </Grid>
                         <Grid height={'100%'} paddingY={'6px'} container justify={'center'} flexDirection={'column'} item xs={6} align="right" marginX={0}>
                             <Button marginY={"6px"} size={'small'} onClick={() => setOpenDrawer(!openDrawer)} color="primary" variant="contained"  >Menu</Button>
