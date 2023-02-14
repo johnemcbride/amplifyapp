@@ -10,6 +10,8 @@ import "@fontsource/josefin-sans";
 import { API, Amplify } from 'aws-amplify';
 import { listMembers } from "./graphql/queries";
 import ELCBNewMember from "./components/ELCBNewMember"
+import ELCBMemberLanding from "./components/ELCBMemberLanding"
+import ELCBSignIn from "./components/ELCBSignIn"
 import { Routes, Route } from "react-router-dom"
 import CssBaseline from "@mui/material/CssBaseline";
 
@@ -19,6 +21,7 @@ import {
 
 import { withAuthenticator } from "@aws-amplify/ui-react";
 import awsconfig from './aws-exports';
+import { PrivateRoute } from "./components/PrivateRoute";
 
 
 Amplify.configure(awsconfig);
@@ -61,6 +64,13 @@ let theme = createTheme({
 
 const App = ({ signOut }) => {
   const [members, setMembers] = useState([]);
+  const [userName, setUserName] = useState('guest')
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  function logIn(userName) {
+    setUserName(userName)
+    setIsLoggedIn(true)
+  }
 
   useEffect(() => {
     fetchMembers();
@@ -80,10 +90,12 @@ const App = ({ signOut }) => {
         <CssBaseline />
         <Box height="100vh" display="flex" flexDirection="column">
 
-          <ELCBHeader signOut={signOut} />
+          <ELCBHeader signOut={signOut} isLoggedIn={isLoggedIn} userName={userName} />
           <Routes>
 
             <Route path="/newmember" element={<ELCBNewMember />} />
+            <Route path="/signin" element={<ELCBSignIn handleLogin={logIn} />} />
+            <Route path="/landing" element={<PrivateRoute><ELCBMemberLanding /></PrivateRoute>} />
             <Route path="/" element={<ELCBLanding />} />
           </Routes>
 

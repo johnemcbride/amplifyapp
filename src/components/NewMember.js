@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box'
 import CssBaseline from '@mui/material/CssBaseline'
+import Stepper from '@mui/material/Stepper'
+import Step from '@mui/material/Step'
+import StepLabel from '@mui/material/StepLabel'
 import Typography from "@mui/material/Typography";
 import Grid from '@mui/material/Grid'
 import Container from '@mui/material/Container'
@@ -26,6 +29,7 @@ import { Formik, ErrorMessage, Field } from 'formik';
 import * as yup from "yup";
 import { FormHelperText } from "@mui/material";
 import moment from 'moment';
+import { Auth } from 'aws-amplify';
 
 
 //  for radio group questions
@@ -49,6 +53,9 @@ String.prototype.capitalize = function (lower) {
             return a.toUpperCase();
         });
 };
+
+
+
 
 const theme = createTheme({
 
@@ -82,6 +89,25 @@ const AddUpdateMember = () => {
 
 
 
+
+    async function signUp() {
+        try {
+            const { user } = await Auth.signUp({
+                username: formObject.username,
+                password: formObject.password,
+                attributes: {
+                    email: formObject.email          // optional
+
+                },
+                autoSignIn: { // optional - enables auto sign in after user is confirmed
+                    enabled: true,
+                }
+            });
+            console.log(user);
+        } catch (error) {
+            console.log('error signing up:', error);
+        }
+    }
     return (
         <Container height="100vh" component="main" maxWidth="">
             <CssBaseline />
@@ -94,18 +120,6 @@ const AddUpdateMember = () => {
                 switch (step) {
 
                     case 0:
-                    // console.log('default')
-                    // return <YouOrThemForm
-                    //     formObject={formObject}
-                    //     handleYouOrThem={
-                    //         (youOrThem) => {
-                    //             setFormObject({
-                    //                 ...formObject,
-                    //                 'youOrThem': youOrThem
-                    //             })
-                    //             setStep(1)
-                    //             console.log('Setting step 1')
-                    //         }} />
 
                     case 1:
                     default:
@@ -121,37 +135,26 @@ const AddUpdateMember = () => {
                                         ...formObject,
                                         ...values
                                     })
-                                    setStep(4)
+                                    setStep(2)
                                     console.log('Setting step 2')
                                 }} />
-                    // case 2:
-                    //     return <CaptureDOB
-                    //         formObject={formObject}
-                    //         handleBack={() => setStep(1)}
-                    //         handleForward={
-                    //             (values) => {
-                    //                 setFormObject({
-                    //                     ...formObject,
-                    //                     ...values
-                    //                 })
-                    //                 setStep(4)
-                    //                 console.log('Setting step 3')
-                    //             }} />
-                    //case 3:
-                    // return <ChooseMultiBand
-                    //     formObject={formObject}
-                    //     handleBack={() => setStep(2)}
-                    //     handleForward={
-                    //         (values) => {
-                    //             setFormObject({
-                    //                 ...formObject,
-                    //                 ...values
-                    //             })
-                    //             setStep(4)
-                    //             console.log('Setting step 4')
-                    //         }} />
-                    case 4:
-                        return <ChooseBands
+                    case 2:
+                        return <ConfirmName
+                            formObject={formObject}
+                            handleBack={() => setStep(1)}
+                            handleForward={
+                                (values) => {
+                                    setFormObject({
+                                        ...formObject,
+                                        ...values
+                                    })
+                                    setStep(3)
+                                    signUp()
+                                    console.log('Setting step 3')
+                                }} />
+
+                    case 3:
+                        return <ConfirmCode
                             formObject={formObject}
                             handleBack={() => setStep(2)}
                             handleForward={
@@ -177,80 +180,6 @@ const AddUpdateMember = () => {
     );
 };
 
-
-function YouOrThemForm({ formObject, handleYouOrThem }) {
-    let touched = null
-    if (formObject.youOrThem != null) {
-        console.log('you or them is not null, you know')
-        touched = ['youOrThem']
-    }
-
-    return (
-        <Formik
-            validationSchema={
-                yup.object().shape({
-                    youOrThem: yup.string().required("Please select an option")
-                })}
-
-            initialTouched={touched}
-
-            initialValues={{
-                youOrThem: formObject.youOrThem || ''
-            }}
-            onSubmit={(values) => { console.log('submitting!!'); console.log(values); handleYouOrThem(values.youOrThem) }}
-        >
-            {({
-                handleSubmit,
-                values,
-                touched,
-                isValid,
-                errors,
-                setFieldValue,
-                setFieldTouched
-            }) =>
-            (
-                <>
-                    <Typography color={'green'} variant="h7">
-                        Are you completing this form for yourself or someone else?
-                    </Typography>
-                    <Grid container direction="column" justiyContent='space-between' component="form" spacing={2} onSubmit={handleSubmit}>
-
-                        <Grid item xs={12} >
-                            <FormControl   >
-                                <RadioGroup
-                                    name={"youOrThem"}
-                                    value={values.youOrThem.toString()}
-                                    isInvalid={errors.youOrThem}
-                                    onChange={(event) => {
-                                        console.log(event)
-                                        setFieldValue('youOrThem', event.target.value.toString(), true)
-                                        setFieldTouched('youOrThem', true, false)
-                                    }}>
-                                    <FormControlLabel value="you" control={<Radio />} label="Yourself" />
-                                    <FormControlLabel value="them" control={<Radio />} label="Someone Else" />
-                                </RadioGroup>
-                            </FormControl>
-                            <FormHelperText>
-                                <ErrorMessage name={"youOrThem"} />
-                            </FormHelperText>
-                        </Grid>
-                        <Grid item xs={12} >
-                            <Button
-                                type="submit"
-                                fullWidth
-                                variant="contained"
-                                disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object)}>
-                                Next
-                            </Button>
-                        </Grid>
-                    </Grid>
-                </>
-            )
-            }
-        </Formik >
-
-    )
-}
 
 
 function CaptureName({ formObject, handleBack, handleForward }) {
@@ -290,13 +219,22 @@ function CaptureName({ formObject, handleBack, handleForward }) {
                 yup.object().shape({
                     forename: yup.string().required("Required"),
                     surname: yup.string().required("Required"),
-                    ethnicGroup: yup.string().required("Please advise ethnic group for inclusion monitoring purposes"),
+                    ethnicgroup: yup.string().required("Please advise ethnic group for inclusion monitoring purposes"),
                     dateofbirth: yup
                         .date()
                         .max(new Date(), "Date must be in the past")
                         .min(minDate, "Check the year....")
                         .required("Required")
                         .typeError('Invalid Date - Expecting date in the format e.g "26th September 2001"'),
+                    username: yup.string()
+                        .required("Required")
+                        .matches(/[a-zA-Z0-9]/, 'Username can only contain non-special letters and numbers.'),
+                    password: yup.string()
+                        .required('No password provided.')
+                        .min(8, 'Password is too short - should be 8 chars minimum.')
+                        .matches(/[a-zA-Z0-9]/, 'Password can only contain non-special letters and numbers.'),
+                    email: yup.string().required("Please provide contact Email").email("Not a valid email")
+
                 })
             }
 
@@ -304,12 +242,11 @@ function CaptureName({ formObject, handleBack, handleForward }) {
             initialValues={{
                 forename: formObject.forename || '',
                 surname: formObject.surname || '',
-                ethnicGroup: formObject.ethnicgroup || '',
+                ethnicgroup: formObject.ethnicgroup || '',
                 dateofbirth: formObject.dateofbirth || '',
-                siblings: false,
-                isUnder30: false,
-                siblingforename: '',
-                siblingsurname: ''
+                username: formObject.username || '',
+                password: formObject.password || '',
+                email: formObject.email || ''
 
             }
             }
@@ -331,8 +268,10 @@ function CaptureName({ formObject, handleBack, handleForward }) {
                 setFieldTouched
             }) =>
             (<>
-                <Typography color={'green'} variant="h7" variant="h7">
-                    About the member's personal details.
+
+
+                <Typography color={'green'} variant="h7" >
+                    Create an account in order to manage membership and attendance.
                 </Typography>
                 <Grid container component="form" spacing={2} marginTop={2} onSubmit={handleSubmit}>
 
@@ -409,74 +348,6 @@ function CaptureName({ formObject, handleBack, handleForward }) {
                     </Grid>
 
 
-                    {(values.isUnder30) ?
-
-                        <Grid item xs={12}>
-                            <Typography color={'green'} variant="h7" variant="h7">
-                                If there are there any siblings under the age of 30 who are also members of the band, click to add details below.<br />
-                            </Typography>
-                            <ToggleButton
-                                fullWidth
-                                value="check"
-                                selected={values.siblings}
-                                onChange={() => {
-
-                                    setFieldValue("siblings", !values.siblings, true)
-                                    setFieldTouched("siblings", true, true)
-                                }}
-                            >
-                                <GroupAdd />&nbsp; Add Sibling
-                            </ToggleButton>
-
-
-                        </Grid> : null}
-
-                    {values.siblings & isUnder30(values.dateofbirth) ?
-
-                        <>
-                            <Grid item xs={12}>  <Typography color={'green'} variant="h7" >
-                                Name of sibling (name of only one sibling required). <br />
-                            </Typography></Grid>
-
-
-                            <Grid item xs={6} >
-
-                                <TextField
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    name="siblingforename"
-                                    label="First Name"
-                                    value={values.siblingforename.capitalize()}
-                                    autoFocus
-                                    autocomplete='off'
-                                    fullWidth
-                                    isInvalid={errors.siblingforename && touched.siblingforename}
-                                    type="text" />
-                                <FormHelperText error="true" type="invalid">
-                                    <ErrorMessage name="forename" />
-                                </FormHelperText>
-
-                            </Grid>
-                            <Grid item xs={6}>
-
-                                <TextField
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    name="siblingsurname"
-                                    label="Family Name"
-                                    value={values.siblingsurname.capitalize()}
-
-                                    autocomplete='off'
-                                    fullWidth
-                                    isInvalid={errors.siblingsurname && touched.siblingsurname}
-                                    type="text" />
-                                <FormHelperText error="true" type="invalid">
-                                    <ErrorMessage name="surname" />
-                                </FormHelperText>
-
-                            </Grid></>
-                        : null}
-
 
 
                     <Grid item xs={12} >
@@ -488,12 +359,12 @@ function CaptureName({ formObject, handleBack, handleForward }) {
                                 component="Select"
                                 labelId="ethnicitylabel"
                                 label="Which ethnic group you belong to?"
-                                name="ethnicGroup"
+                                name="ethnicgroup"
                                 value={values.ethnicGroup}
                                 // You need to set the new field value
                                 fullWidth
                                 onChange={handleChange}
-                                onBlur={handleBlur('ethnicGroup')}
+                                onBlur={handleBlur('ethnicgroup')}
                                 multiple={false}
                             >
                                 {ethnicGroups.map(s => (
@@ -504,12 +375,74 @@ function CaptureName({ formObject, handleBack, handleForward }) {
                             </Select>
 
                             <FormHelperText error="true" type="invalid">
-                                <ErrorMessage name={"ethnicGroup"} />
+                                <ErrorMessage name={"ethnicgroup"} />
 
                             </FormHelperText>
                         </FormControl>
 
                     </Grid>
+
+
+
+                    <Grid item xs={6} >
+
+                        <TextField
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            name="username"
+                            label="User Name"
+                            value={values.username.toLowerCase()}
+                            autoFocus
+                            autocomplete='off'
+                            fullWidth
+                            isInvalid={errors.username && touched.username}
+                            type="text" />
+                        <FormHelperText error="true" type="invalid">
+                            <ErrorMessage name="username" />
+                        </FormHelperText>
+
+                    </Grid>
+                    <Grid item xs={6}>
+
+                        <TextField
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            name="password"
+                            label="Password"
+                            value={values.password}
+                            autocomplete='off'
+                            fullWidth
+                            isInvalid={errors.password && touched.password}
+                            type="password" />
+                        <FormHelperText error="true" type="invalid">
+                            <ErrorMessage name="password" />
+                        </FormHelperText>
+
+                    </Grid>
+
+                    <Grid item xs={12}>
+
+                        <TextField
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            name="email"
+                            label="Email"
+                            value={values.email.toLowerCase()}
+                            autocomplete='off'
+                            fullWidth
+                            isInvalid={errors.email && touched.email}
+                            type="text" />
+                        <FormHelperText error="true" type="invalid">
+                            <ErrorMessage name="email" />
+                        </FormHelperText>
+
+                    </Grid>
+
+
+
+
+
+
                 </Grid>
 
                 <Grid container marginTop={'10px'} spacing={1}>
@@ -543,45 +476,51 @@ function CaptureName({ formObject, handleBack, handleForward }) {
 
 
 
-function CaptureDOB({ formObject, handleBack, handleForward }) {
 
-    const minDate = new Date(new Date(new Date().setFullYear(new Date().getFullYear() - 100)).setDate(1))
+function ConfirmCode({ formObject, handleBack, handleForward }) {
 
-    let touched = null
-    if (formObject.dateofbirth != null) {
-        touched = ['dateofbirth']
+
+    async function confirmCode(code) {
+        try {
+            const { response } = await Auth.confirmSignUp(formObject.username, code)
+            console.log(response);
+        } catch (error) {
+            console.log('error signing up:', error);
+        }
     }
 
     return (
         <Formik
+
+            //initialTouched={formObject.forename == '' ? true : false}
+            //initialValid={formObject.forename == '' ? true : false}
+
             validationSchema={
                 yup.object().shape({
-                    //todo conditional validation for sibling name
-                    dateofbirth: yup
-                        .date()
-                        .max(new Date(), "Date must be in the past")
-                        .min(minDate, "Check the year....")
-                        .required("Required")
-                        .typeError('Invalid Date - Expecting date in the format e.g "26th September 2001"'),
-                })}
-
-            initialTouched={touched}
+                    code: yup
+                        .number('Must be a number')
+                        .required('Provide number')
+                        .min(6, 'Must be six digits')
 
 
-            isTouched={(formObject.dateofbirth == null ? false : true)
+                })
             }
+
+
             initialValues={{
-                dateofbirth: formObject.dateofbirth || '',
-                siblings: false,
-                isUnder30: false,
-                siblingforename: '',
-                siblingsurname: ''
+                code: formObject.code || ''
+
             }
             }
+
+
             onSubmit={(values) => {
-                console.log('submitting dob!!');
+                console.log('validating code');
                 console.log(values);
-                handleForward(values)
+                confirmCode(values.code).then(
+                    console.log('done code')
+                )
+
             }}
         >
             {({
@@ -596,135 +535,52 @@ function CaptureDOB({ formObject, handleBack, handleForward }) {
                 setFieldTouched
             }) =>
             (<>
+
+
+                <Typography color={'green'} variant="h7" >
+                    Check your email for confirmation code and enter it here to confirm signup.
+                </Typography>
                 <Grid container component="form" spacing={2} marginTop={2} onSubmit={handleSubmit}>
 
-                    <Grid item xs={12}>
-                        <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <Grid item xs={12} >
 
-                            <DatePicker
-                                onChange={(value) => {
-                                    setFieldValue("dateofbirth", value, true)
-                                    setFieldTouched('dateofbirth', true, false)
-                                    setFieldValue("isUnder30", isUnder30(value), false)
-                                }}
-                                inputFormat="Do MMMM yyyy"
-                                label="Date Of Birth"
-                                autocomplete='off'
-                                value={values.dateofbirth || null}
-                                fullWidth
-                                renderInput={(params) =>
-                                    <TextField
-                                        onBlur={(value) => {
-                                            setFieldTouched('dateofbirth', true, false)
-                                        }}
-                                        fullWidth
-                                        name="dateofbirth"
-                                        isInvalid={errors.dateofbirth && touched.dateofbirth}
-                                        {...params} />}
-
-                            />
-                        </LocalizationProvider>
-
+                        <TextField
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            name="code"
+                            label="Confirmation Code"
+                            value={values.code}
+                            autoFocus
+                            autocomplete='off'
+                            fullWidth
+                            isInvalid={errors.code && touched.code}
+                            type="text" />
                         <FormHelperText error="true" type="invalid">
-                            <ErrorMessage name="dateofbirth" />
+                            <ErrorMessage name="code" />
                         </FormHelperText>
 
-
                     </Grid>
 
 
-                    {(values.isUnder30) ?
-
-                        <Grid item xs={12}>
-                            <Typography color={'green'} variant="h7" variant="h7">
-                                If there are there any siblings under the age of 30 who are also members of the band, click to add details below.<br />
-                            </Typography>
-                            <ToggleButton
+                    <Grid container marginTop={'10px'} spacing={1}>
+                        <Grid item xs={6}>
+                            <Button
                                 fullWidth
-                                value="check"
-                                selected={values.siblings}
-                                onChange={() => {
-
-                                    setFieldValue("siblings", !values.siblings, true)
-                                    setFieldTouched("siblings", true, true)
-                                }}
+                                onClick={handleBack}
+                                variant="outlined"
                             >
-                                <GroupAdd />&nbsp; Add Sibling
-                            </ToggleButton>
-
-
-                        </Grid> : null}
-
-                    {values.siblings & isUnder30(values.dateofbirth) ?
-
-                        <>
-                            <Grid item xs={12}>  <Typography color={'green'} variant="h7" >
-                                Name of sibling (name of only one sibling required). <br />
-                            </Typography></Grid>
-
-
-                            <Grid item xs={6} >
-
-                                <TextField
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    name="siblingforename"
-                                    label="First Name"
-                                    value={values.siblingforename.capitalize()}
-                                    autoFocus
-                                    autocomplete='off'
-                                    fullWidth
-                                    isInvalid={errors.siblingforename && touched.siblingforename}
-                                    type="text" />
-                                <FormHelperText error="true" type="invalid">
-                                    <ErrorMessage name="forename" />
-                                </FormHelperText>
-
-                            </Grid>
-                            <Grid item xs={6}>
-
-                                <TextField
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    name="siblingsurname"
-                                    label="Family Name"
-                                    value={values.siblingsurname.capitalize()}
-
-                                    autocomplete='off'
-                                    fullWidth
-                                    isInvalid={errors.siblingsurname && touched.siblingsurname}
-                                    type="text" />
-                                <FormHelperText error="true" type="invalid">
-                                    <ErrorMessage name="surname" />
-                                </FormHelperText>
-
-                            </Grid></>
-                        : null}
-
-
-
-
-                </Grid>
-
-                <Grid container marginTop={'10px'} spacing={1}>
-                    <Grid item xs={6}>
-                        <Button
-                            fullWidth
-                            onClick={handleBack}
-                            variant="outlined"
-                        >
-                            Go Back
-                        </Button>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Button
-                            fullWidth
-                            onClick={handleSubmit}
-                            variant="contained"
-                            disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object)}
-                        >
-                            Next
-                        </Button>
+                                Resend Code
+                            </Button>
+                        </Grid>
+                        <Grid item xs={6}>
+                            <Button
+                                fullWidth
+                                onClick={handleSubmit}
+                                variant="contained"
+                                disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object)}>
+                                Confirm SignUp
+                            </Button>
+                        </Grid>
                     </Grid>
                 </Grid>
 
@@ -737,108 +593,104 @@ function CaptureDOB({ formObject, handleBack, handleForward }) {
 }
 
 
-function ChooseMultiBand({ formObject, handleBack, handleForward }) {
 
-    let isTouched = null
-    let ageInYears = -1 * formObject.dateofbirth.diff(Date()) / (60 * 60 * 24 * 365.2425 * 1000)
-    console.log(ageInYears)
-    let youOrName = formObject.youOrThem == 'you' ? 'you' : formObject.forename
-    let youOrThey = formObject.youOrThem == 'you' ? 'you' : 'they'
-    let areIs = formObject.youOrThem == 'you' ? 'are' : 'is'
-    if (formObject.multiBand != null) {
-        isTouched = ['multiBand']
+function ConfirmName({ formObject, handleBack, handleForward }) {
+
+    let touched = null
+    if (formObject.forename != null) {
+        touched = ['forename']
     }
     return (
-        <Formik
-            validationSchema={
-                yup.object().shape({
-                    multiBand: yup.string().required("Required"),
-                })}
+        <>
 
-            initialTouched={isTouched}
-            initialValues={{
-                multiBand: formObject.multiBand || ''
 
-            }}
-            onSubmit={(values) => {
-                console.log('submitting multibanb!!');
-                console.log(values);
-                handleForward(values)
-            }}
-        >
-            {({
-                handleSubmit,
-                values,
-                touched,
-                isValid,
-                errors,
-                handleChange,
-                handleBlur,
-                setFieldValue,
-                setFieldTouched
-            }) =>
-            (<>
-                <Typography color={'green'} variant="h7" >
-                    {ageInYears < 30 ?
-                        'As an adult under 30, ' + youOrName + ' ' + areIs + ' entitled to a half-price discount (£52.50).  '
-                        + youOrThey.capitalize() + ' are further entitled to an additional half-price discount if  ' + youOrThey + '  only sign up for one band.' :
-                        'As an adult over 30,  ' + youOrName + ' eligible for full price membership only (£105.00).\
-                        However, if '+ youOrThey + ' opt to join only one band,  ' + youOrName + ' ' + areIs + '  entitled to a half-price discount.'}
-                    <br /> Please choose whether {youOrName} would like to sign up for one band or have full membership.
-                </Typography>
-                <Grid container component="form" spacing={2} onSubmit={handleSubmit}>
+            <Typography color={'green'} variant="h7" >
+                Confirm your details.
+            </Typography>
+            <br />
 
-                    <Grid item xs={12} >
-                        <FormControl   >
-                            <RadioGroup
-                                name={"multiBand"}
-                                value={values.multiBand.toString()}
-                                isInvalid={errors.multiBand}
-                                onChange={(event) => {
-                                    console.log(event)
-                                    setFieldValue('multiBand', event.target.value.toString(), true)
-                                    setFieldTouched('multiBand', true, false)
-                                }}>
-                                <FormControlLabel value="singleband" control={<Radio />} label="One Band Only" />
-                                <FormControlLabel value="multiband" control={<Radio />} label="Multiple Bands" />
-                            </RadioGroup>
-                        </FormControl>
-                        <FormHelperText>
-                            <ErrorMessage name={"multiBand"} />
-                        </FormHelperText>
-                    </Grid>
 
+            <Typography variant="h6" >
+                Name
+            </Typography>
+
+
+            <Typography variant="main" >
+                {formObject.forename} {formObject.surname}
+            </Typography>
+            <br />
+
+            <Typography variant="h6" >
+                Date Of Birth
+            </Typography>
+
+
+            <Typography variant="main" >
+                {formObject.dateofbirth.format('Do MMMM yyyy')}
+            </Typography>
+            <br />
+            <Typography variant="h6" >
+                Ethnicity
+            </Typography>
+
+
+            <Typography variant="main" >
+                {formObject.ethnicgroup}
+            </Typography>
+            <br />
+            <Typography variant="h6" >
+                Username
+            </Typography>
+
+
+            <Typography variant="main" >
+                {formObject.username}
+            </Typography>
+            <br />
+
+            <Typography variant="h6" >
+                Email
+            </Typography>
+
+
+            <Typography variant="main" >
+                {formObject.email}
+            </Typography>
+            <br />
+
+
+
+
+            <Grid container marginTop={'10px'} spacing={1}>
+                <Grid item xs={6}>
+                    <Button
+                        fullWidth
+                        onClick={handleBack}
+                        variant="outlined"
+                    >
+                        Go Back
+                    </Button>
+                </Grid>
+                <Grid item xs={6}>
+                    <Button
+                        fullWidth
+                        onClick={handleForward}
+                        variant="contained"
+                        Next>
+                        Confirm
+                    </Button>
                 </Grid>
 
-                <Grid container marginTop={'10px'} spacing={1}>
-                    <Grid item xs={6}>
-                        <Button
-                            fullWidth
-                            onClick={handleBack}
-                            variant="outlined"
-                        >
-                            Go Back
-                        </Button>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Button
-                            fullWidth
-                            onClick={handleSubmit}
-                            variant="contained"
-                            disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object)}
-                        >
-                            Next
-                        </Button>
-                    </Grid>
-                </Grid>
-
-            </>
-            )
-            }
-        </Formik >
-
+            </Grid>
+        </>
     )
 }
+
+
+
+
+
+
 
 
 function ChooseBands({ formObject, handleBack, handleForward }) {

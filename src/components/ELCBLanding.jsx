@@ -38,6 +38,12 @@ export default function Header() {
                             variant="outline"
                             component={Link}
                             to="/newmember"> Register </Button>
+                        <Button
+                            align="center"
+                            variant="outline"
+                            component={Link}
+                            to="/signin"> Sign In </Button>
+
 
 
 

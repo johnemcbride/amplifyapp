@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { Typography } from '@mui/material';
 
-function ELCBHeader({ signOut }) {
+function ELCBHeader({ userName, isLoggedIn, signOut }) {
     const [openDrawer, setOpenDrawer] = useState(false);
 
     return (
@@ -53,6 +53,15 @@ function ELCBHeader({ signOut }) {
 
                     <Drawer open={openDrawer} onClose={() => setOpenDrawer(false)} >
                         <List>
+                            {
+                                isLoggedIn ?
+
+                                    <ListItem onClick={() => setOpenDrawer(false)}>
+                                        <ListItemText>
+                                            Welcome, <b>{userName}</b>
+                                        </ListItemText>
+                                    </ListItem>
+                                    : null}
                             <ListItem onClick={() => setOpenDrawer(false)}>
                                 <ListItemText>
                                     Members
@@ -68,11 +77,12 @@ function ELCBHeader({ signOut }) {
                                     Subscriptions
                                 </ListItemText>
                             </ListItem>
-                            <ListItem onClick={() => setOpenDrawer(false)}>
-                                <ListItemText>
-                                    Signout
-                                </ListItemText>
-                            </ListItem>
+                            {!isLoggedIn ?
+                                <ListItem onClick={() => setOpenDrawer(false)}>
+                                    <ListItemText>
+                                        Signout
+                                    </ListItemText>
+                                </ListItem> : null}
                         </List>
                     </Drawer>
 
