@@ -18,11 +18,12 @@ export default function Header() {
                         align="center"
                         order={{ xs: 2, sm: 1 }}
                         marginX={0}
-                        marginY={'100px'}
+
                         paddingX={0}
                         container
                         xs={12}
                         sm={6}
+
                         flexDirection="column"
                         justifyContent="center">
 

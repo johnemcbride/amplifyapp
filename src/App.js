@@ -15,6 +15,7 @@ import ELCBSignIn from "./components/ELCBSignIn"
 import { Routes, Route } from "react-router-dom"
 import CssBaseline from "@mui/material/CssBaseline";
 
+import { orange, green } from '@mui/material/colors';
 import {
   createTheme
 } from '@mui/material/styles';
@@ -44,12 +45,12 @@ let theme = createTheme({
       height: "100%"
     },
     palette: {
-      mode: 'light',
+
       primary: {
-        main: '#e65100',
+        main: orange,
       },
       secondary: {
-        main: '#f50057',
+        main: green,
       },
     },
     overrides: {

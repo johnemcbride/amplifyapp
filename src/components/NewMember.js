@@ -286,7 +286,7 @@ function CaptureName({ formObject, handleBack, handleForward }) {
                             autoFocus
                             autocomplete='off'
                             fullWidth
-                            isInvalid={errors.forename && touched.forename}
+                            error={errors.forename && touched.forename}
                             type="text" />
                         <FormHelperText error="true" type="invalid">
                             <ErrorMessage name="forename" />
@@ -304,7 +304,7 @@ function CaptureName({ formObject, handleBack, handleForward }) {
 
                             autocomplete='off'
                             fullWidth
-                            isInvalid={errors.surname && touched.surname}
+                            error={errors.surname && touched.surname}
                             type="text" />
                         <FormHelperText error="true" type="invalid">
                             <ErrorMessage name="surname" />
@@ -395,7 +395,7 @@ function CaptureName({ formObject, handleBack, handleForward }) {
                             autoFocus
                             autocomplete='off'
                             fullWidth
-                            isInvalid={errors.username && touched.username}
+                            error={errors.username && touched.username}
                             type="text" />
                         <FormHelperText error="true" type="invalid">
                             <ErrorMessage name="username" />
@@ -412,7 +412,7 @@ function CaptureName({ formObject, handleBack, handleForward }) {
                             value={values.password}
                             autocomplete='off'
                             fullWidth
-                            isInvalid={errors.password && touched.password}
+                            error={errors.password && touched.password}
                             type="password" />
                         <FormHelperText error="true" type="invalid">
                             <ErrorMessage name="password" />
@@ -430,7 +430,7 @@ function CaptureName({ formObject, handleBack, handleForward }) {
                             value={values.email.toLowerCase()}
                             autocomplete='off'
                             fullWidth
-                            isInvalid={errors.email && touched.email}
+                            error={errors.email && touched.email}
                             type="text" />
                         <FormHelperText error="true" type="invalid">
                             <ErrorMessage name="email" />

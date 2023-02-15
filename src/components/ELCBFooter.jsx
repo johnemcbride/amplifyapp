@@ -15,7 +15,7 @@ export default function Footer() {
             flexDirection="column"
             justifyContent="center"
         >
-            <Typography variant="body2" color="textSecondary" align="center" marginY={'10px'}>
+            <Typography variant="body2" color="textSecondary" align="center" >
                 Copyright © &nbsp;
                 <Link color="inherit" href="https://www.eastlondoncommunityband.co.uk">
                     East London Community Band

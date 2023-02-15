@@ -18,17 +18,24 @@ import InputLabel from "@mui/material/InputLabel"
 import Checkbox from "@mui/material/Checkbox"
 import ToggleButton from "@mui/material/ToggleButton"
 import GroupAdd from "@mui/icons-material/GroupAdd"
+import CircularProgress from "@mui/material/CircularProgress"
 import { Formik, ErrorMessage, Field } from 'formik';
 import { FormHelperText } from "@mui/material";
 import * as yup from "yup";
 import { Auth } from 'aws-amplify';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 
 export default function ELCBSignin({ handleLogin }) {
     const [formObject, setFormObject] = useState({})
     const [isSubmitting, setIsSubmitting] = useState(false)
     const navigate = useNavigate();
 
+    // if logged in redirect to real page
+    Auth.currentAuthenticatedUser().then(user => {
+        console.log('logged in!')
+        navigate("/landing")
+    }
+    )
     return (
         <>
 
@@ -43,10 +50,8 @@ export default function ELCBSignin({ handleLogin }) {
                         yup.object().shape({
                             username: yup.string().required("Required"),
                             password: yup.string().required("Required"),
-
                         })
                     }
-
                     initialValues={{
                         username: formObject.username || '',
                         password: formObject.password || '',
@@ -60,22 +65,16 @@ export default function ELCBSignin({ handleLogin }) {
                             ...formObject,
                             ...values
                         })
-
                         try {
                             Auth.signIn(values.username, values.password).then(user => {
                                 handleLogin(user.username)
                                 navigate("/landing")
-
+                                setIsSubmitting(false)
                             }
-
                             )
                         } catch (error) {
                             console.log('error signing in', error);
                         }
-                        setIsSubmitting(false)
-
-
-                        // do stuff - log in!
                     }}
                 >
                     {({
@@ -90,15 +89,11 @@ export default function ELCBSignin({ handleLogin }) {
                         setFieldTouched
                     }) =>
                     (<>
-
-
                         <Typography color={'green'} variant="h7" >
                             Enter username and password to log in.
                         </Typography>
                         <Grid container component="form" marginTop={1} spacing={3} onSubmit={handleSubmit}>
-
                             <Grid item xs={12} >
-
                                 <TextField
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -108,16 +103,13 @@ export default function ELCBSignin({ handleLogin }) {
                                     autoFocus
                                     autocomplete='off'
                                     fullWidth
-                                    isInvalid={errors.username && touched.username}
+                                    error={errors.username && touched.username}
                                     type="text" />
                                 <FormHelperText error="true" type="invalid">
                                     <ErrorMessage name="forename" />
                                 </FormHelperText>
-
                             </Grid>
-
                             <Grid item xs={12} >
-
                                 <TextField
                                     onChange={handleChange}
                                     onBlur={handleBlur}
@@ -127,23 +119,22 @@ export default function ELCBSignin({ handleLogin }) {
                                     autoFocus
                                     autocomplete='off'
                                     fullWidth
-                                    isInvalid={errors.password && touched.password}
+                                    error={errors.password && touched.password}
                                     type="password" />
                                 <FormHelperText error="true" type="invalid">
                                     <ErrorMessage name="password" />
                                 </FormHelperText>
-
                             </Grid>
-
                             <Grid item xs={12}>
                                 <Button
                                     fullWidth
-                                    tabIndex="3"
                                     type="submit"
                                     variant="contained"
+                                    color="primary"
                                     disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object || isSubmitting)}
-
                                 >
+                                    {isSubmitting ? <CircularProgress size={20} color="secondary" sx={{ marginX: '20px' }} /> : null}
+
                                     Log In
                                 </Button>
                             </Grid>
