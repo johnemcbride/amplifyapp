@@ -6,35 +6,44 @@
   REGION
 Amplify Params - DO NOT EDIT */
 
-import crypto from '@aws-crypto/sha256-js';
-import { defaultProvider } from '@aws-sdk/credential-provider-node';
-import { SignatureV4 } from '@aws-sdk/signature-v4';
-import { HttpRequest } from '@aws-sdk/protocol-http';
-import { default as fetch, Request } from 'node-fetch';
+const crypto = require('@aws-crypto/sha256-js');
+const { defaultProvider } = require('@aws-sdk/credential-provider-node');
+const { SignatureV4 } = require('@aws-sdk/signature-v4');
+const { HttpRequest } = require('@aws-sdk/protocol-http');
+const fetch = require('node-fetch');
 
 const GRAPHQL_ENDPOINT = process.env.API_AMPLIFYAPP_GRAPHQLAPIENDPOINTOUTPUT;
 const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
+
+const { Request } = fetch
 const { Sha256 } = crypto;
 
-const query = /* GraphQL */ `
-  query LIST_TODOS {
-    listEnrolments {
-      items {
-        id
-        bands
-        ratedescription
-      }
-    }
-
-  }
-`;
 
 /**
  * @type {import('@types/aws-lambda').APIGatewayProxyHandler}
  */
 
-export const handler = async (event) => {
-  console.log(`EVENT: ${JSON.stringify(event)}`);
+exports.handler = async (event) => {
+  //console.log(`EVENT: ${JSON.stringify(event)}`);
+  const id = JSON.parse(event.body).id
+  console.log(JSON.parse(event.body).id)
+
+  const query = /* GraphQL */ `
+  query GetEnrolment($id: ID!) {
+    getEnrolment(id: $id) {
+      id
+      bands
+      status
+      term
+      ratedescription
+      rate
+      stripeRef
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
 
   const endpoint = new URL(GRAPHQL_ENDPOINT);
 
@@ -45,6 +54,9 @@ export const handler = async (event) => {
     sha256: Sha256
   });
 
+  const variables = {
+    id: id,
+  }
   const requestToBeSigned = new HttpRequest({
     method: 'POST',
     headers: {
@@ -52,7 +64,7 @@ export const handler = async (event) => {
       host: endpoint.host
     },
     hostname: endpoint.host,
-    body: JSON.stringify({ query }),
+    body: JSON.stringify({ query, variables }),
     path: endpoint.pathname
   });
 

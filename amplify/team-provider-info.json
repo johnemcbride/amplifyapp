@@ -26,7 +26,7 @@
       "function": {
         "checkout": {
           "deploymentBucketName": "amplify-amplifyc03145fb6ec14-staging-85212-deployment",
-          "s3Key": "amplify-builds/checkout-534458683571765a4f44-build.zip"
+          "s3Key": "amplify-builds/checkout-626b4a6c38704d4f6969-build.zip"
         }
       }
     }
