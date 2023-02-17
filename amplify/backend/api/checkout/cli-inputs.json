@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "paths": {
+    "/checkout": {
+      "name": "/checkout",
+      "lambdaFunction": "checkout",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read"
+        ]
+      }
+    }
+  }
+}

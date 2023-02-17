@@ -131,10 +131,8 @@ export default function ELCBSignin({ handleLogin }) {
                                     type="submit"
                                     variant="contained"
                                     color="primary"
-                                    disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object || isSubmitting)}
-                                >
+                                    disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object || isSubmitting)}>
                                     {isSubmitting ? <CircularProgress size={20} color="secondary" sx={{ marginX: '20px' }} /> : null}
-
                                     Log In
                                 </Button>
                             </Grid>

@@ -18,7 +18,7 @@ function ELCBHeader({ userName, isLoggedIn, signOut }) {
 
     return (
         <>
-            <AppBar position={'static'} sx={{ backgroundColor: 'black' }}>
+            <AppBar position={'sticky'} sx={{ backgroundColor: 'black' }}>
                 <Container height={'100%'}>
                     <Grid
                         sx={{
@@ -49,7 +49,7 @@ function ELCBHeader({ userName, isLoggedIn, signOut }) {
 
                         {
                             isLoggedIn ?
-                                <Grid height={'100%'} paddingY={'6px'} container justify={'center'} flexDirection={'column'} item xs={6} align="right" marginX={0}>
+                                <Grid height={'100%'} paddingY={'6px'} justify={'center'} flexDirection={'column'} item xs={6} align="right" marginX={0}>
                                     <Button marginY={"6px"} size={'small'} onClick={() => setOpenDrawer(!openDrawer)} color="primary" variant="contained"  >Menu</Button>
                                 </Grid>
                                 : null}

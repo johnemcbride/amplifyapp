@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "api": {
+      "amplifyapp": [
+        "Query"
+      ]
+    }
+  },
+  "lambdaLayers": [],
+  "secretNames": []
+}

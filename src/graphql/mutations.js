@@ -52,14 +52,12 @@ export const createMember = /* GraphQL */ `
     $condition: ModelMemberConditionInput
   ) {
     createMember(input: $input, condition: $condition) {
+      id
       forename
       surname
-      dateOfBirth
-      addressLine1
-      addressLine2
-      town
-      postCode
-      id
+      dateofbirth
+      ethnicity
+      instruments
       createdAt
       updatedAt
       owner
@@ -72,14 +70,12 @@ export const updateMember = /* GraphQL */ `
     $condition: ModelMemberConditionInput
   ) {
     updateMember(input: $input, condition: $condition) {
+      id
       forename
       surname
-      dateOfBirth
-      addressLine1
-      addressLine2
-      town
-      postCode
-      id
+      dateofbirth
+      ethnicity
+      instruments
       createdAt
       updatedAt
       owner
@@ -92,14 +88,69 @@ export const deleteMember = /* GraphQL */ `
     $condition: ModelMemberConditionInput
   ) {
     deleteMember(input: $input, condition: $condition) {
+      id
       forename
       surname
-      dateOfBirth
-      addressLine1
-      addressLine2
-      town
-      postCode
+      dateofbirth
+      ethnicity
+      instruments
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const createEnrolment = /* GraphQL */ `
+  mutation CreateEnrolment(
+    $input: CreateEnrolmentInput!
+    $condition: ModelEnrolmentConditionInput
+  ) {
+    createEnrolment(input: $input, condition: $condition) {
       id
+      bands
+      status
+      term
+      ratedescription
+      rate
+      stripeRef
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const updateEnrolment = /* GraphQL */ `
+  mutation UpdateEnrolment(
+    $input: UpdateEnrolmentInput!
+    $condition: ModelEnrolmentConditionInput
+  ) {
+    updateEnrolment(input: $input, condition: $condition) {
+      id
+      bands
+      status
+      term
+      ratedescription
+      rate
+      stripeRef
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const deleteEnrolment = /* GraphQL */ `
+  mutation DeleteEnrolment(
+    $input: DeleteEnrolmentInput!
+    $condition: ModelEnrolmentConditionInput
+  ) {
+    deleteEnrolment(input: $input, condition: $condition) {
+      id
+      bands
+      status
+      term
+      ratedescription
+      rate
+      stripeRef
       createdAt
       updatedAt
       owner

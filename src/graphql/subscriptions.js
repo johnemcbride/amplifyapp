@@ -43,14 +43,12 @@ export const onCreateMember = /* GraphQL */ `
     $owner: String
   ) {
     onCreateMember(filter: $filter, owner: $owner) {
+      id
       forename
       surname
-      dateOfBirth
-      addressLine1
-      addressLine2
-      town
-      postCode
-      id
+      dateofbirth
+      ethnicity
+      instruments
       createdAt
       updatedAt
       owner
@@ -63,14 +61,12 @@ export const onUpdateMember = /* GraphQL */ `
     $owner: String
   ) {
     onUpdateMember(filter: $filter, owner: $owner) {
+      id
       forename
       surname
-      dateOfBirth
-      addressLine1
-      addressLine2
-      town
-      postCode
-      id
+      dateofbirth
+      ethnicity
+      instruments
       createdAt
       updatedAt
       owner
@@ -83,14 +79,69 @@ export const onDeleteMember = /* GraphQL */ `
     $owner: String
   ) {
     onDeleteMember(filter: $filter, owner: $owner) {
+      id
       forename
       surname
-      dateOfBirth
-      addressLine1
-      addressLine2
-      town
-      postCode
+      dateofbirth
+      ethnicity
+      instruments
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onCreateEnrolment = /* GraphQL */ `
+  subscription OnCreateEnrolment(
+    $filter: ModelSubscriptionEnrolmentFilterInput
+    $owner: String
+  ) {
+    onCreateEnrolment(filter: $filter, owner: $owner) {
       id
+      bands
+      status
+      term
+      ratedescription
+      rate
+      stripeRef
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onUpdateEnrolment = /* GraphQL */ `
+  subscription OnUpdateEnrolment(
+    $filter: ModelSubscriptionEnrolmentFilterInput
+    $owner: String
+  ) {
+    onUpdateEnrolment(filter: $filter, owner: $owner) {
+      id
+      bands
+      status
+      term
+      ratedescription
+      rate
+      stripeRef
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const onDeleteEnrolment = /* GraphQL */ `
+  subscription OnDeleteEnrolment(
+    $filter: ModelSubscriptionEnrolmentFilterInput
+    $owner: String
+  ) {
+    onDeleteEnrolment(filter: $filter, owner: $owner) {
+      id
+      bands
+      status
+      term
+      ratedescription
+      rate
+      stripeRef
       createdAt
       updatedAt
       owner

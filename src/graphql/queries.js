@@ -33,16 +33,14 @@ export const listNotes = /* GraphQL */ `
   }
 `;
 export const getMember = /* GraphQL */ `
-  query GetMember($id: ID!) {
-    getMember(id: $id) {
+  query GetMember($id: ID!, $createdAt: String!) {
+    getMember(id: $id, createdAt: $createdAt) {
+      id
       forename
       surname
-      dateOfBirth
-      addressLine1
-      addressLine2
-      town
-      postCode
-      id
+      dateofbirth
+      ethnicity
+      instruments
       createdAt
       updatedAt
       owner
@@ -51,20 +49,114 @@ export const getMember = /* GraphQL */ `
 `;
 export const listMembers = /* GraphQL */ `
   query ListMembers(
+    $id: ID
+    $createdAt: ModelStringKeyConditionInput
     $filter: ModelMemberFilterInput
     $limit: Int
     $nextToken: String
+    $sortDirection: ModelSortDirection
   ) {
-    listMembers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listMembers(
+      id: $id
+      createdAt: $createdAt
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      sortDirection: $sortDirection
+    ) {
       items {
+        id
         forename
         surname
-        dateOfBirth
-        addressLine1
-        addressLine2
-        town
-        postCode
+        dateofbirth
+        ethnicity
+        instruments
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+    }
+  }
+`;
+export const searchMembers = /* GraphQL */ `
+  query SearchMembers(
+    $filter: SearchableMemberFilterInput
+    $sort: [SearchableMemberSortInput]
+    $limit: Int
+    $nextToken: String
+    $from: Int
+    $aggregates: [SearchableMemberAggregationInput]
+  ) {
+    searchMembers(
+      filter: $filter
+      sort: $sort
+      limit: $limit
+      nextToken: $nextToken
+      from: $from
+      aggregates: $aggregates
+    ) {
+      items {
         id
+        forename
+        surname
+        dateofbirth
+        ethnicity
+        instruments
+        createdAt
+        updatedAt
+        owner
+      }
+      nextToken
+      total
+      aggregateItems {
+        name
+        result {
+          ... on SearchableAggregateScalarResult {
+            value
+          }
+          ... on SearchableAggregateBucketResult {
+            buckets {
+              key
+              doc_count
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+export const getEnrolment = /* GraphQL */ `
+  query GetEnrolment($id: ID!) {
+    getEnrolment(id: $id) {
+      id
+      bands
+      status
+      term
+      ratedescription
+      rate
+      stripeRef
+      createdAt
+      updatedAt
+      owner
+    }
+  }
+`;
+export const listEnrolments = /* GraphQL */ `
+  query ListEnrolments(
+    $filter: ModelEnrolmentFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listEnrolments(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        bands
+        status
+        term
+        ratedescription
+        rate
+        stripeRef
         createdAt
         updatedAt
         owner

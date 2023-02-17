@@ -33,6 +33,14 @@ import { Auth } from 'aws-amplify';
 import { useNavigate } from "react-router-dom";
 import userEvent from '@testing-library/user-event';
 import moment from 'moment';
+
+import { API } from 'aws-amplify';
+
+import {
+    createEnrolment as createEnrolmentMutation
+} from "../graphql/mutations";
+
+
 function createData(
     band: string,
     start: string,
@@ -69,13 +77,13 @@ function oneSmallBandOnly(bands) {
 
 function calculateMembershipRate(dateofbirth, bands, siblings) {
     if (isUnder30(dateofbirth) && ((oneSmallBandOnly(bands) || siblings))) {
-        return '£26.25 - (QUARTER) - YOUNG PEOPLE IN ONE SMALL BAND OR WITH SIBLINGS UNDER 30'
+        return ['£26.25 - (QUARTER) - YOUNG PEOPLE IN ONE SMALL BAND OR WITH SIBLINGS UNDER 30', 26.25]
     }
     else if (isUnder30(dateofbirth) || oneSmallBandOnly(bands)) {
-        return '£52.50 - (HALF) - YOUNG PEOPLE OR ONE SMALL BAND'
+        return ['£52.50 - (HALF) - YOUNG PEOPLE OR ONE SMALL BAND', 52.20]
     }
     else {
-        return '£105.00 - (FULL)'
+        return ['£105.00 - (FULL)', 105]
     }
 }
 
@@ -86,6 +94,40 @@ export default function ELCBMemberEnrol({ user }) {
     const navigate = useNavigate();
 
 
+
+    async function createEnrolment(bands, term, ratedescription, rate) {
+        const data = {
+            status: 'pending',
+            bands: bands,
+            term: term,
+            ratedescription: ratedescription,
+            rate: rate
+
+        };
+        try {
+            await API.graphql({
+                query: createEnrolmentMutation,
+                variables: { input: data },
+                authMode: "AMAZON_COGNITO_USER_POOLS"
+            }).then(
+                result => {
+
+                    //get id
+                    const id = result.data.createEnrolment.id
+                    console.log(result)
+                    API.post('checkout', '/checkout', {
+                        body: {
+                            'id': id
+                        }
+                    })
+                }
+            );
+        }
+        catch (e) {
+            console.log(e)
+            // handler later
+        }
+    }
     const options = [
         { 'id': 'stompers', 'description': 'Stompers' },
         { 'id': 'early', 'description': 'Early Music' },
@@ -113,9 +155,14 @@ export default function ELCBMemberEnrol({ user }) {
                 bands: formObject.bands || []
             }}
             onSubmit={(values) => {
-                console.log('submitting multibanb!!');
-                console.log(values);
-                handleForward(values)
+                // pay
+                setIsSubmitting(true)
+                createEnrolment(
+                    values.bands,
+                    '2023 Term 2 (2nd Jan - 3rd Mar)',
+                    calculateMembershipRate(moment(user.dateofbirth, 'YYYY-MM-DD'), values.bands, false)[0],
+                    calculateMembershipRate(moment(user.dateofbirth, 'YYYY-MM-DD'), values.bands, false)[1]
+                )
             }}
         >
             {({
@@ -274,7 +321,7 @@ export default function ELCBMemberEnrol({ user }) {
                                                 <TableCell component="th" scope="row">
                                                     Membership Rate
                                                 </TableCell>
-                                                <TableCell align="right">{calculateMembershipRate(moment(user.dateofbirth, 'YYYY-MM-DD'), values.bands, false)}</TableCell>
+                                                <TableCell align="right">{calculateMembershipRate(moment(user.dateofbirth, 'YYYY-MM-DD'), values.bands, false)[0]}</TableCell>
 
                                             </TableRow>
 
@@ -296,9 +343,9 @@ export default function ELCBMemberEnrol({ user }) {
                                     <Grid item xs={6}>
                                         <Button
                                             fullWidth
-                                            onClick={() => setMode('ss')}
+                                            onClick={handleSubmit}
                                             variant="contained"
-                                            disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object)}
+                                            disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object) || isSubmitting}
                                         >
                                             {isSubmitting ? <CircularProgress size={20} color="secondary" sx={{ marginX: '20px' }} /> : null}
 

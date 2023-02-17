@@ -28,134 +28,32 @@ export default function ELCBMemberLanding() {
     const [formObject, setFormObject] = useState({})
     const [isSubmitting, setIsSubmitting] = useState(false)
     const navigate = useNavigate();
-
-
-
     return (
         <>
-
-            <Grid container spacing={0} marginY={1} paddingX={{
-                'xs': '10px',
-                'sm': '100px'
-            }} >
-
-
-                <Formik
-                    validationSchema={
-                        yup.object().shape({
-                            username: yup.string().required("Required"),
-                            password: yup.string().required("Required"),
-
-                        })
-                    }
-
-                    initialValues={{
-                        username: formObject.username || '',
-                        password: formObject.password || '',
-                    }
-                    }
-                    onSubmit={(values) => {
-                        console.log('Trying to log in');
-                        console.log(values);
-                        setIsSubmitting(true)
-                        setFormObject({
-                            ...formObject,
-                            ...values
-                        })
-
-                        try {
-                            Auth.signIn(values.username, values.password).then(
-                                navigate("/landing")
-                            )
-                        } catch (error) {
-                            console.log('error signing in', error);
-                        }
-                        setIsSubmitting(false)
-
-
-                        // do stuff - log in!
-                    }}
-                >
-                    {({
-                        handleSubmit,
-                        values,
-                        touched,
-                        isValid,
-                        errors,
-                        handleChange,
-                        handleBlur,
-                        setFieldValue,
-                        setFieldTouched
-                    }) =>
-                    (<>
-
-
-                        <Typography color={'green'} variant="h7" >
-                            Logged In!
-                        </Typography>
-                        <Grid container component="form" marginTop={1} spacing={3} onSubmit={handleSubmit}>
-
-                            <Grid item xs={12} >
-
-                                <TextField
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    name="username"
-                                    label="User Name"
-                                    value={values.username}
-                                    autoFocus
-                                    autocomplete='off'
-                                    fullWidth
-                                    isInvalid={errors.username && touched.username}
-                                    type="text" />
-                                <FormHelperText error="true" type="invalid">
-                                    <ErrorMessage name="forename" />
-                                </FormHelperText>
-
-                            </Grid>
-
-                            <Grid item xs={12} >
-
-                                <TextField
-                                    onChange={handleChange}
-                                    onBlur={handleBlur}
-                                    name="password"
-                                    label="Password"
-                                    value={values.password}
-                                    autoFocus
-                                    autocomplete='off'
-                                    fullWidth
-                                    isInvalid={errors.password && touched.password}
-                                    type="password" />
-                                <FormHelperText error="true" type="invalid">
-                                    <ErrorMessage name="password" />
-                                </FormHelperText>
-
-                            </Grid>
-
-                            <Grid item xs={12}>
-                                <Button
-                                    fullWidth
-                                    tabIndex="3"
-                                    type="submit"
-                                    variant="contained"
-                                    disabled={!isValid || (Object.keys(touched).length === 0 && touched.constructor === Object || isSubmitting)}
-
-                                >
-                                    Log In
-                                </Button>
-                            </Grid>
-
-                        </Grid>
-
-                    </>
-                    )}
-                </Formik >
-
-
-
-
-            </Grid>
+            <Grid container
+                align="center"
+                marginX={0}
+                xs={12}
+                flexDirection="column"
+                justifyContent="center" spacing={0} marginY={1}
+                paddingX={{
+                    'xs': '10px',
+                    'sm': '100px'
+                }} >
+                <Typography color={'green'} variant="h7" >
+                    Welcome!
+                </Typography>
+                <Button
+                    align="center"
+                    variant="outline"
+                    component={Link}
+                    to="/enrol"> Enrol For This Term </Button>
+                <Button
+                    align="center"
+                    variant="outline"
+                    component={Link}
+                    to="/profile"> Update Your Profile</Button>
+            </Grid >
         </>
     );
 }
