@@ -71,7 +71,7 @@ mutation UpdateEnrolment(
 exports.handler = async (event) => {
   console.log(`EVENT: ${JSON.stringify(event)} `);
 
-  const id = JSON.parse(event.body).data.customer_reference_id
+  const id = JSON.parse(event.body).data.object.client_reference_id
   console.log(`ID: ${id} `);
 
 

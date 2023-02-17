@@ -30,7 +30,7 @@
         },
         "stripeHandler": {
           "deploymentBucketName": "amplify-amplifyc03145fb6ec14-staging-85212-deployment",
-          "s3Key": "amplify-builds/stripeHandler-514c4e537347436b4677-build.zip"
+          "s3Key": "amplify-builds/stripeHandler-47394b6a6c314f7a6577-build.zip"
         }
       }
     }
