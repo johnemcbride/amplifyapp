@@ -119,7 +119,13 @@ export default function ELCBMemberEnrol({ user }) {
                         body: {
                             'id': id
                         }
-                    })
+                    }).then(
+                        (res) => {
+                            setIsSubmitting(false)
+                            window.location.replace(res);
+                        }
+                    )
+
                 }
             );
         }
@@ -163,6 +169,7 @@ export default function ELCBMemberEnrol({ user }) {
                     calculateMembershipRate(moment(user.dateofbirth, 'YYYY-MM-DD'), values.bands, false)[0],
                     calculateMembershipRate(moment(user.dateofbirth, 'YYYY-MM-DD'), values.bands, false)[1]
                 )
+
             }}
         >
             {({

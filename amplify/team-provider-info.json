@@ -26,7 +26,11 @@
       "function": {
         "checkout": {
           "deploymentBucketName": "amplify-amplifyc03145fb6ec14-staging-85212-deployment",
-          "s3Key": "amplify-builds/checkout-626b4a6c38704d4f6969-build.zip"
+          "s3Key": "amplify-builds/checkout-47332f315262474d4f44-build.zip"
+        },
+        "stripeHandler": {
+          "deploymentBucketName": "amplify-amplifyc03145fb6ec14-staging-85212-deployment",
+          "s3Key": "amplify-builds/stripeHandler-514c4e537347436b4677-build.zip"
         }
       }
     }

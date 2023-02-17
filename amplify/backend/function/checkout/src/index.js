@@ -11,6 +11,7 @@ const { defaultProvider } = require('@aws-sdk/credential-provider-node');
 const { SignatureV4 } = require('@aws-sdk/signature-v4');
 const { HttpRequest } = require('@aws-sdk/protocol-http');
 const fetch = require('node-fetch');
+const Stripe = require('stripe');
 
 const GRAPHQL_ENDPOINT = process.env.API_AMPLIFYAPP_GRAPHQLAPIENDPOINTOUTPUT;
 const AWS_REGION = process.env.AWS_REGION || 'us-east-1';
@@ -45,6 +46,31 @@ exports.handler = async (event) => {
   }
 `;
 
+
+  const createSwipe = async (referenceid, term, bands, email, rate, ratedescription) => {
+
+    let url = "https://api.stripe.com/v1/checkout/sessions";
+    const privatekey = "sk_test_51MPqHgHsYPcD7OHQied7QODzII5wiNOzL6LqzTBLDWyuxdEzTlvsLLUtmANmorVGJwS5yIemWOlW3hQzcut43kLF00RNmzxG8a"
+    const stripe = Stripe('sk_test_51MPqHgHsYPcD7OHQied7QODzII5wiNOzL6LqzTBLDWyuxdEzTlvsLLUtmANmorVGJwS5yIemWOlW3hQzcut43kLF00RNmzxG8a');
+    const session = await stripe.checkout.sessions.create({
+      line_items: [
+        {
+          price_data: {
+            currency: 'GBP',
+            unit_amount: (rate * 100).toString().split('.')[0],
+            product_data: { name: ratedescription + ' (' + bands.join(', ') + ')' }
+          },
+          quantity: 1
+        }
+      ],
+      mode: 'payment',
+      success_url: "http://localhost:3000/payment/" + referenceid,
+      cancel_url: "http://localhost:3000",
+      client_reference_id: referenceid,
+      customer_email: email,
+    });
+    return session
+  }
   const endpoint = new URL(GRAPHQL_ENDPOINT);
 
   const signer = new SignatureV4({
@@ -74,29 +100,53 @@ exports.handler = async (event) => {
   let statusCode = 200;
   let body;
   let response;
+  let swiperesp;
 
   try {
     response = await fetch(request);
     body = await response.json();
+
+    //referenceid, term, bands, email, rate, ratedescription
+    swiperesp = await createSwipe(
+      id,
+      body.data.getEnrolment.term,
+      body.data.getEnrolment.bands,
+      'john.e.mcbride@icloud.com',
+      body.data.getEnrolment.rate,
+      body.data.getEnrolment.ratedescription)
+
     if (body.errors) statusCode = 400;
+
+    return {
+      statusCode,
+      //  Uncomment below to enable CORS requests
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "*"
+      },
+      body: JSON.stringify(swiperesp.url)
+    };
   } catch (error) {
     statusCode = 500;
     body = {
       errors: [
         {
+          body: body,
           message: error.message
         }
       ]
     };
+
+
+    return {
+      statusCode,
+      //  Uncomment below to enable CORS requests
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "*"
+      },
+      body: JSON.stringify(body)
+    };
   }
 
-  return {
-    statusCode,
-    //  Uncomment below to enable CORS requests
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "*"
-    },
-    body: JSON.stringify(body)
-  };
 };

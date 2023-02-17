@@ -11,6 +11,13 @@
           "read"
         ]
       }
+    },
+    "/checkout/response": {
+      "name": "/checkout/response",
+      "lambdaFunction": "stripeHandler",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }

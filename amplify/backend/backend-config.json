@@ -45,6 +45,14 @@
           ],
           "category": "function",
           "resourceName": "checkout"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "stripeHandler"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -93,6 +101,22 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    },
+    "stripeHandler": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "amplifyapp"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "parameters": {
@@ -109,6 +133,22 @@
         {
           "category": "function",
           "resourceName": "checkout"
+        }
+      ]
+    },
+    "AMPLIFY_function_stripeHandler_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "stripeHandler"
+        }
+      ]
+    },
+    "AMPLIFY_function_stripeHandler_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "stripeHandler"
         }
       ]
     }
