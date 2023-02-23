@@ -69,14 +69,20 @@ let theme = createTheme({
 });
 
 async function getProfile() {
-  return API.graphql({
-    query: queries.listMembers,
-    variables: {
-      limit: 1,
-      order: [['createdAt', 'ASC']]
-    },
-    authMode: "AMAZON_COGNITO_USER_POOLS"
-  })
+  try{
+    return API.graphql({
+      query: queries.listMembers,
+      variables: {
+        limit: 1,
+        order: [['createdAt', 'ASC']]
+      },
+      authMode: "AMAZON_COGNITO_USER_POOLS"
+    })
+  }
+  catch{
+    console.log("Not logged in")
+  }
+ 
 }
 
 
@@ -104,7 +110,9 @@ const App = ({ signOut }) => {
           })
 
 
-      })
+      }).catch(
+      
+      console.log)
   }, []);
 
   return (

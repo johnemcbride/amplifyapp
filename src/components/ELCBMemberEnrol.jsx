@@ -189,7 +189,6 @@ export default function ELCBMemberEnrol({ user }) {
                         align="center"
                         marginX={0}
 
-                        marginY={'50px'}
                         xs={12}
                         flexDirection="column"
                         justifyContent="space-around" spacing={0}

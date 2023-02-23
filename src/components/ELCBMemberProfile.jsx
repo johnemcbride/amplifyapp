@@ -298,7 +298,7 @@ export default function ELCBMemberEnrol({ formObject, setFormObject }) {
                     <Grid container
                         align="center"
                         marginX={0}
-                        marginY={'50px'}
+                     
                         xs={12}
                         flexDirection="column"
                         justifyContent="space-around" spacing={0}
@@ -312,7 +312,7 @@ export default function ELCBMemberEnrol({ formObject, setFormObject }) {
                         }}
                     >
                         <TableContainer component={Paper}>
-                            <Table marginY={'10px'} size="small" aria-label="a dense table">
+                            <Table  size="small" aria-label="a dense table">
                                 <TableBody>
                                     <TableRow
                                         sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -499,7 +499,7 @@ export default function ELCBMemberEnrol({ formObject, setFormObject }) {
                         </TableContainer>
 
 
-                        <Grid container marginY={'10px'} spacing={1}>
+                        <Grid container  spacing={1}>
 
                             {mode == 'update' ?
                                 <>

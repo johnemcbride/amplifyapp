@@ -20,9 +20,9 @@ export default function Header() {
                         marginX={0}
 
                         paddingX={0}
-                        container
                         xs={12}
                         sm={6}
+                        item
 
                         flexDirection="column"
                         justifyContent="center">
@@ -52,6 +52,7 @@ export default function Header() {
                     <Grid
                         height='50vh'
                         order={{ xs: 1, sm: 2 }}
+                        item
                         sx={{
 
                             width: '100vw',
@@ -67,9 +68,9 @@ export default function Header() {
                             backgroundImage:
                                 "url('https://static.wixstatic.com/media/ee0576_f4cd463325c24230b8a3b818ae93711a~mv2.jpg/v1/crop/x_9,y_0,w_874,h_764/fill/w_638,h_558,al_c,q_80,usm_0.66_1.00_0.01,enc_auto/new_site_bandstand_03.jpg')"
                         }}
-                        container
                         xs={12}
-                        sm={6}>
+                        sm={6}
+                        >
                         <Typography sx={{
                             display: 'flex',
 

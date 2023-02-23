@@ -875,7 +875,7 @@ function ChooseBands({ formObject, handleBack, handleForward }) {
 
                 </Grid>
 
-                <Grid container marginY={'auto'} spacing={1}>
+                <Grid container  spacing={1}>
                     <Grid item xs={6}>
                         <Button
                             fullWidth

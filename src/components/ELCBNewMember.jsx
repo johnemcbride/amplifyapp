@@ -21,8 +21,7 @@ export default function Header() {
                         marginX={0}
                         paddingX={0}
                         container
-                        xs={12}
-                        sm={6}
+                      
 
                         sx={{
 
@@ -56,8 +55,7 @@ export default function Header() {
                             align: 'center'
                         }}
                         container
-                        xs={12}
-                        sm={6}>
+                        >
                         <Typography sx={{
                             display: 'flex',
                             marginX: '10',

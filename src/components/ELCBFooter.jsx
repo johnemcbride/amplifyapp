@@ -16,7 +16,7 @@ export default function Footer() {
             justifyContent="center"
         >
 
-            <Container align="center" marginY="10px">
+            <Container align="center" >
                 <SocialIcon style={{ height: 30, width: 30, marginRight: '5px' }} bgColor="#036A32" fgColor="#FFC314" url="https://twitter.com/elcb_social" />
                 <SocialIcon style={{ height: 30, width: 30, marginRight: '5px' }} bgColor="#036A32" fgColor="#FFC314" url="https://www.instagram.com/elcb_social" />
                 <SocialIcon style={{ height: 30, width: 30, marginRight: '5px' }} bgColor="#036A32" fgColor="#FFC314" url="https://www.facebook.com/eastlondoncommunityband" />

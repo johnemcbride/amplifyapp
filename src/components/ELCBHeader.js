@@ -40,7 +40,7 @@ function ELCBHeader({ userName, isLoggedIn, signOut }) {
                                 justify: 'center',
                                 paddingX: 0,
                             }}
-                            spacing={0} height={'100%'} container justifyContent={'center'} flexDirection={'column'} xs={6}>
+                            spacing={0} height={'100%'} container justifyContent={'center'} flexDirection={'column'} >
                             <Typography onClick={() => navigate("/")} height={'100%'} justifyContent={'center'} marginY={0} color={"orange"} fontWeight={'bold'} flexWrap={'wrap'}>
 
 
@@ -50,7 +50,7 @@ function ELCBHeader({ userName, isLoggedIn, signOut }) {
                         {
                             isLoggedIn ?
                                 <Grid height={'100%'} paddingY={'6px'} justify={'center'} flexDirection={'column'} item xs={6} align="right" marginX={0}>
-                                    <Button marginY={"6px"} size={'small'} onClick={() => setOpenDrawer(!openDrawer)} color="primary" variant="contained"  >Menu</Button>
+                                    <Button  size={'small'} onClick={() => setOpenDrawer(!openDrawer)} color="primary" variant="contained"  >Menu</Button>
                                 </Grid>
                                 : null}
 
