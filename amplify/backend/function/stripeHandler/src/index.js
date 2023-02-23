@@ -78,7 +78,7 @@ exports.handler = async (event) => {
   const variables = {
     input: {
       id: id,
-      status: 'boo'
+      status: 'paid'
     }
 
   }

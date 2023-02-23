@@ -1,42 +1,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateNote = /* GraphQL */ `
-  subscription OnCreateNote($filter: ModelSubscriptionNoteFilterInput) {
-    onCreateNote(filter: $filter) {
-      id
-      name
-      description
-      image
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateNote = /* GraphQL */ `
-  subscription OnUpdateNote($filter: ModelSubscriptionNoteFilterInput) {
-    onUpdateNote(filter: $filter) {
-      id
-      name
-      description
-      image
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteNote = /* GraphQL */ `
-  subscription OnDeleteNote($filter: ModelSubscriptionNoteFilterInput) {
-    onDeleteNote(filter: $filter) {
-      id
-      name
-      description
-      image
-      createdAt
-      updatedAt
-    }
-  }
-`;
 export const onCreateMember = /* GraphQL */ `
   subscription OnCreateMember(
     $filter: ModelSubscriptionMemberFilterInput
@@ -104,8 +68,20 @@ export const onCreateEnrolment = /* GraphQL */ `
       ratedescription
       rate
       stripeRef
+      member {
+        id
+        forename
+        surname
+        dateofbirth
+        ethnicity
+        instruments
+        createdAt
+        updatedAt
+        owner
+      }
       createdAt
       updatedAt
+      enrolmentMemberId
       owner
     }
   }
@@ -123,8 +99,20 @@ export const onUpdateEnrolment = /* GraphQL */ `
       ratedescription
       rate
       stripeRef
+      member {
+        id
+        forename
+        surname
+        dateofbirth
+        ethnicity
+        instruments
+        createdAt
+        updatedAt
+        owner
+      }
       createdAt
       updatedAt
+      enrolmentMemberId
       owner
     }
   }
@@ -142,8 +130,20 @@ export const onDeleteEnrolment = /* GraphQL */ `
       ratedescription
       rate
       stripeRef
+      member {
+        id
+        forename
+        surname
+        dateofbirth
+        ethnicity
+        instruments
+        createdAt
+        updatedAt
+        owner
+      }
       createdAt
       updatedAt
+      enrolmentMemberId
       owner
     }
   }
