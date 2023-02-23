@@ -3,7 +3,7 @@
 
 
 
-type Member @model @searchable @auth(rules: [{allow:owner}]) {
+type Member @model @auth(rules: [{allow:owner}]) {
   id: ID! @primaryKey(sortKeyFields: ["createdAt"]),
   forename: String,
   surname: String,
@@ -24,6 +24,7 @@ type Enrolment @model @auth(rules: [{allow:owner},
   ratedescription: String,
   rate: Float,
   stripeRef: String
+  member: Member @hasOne
 
 }
 

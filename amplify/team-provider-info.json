@@ -19,10 +19,6 @@
       "storage": {
         "imagestorage": {}
       },
-      "api": {
-        "amplifyapp": {},
-        "checkout": {}
-      },
       "function": {
         "checkout": {
           "deploymentBucketName": "amplify-amplifyc03145fb6ec14-staging-85212-deployment",
