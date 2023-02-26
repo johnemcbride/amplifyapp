@@ -261,7 +261,7 @@ function CaptureName({ formObject, handleBack, handleForward }) {
                             onBlur={handleBlur}
                             name="username"
                             label="User Name"
-                            value={values.username.toLowerCase()}
+                            value={values.username}
                             autoFocus
                             autocomplete='off'
                             fullWidth

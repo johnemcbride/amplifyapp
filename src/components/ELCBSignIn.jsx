@@ -184,7 +184,7 @@ export default function ELCBSignin({ handleLogin }) {
                   severity="error"
                   sx={{ width: "100%" }}
                 >
-                  Login failed - bum note ({error.message})
+                  Login failed ({error.message})
                 </Alert>
               </Snackbar>
             </>
