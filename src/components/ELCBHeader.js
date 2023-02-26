@@ -44,15 +44,10 @@ function ELCBHeader({ userName, isLoggedIn, signOut }) {
                             <Typography onClick={() => navigate("/")} height={'100%'} justifyContent={'center'} marginY={0} color={"orange"} fontWeight={'bold'} flexWrap={'wrap'}>
 
 
-                                EAST LONDON COMMUNITY BAND</Typography>
+                                <img height="50px"  src="https://static.wixstatic.com/media/ee0576_f5a8145481604ef99ea186c9da35fa5f~mv2.png/v1/fill/w_376,h_240,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/ee0576_f5a8145481604ef99ea186c9da35fa5f~mv2.png" />MEMBERSHIP PORTAL</Typography>
                         </Grid>
 
-                        {
-                            isLoggedIn ?
-                                <Grid height={'100%'} paddingY={'6px'} justify={'center'} flexDirection={'column'} item xs={6} align="right" marginX={0}>
-                                    <Button  size={'small'} onClick={() => setOpenDrawer(!openDrawer)} color="primary" variant="contained"  >Menu</Button>
-                                </Grid>
-                                : null}
+                            
 
                     </Grid>
 
