@@ -20,7 +20,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { orange, green } from '@mui/material/colors';
 
 
-import { withAuthenticator } from "@aws-amplify/ui-react";
 import awsconfig from './aws-exports';
 import { PrivateRoute } from "./components/PrivateRoute";
 import * as queries from './graphql/queries';

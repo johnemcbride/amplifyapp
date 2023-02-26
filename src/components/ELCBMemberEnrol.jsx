@@ -33,11 +33,16 @@ import { Auth } from "aws-amplify";
 import { useNavigate } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import moment from "moment";
-
 import { API } from "aws-amplify";
 
 import { createEnrolment as createEnrolmentMutation } from "../graphql/mutations";
 
+import { Enrolment, Member } from "../models";
+import { DataStore } from "aws-amplify";
+
+import awsconfig from "../aws-exports";
+import { Amplify } from "aws-amplify";
+Amplify.configure(awsconfig);
 function createData(band: string, start: string, finish: string) {
   return { band, start, finish };
 }
@@ -81,8 +86,11 @@ function calculateMembershipRate(dateofbirth, bands, siblings) {
     return ["£105.00 - (FULL)", 105];
   }
 }
-
 export default function ELCBMemberEnrol({ user }) {
+  console.log("bla");
+
+  //DataStore.save(new Enrolment({ status: "26 feb" })).then(console.log);
+  //DataStore.query(Enrolment).then(console.log);
   const [formObject, setFormObject] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [mode, setMode] = useState("pickbands");

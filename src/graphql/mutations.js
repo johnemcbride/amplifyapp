@@ -15,6 +15,9 @@ export const createMember = /* GraphQL */ `
       instruments
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       owner
     }
   }
@@ -33,6 +36,9 @@ export const updateMember = /* GraphQL */ `
       instruments
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       owner
     }
   }
@@ -51,6 +57,9 @@ export const deleteMember = /* GraphQL */ `
       instruments
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       owner
     }
   }
@@ -77,10 +86,16 @@ export const createEnrolment = /* GraphQL */ `
         instruments
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
         owner
       }
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       enrolmentMemberId
       owner
     }
@@ -108,10 +123,16 @@ export const updateEnrolment = /* GraphQL */ `
         instruments
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
         owner
       }
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       enrolmentMemberId
       owner
     }
@@ -139,10 +160,16 @@ export const deleteEnrolment = /* GraphQL */ `
         instruments
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
         owner
       }
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       enrolmentMemberId
       owner
     }

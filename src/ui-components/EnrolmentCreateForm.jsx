@@ -19,7 +19,7 @@ import {
   useTheme,
 } from "@aws-amplify/ui-react";
 import { getOverrideProps } from "@aws-amplify/ui-react/internal";
-import { Member } from "../models";
+import { Enrolment } from "../models";
 import { fetchByPath, validateField } from "./utils";
 import { DataStore } from "aws-amplify";
 function ArrayField({
@@ -169,7 +169,7 @@ function ArrayField({
     </React.Fragment>
   );
 }
-export default function MemberCreateForm(props) {
+export default function EnrolmentCreateForm(props) {
   const {
     clearOnSuccess = true,
     onSuccess,
@@ -181,44 +181,41 @@ export default function MemberCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    forename: "",
-    surname: "",
-    dateofbirth: "",
-    ethnicity: "",
-    instruments: [],
-    createdAt: "",
+    bands: [],
+    status: "",
+    term: "",
+    ratedescription: "",
+    rate: "",
+    stripeRef: "",
   };
-  const [forename, setForename] = React.useState(initialValues.forename);
-  const [surname, setSurname] = React.useState(initialValues.surname);
-  const [dateofbirth, setDateofbirth] = React.useState(
-    initialValues.dateofbirth
+  const [bands, setBands] = React.useState(initialValues.bands);
+  const [status, setStatus] = React.useState(initialValues.status);
+  const [term, setTerm] = React.useState(initialValues.term);
+  const [ratedescription, setRatedescription] = React.useState(
+    initialValues.ratedescription
   );
-  const [ethnicity, setEthnicity] = React.useState(initialValues.ethnicity);
-  const [instruments, setInstruments] = React.useState(
-    initialValues.instruments
-  );
-  const [createdAt, setCreatedAt] = React.useState(initialValues.createdAt);
+  const [rate, setRate] = React.useState(initialValues.rate);
+  const [stripeRef, setStripeRef] = React.useState(initialValues.stripeRef);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setForename(initialValues.forename);
-    setSurname(initialValues.surname);
-    setDateofbirth(initialValues.dateofbirth);
-    setEthnicity(initialValues.ethnicity);
-    setInstruments(initialValues.instruments);
-    setCurrentInstrumentsValue("");
-    setCreatedAt(initialValues.createdAt);
+    setBands(initialValues.bands);
+    setCurrentBandsValue("");
+    setStatus(initialValues.status);
+    setTerm(initialValues.term);
+    setRatedescription(initialValues.ratedescription);
+    setRate(initialValues.rate);
+    setStripeRef(initialValues.stripeRef);
     setErrors({});
   };
-  const [currentInstrumentsValue, setCurrentInstrumentsValue] =
-    React.useState("");
-  const instrumentsRef = React.createRef();
+  const [currentBandsValue, setCurrentBandsValue] = React.useState("");
+  const bandsRef = React.createRef();
   const validations = {
-    forename: [],
-    surname: [],
-    dateofbirth: [],
-    ethnicity: [],
-    instruments: [],
-    createdAt: [{ type: "Required" }],
+    bands: [],
+    status: [],
+    term: [],
+    ratedescription: [],
+    rate: [],
+    stripeRef: [],
   };
   const runValidationTasks = async (
     fieldName,
@@ -245,12 +242,12 @@ export default function MemberCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          forename,
-          surname,
-          dateofbirth,
-          ethnicity,
-          instruments,
-          createdAt,
+          bands,
+          status,
+          term,
+          ratedescription,
+          rate,
+          stripeRef,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -280,7 +277,7 @@ export default function MemberCreateForm(props) {
               modelFields[key] = undefined;
             }
           });
-          await DataStore.save(new Member(modelFields));
+          await DataStore.save(new Enrolment(modelFields));
           if (onSuccess) {
             onSuccess(modelFields);
           }
@@ -293,202 +290,203 @@ export default function MemberCreateForm(props) {
           }
         }
       }}
-      {...getOverrideProps(overrides, "MemberCreateForm")}
+      {...getOverrideProps(overrides, "EnrolmentCreateForm")}
       {...rest}
     >
-      <TextField
-        label="Forename"
-        isRequired={false}
-        isReadOnly={false}
-        value={forename}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              forename: value,
-              surname,
-              dateofbirth,
-              ethnicity,
-              instruments,
-              createdAt,
-            };
-            const result = onChange(modelFields);
-            value = result?.forename ?? value;
-          }
-          if (errors.forename?.hasError) {
-            runValidationTasks("forename", value);
-          }
-          setForename(value);
-        }}
-        onBlur={() => runValidationTasks("forename", forename)}
-        errorMessage={errors.forename?.errorMessage}
-        hasError={errors.forename?.hasError}
-        {...getOverrideProps(overrides, "forename")}
-      ></TextField>
-      <TextField
-        label="Surname"
-        isRequired={false}
-        isReadOnly={false}
-        value={surname}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              forename,
-              surname: value,
-              dateofbirth,
-              ethnicity,
-              instruments,
-              createdAt,
-            };
-            const result = onChange(modelFields);
-            value = result?.surname ?? value;
-          }
-          if (errors.surname?.hasError) {
-            runValidationTasks("surname", value);
-          }
-          setSurname(value);
-        }}
-        onBlur={() => runValidationTasks("surname", surname)}
-        errorMessage={errors.surname?.errorMessage}
-        hasError={errors.surname?.hasError}
-        {...getOverrideProps(overrides, "surname")}
-      ></TextField>
-      <TextField
-        label="Dateofbirth"
-        isRequired={false}
-        isReadOnly={false}
-        type="date"
-        value={dateofbirth}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              forename,
-              surname,
-              dateofbirth: value,
-              ethnicity,
-              instruments,
-              createdAt,
-            };
-            const result = onChange(modelFields);
-            value = result?.dateofbirth ?? value;
-          }
-          if (errors.dateofbirth?.hasError) {
-            runValidationTasks("dateofbirth", value);
-          }
-          setDateofbirth(value);
-        }}
-        onBlur={() => runValidationTasks("dateofbirth", dateofbirth)}
-        errorMessage={errors.dateofbirth?.errorMessage}
-        hasError={errors.dateofbirth?.hasError}
-        {...getOverrideProps(overrides, "dateofbirth")}
-      ></TextField>
-      <TextField
-        label="Ethnicity"
-        isRequired={false}
-        isReadOnly={false}
-        value={ethnicity}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              forename,
-              surname,
-              dateofbirth,
-              ethnicity: value,
-              instruments,
-              createdAt,
-            };
-            const result = onChange(modelFields);
-            value = result?.ethnicity ?? value;
-          }
-          if (errors.ethnicity?.hasError) {
-            runValidationTasks("ethnicity", value);
-          }
-          setEthnicity(value);
-        }}
-        onBlur={() => runValidationTasks("ethnicity", ethnicity)}
-        errorMessage={errors.ethnicity?.errorMessage}
-        hasError={errors.ethnicity?.hasError}
-        {...getOverrideProps(overrides, "ethnicity")}
-      ></TextField>
       <ArrayField
         onChange={async (items) => {
           let values = items;
           if (onChange) {
             const modelFields = {
-              forename,
-              surname,
-              dateofbirth,
-              ethnicity,
-              instruments: values,
-              createdAt,
+              bands: values,
+              status,
+              term,
+              ratedescription,
+              rate,
+              stripeRef,
             };
             const result = onChange(modelFields);
-            values = result?.instruments ?? values;
+            values = result?.bands ?? values;
           }
-          setInstruments(values);
-          setCurrentInstrumentsValue("");
+          setBands(values);
+          setCurrentBandsValue("");
         }}
-        currentFieldValue={currentInstrumentsValue}
-        label={"Instruments"}
-        items={instruments}
-        hasError={errors.instruments?.hasError}
-        setFieldValue={setCurrentInstrumentsValue}
-        inputFieldRef={instrumentsRef}
+        currentFieldValue={currentBandsValue}
+        label={"Bands"}
+        items={bands}
+        hasError={errors.bands?.hasError}
+        setFieldValue={setCurrentBandsValue}
+        inputFieldRef={bandsRef}
         defaultFieldValue={""}
       >
         <TextField
-          label="Instruments"
+          label="Bands"
           isRequired={false}
           isReadOnly={false}
-          value={currentInstrumentsValue}
+          value={currentBandsValue}
           onChange={(e) => {
             let { value } = e.target;
-            if (errors.instruments?.hasError) {
-              runValidationTasks("instruments", value);
+            if (errors.bands?.hasError) {
+              runValidationTasks("bands", value);
             }
-            setCurrentInstrumentsValue(value);
+            setCurrentBandsValue(value);
           }}
-          onBlur={() =>
-            runValidationTasks("instruments", currentInstrumentsValue)
-          }
-          errorMessage={errors.instruments?.errorMessage}
-          hasError={errors.instruments?.hasError}
-          ref={instrumentsRef}
+          onBlur={() => runValidationTasks("bands", currentBandsValue)}
+          errorMessage={errors.bands?.errorMessage}
+          hasError={errors.bands?.hasError}
+          ref={bandsRef}
           labelHidden={true}
-          {...getOverrideProps(overrides, "instruments")}
+          {...getOverrideProps(overrides, "bands")}
         ></TextField>
       </ArrayField>
       <TextField
-        label="Created at"
-        isRequired={true}
+        label="Status"
+        isRequired={false}
         isReadOnly={false}
-        value={createdAt}
+        value={status}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              forename,
-              surname,
-              dateofbirth,
-              ethnicity,
-              instruments,
-              createdAt: value,
+              bands,
+              status: value,
+              term,
+              ratedescription,
+              rate,
+              stripeRef,
             };
             const result = onChange(modelFields);
-            value = result?.createdAt ?? value;
+            value = result?.status ?? value;
           }
-          if (errors.createdAt?.hasError) {
-            runValidationTasks("createdAt", value);
+          if (errors.status?.hasError) {
+            runValidationTasks("status", value);
           }
-          setCreatedAt(value);
+          setStatus(value);
         }}
-        onBlur={() => runValidationTasks("createdAt", createdAt)}
-        errorMessage={errors.createdAt?.errorMessage}
-        hasError={errors.createdAt?.hasError}
-        {...getOverrideProps(overrides, "createdAt")}
+        onBlur={() => runValidationTasks("status", status)}
+        errorMessage={errors.status?.errorMessage}
+        hasError={errors.status?.hasError}
+        {...getOverrideProps(overrides, "status")}
+      ></TextField>
+      <TextField
+        label="Term"
+        isRequired={false}
+        isReadOnly={false}
+        value={term}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              bands,
+              status,
+              term: value,
+              ratedescription,
+              rate,
+              stripeRef,
+            };
+            const result = onChange(modelFields);
+            value = result?.term ?? value;
+          }
+          if (errors.term?.hasError) {
+            runValidationTasks("term", value);
+          }
+          setTerm(value);
+        }}
+        onBlur={() => runValidationTasks("term", term)}
+        errorMessage={errors.term?.errorMessage}
+        hasError={errors.term?.hasError}
+        {...getOverrideProps(overrides, "term")}
+      ></TextField>
+      <TextField
+        label="Ratedescription"
+        isRequired={false}
+        isReadOnly={false}
+        value={ratedescription}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              bands,
+              status,
+              term,
+              ratedescription: value,
+              rate,
+              stripeRef,
+            };
+            const result = onChange(modelFields);
+            value = result?.ratedescription ?? value;
+          }
+          if (errors.ratedescription?.hasError) {
+            runValidationTasks("ratedescription", value);
+          }
+          setRatedescription(value);
+        }}
+        onBlur={() => runValidationTasks("ratedescription", ratedescription)}
+        errorMessage={errors.ratedescription?.errorMessage}
+        hasError={errors.ratedescription?.hasError}
+        {...getOverrideProps(overrides, "ratedescription")}
+      ></TextField>
+      <TextField
+        label="Rate"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={rate}
+        onChange={(e) => {
+          let value = isNaN(parseFloat(e.target.value))
+            ? e.target.value
+            : parseFloat(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              bands,
+              status,
+              term,
+              ratedescription,
+              rate: value,
+              stripeRef,
+            };
+            const result = onChange(modelFields);
+            value = result?.rate ?? value;
+          }
+          if (errors.rate?.hasError) {
+            runValidationTasks("rate", value);
+          }
+          setRate(value);
+        }}
+        onBlur={() => runValidationTasks("rate", rate)}
+        errorMessage={errors.rate?.errorMessage}
+        hasError={errors.rate?.hasError}
+        {...getOverrideProps(overrides, "rate")}
+      ></TextField>
+      <TextField
+        label="Stripe ref"
+        isRequired={false}
+        isReadOnly={false}
+        value={stripeRef}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              bands,
+              status,
+              term,
+              ratedescription,
+              rate,
+              stripeRef: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.stripeRef ?? value;
+          }
+          if (errors.stripeRef?.hasError) {
+            runValidationTasks("stripeRef", value);
+          }
+          setStripeRef(value);
+        }}
+        onBlur={() => runValidationTasks("stripeRef", stripeRef)}
+        errorMessage={errors.stripeRef?.errorMessage}
+        hasError={errors.stripeRef?.hasError}
+        {...getOverrideProps(overrides, "stripeRef")}
       ></TextField>
       <Flex
         justifyContent="space-between"

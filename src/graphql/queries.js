@@ -12,6 +12,9 @@ export const getMember = /* GraphQL */ `
       instruments
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       owner
     }
   }
@@ -32,9 +35,45 @@ export const listMembers = /* GraphQL */ `
         instruments
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
         owner
       }
       nextToken
+      startedAt
+    }
+  }
+`;
+export const syncMembers = /* GraphQL */ `
+  query SyncMembers(
+    $filter: ModelMemberFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncMembers(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        forename
+        surname
+        dateofbirth
+        ethnicity
+        instruments
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        owner
+      }
+      nextToken
+      startedAt
     }
   }
 `;
@@ -57,10 +96,16 @@ export const getEnrolment = /* GraphQL */ `
         instruments
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
         owner
       }
       createdAt
       updatedAt
+      _version
+      _deleted
+      _lastChangedAt
       enrolmentMemberId
       owner
     }
@@ -83,10 +128,48 @@ export const listEnrolments = /* GraphQL */ `
         stripeRef
         createdAt
         updatedAt
+        _version
+        _deleted
+        _lastChangedAt
         enrolmentMemberId
         owner
       }
       nextToken
+      startedAt
+    }
+  }
+`;
+export const syncEnrolments = /* GraphQL */ `
+  query SyncEnrolments(
+    $filter: ModelEnrolmentFilterInput
+    $limit: Int
+    $nextToken: String
+    $lastSync: AWSTimestamp
+  ) {
+    syncEnrolments(
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+      lastSync: $lastSync
+    ) {
+      items {
+        id
+        bands
+        status
+        term
+        ratedescription
+        rate
+        stripeRef
+        createdAt
+        updatedAt
+        _version
+        _deleted
+        _lastChangedAt
+        enrolmentMemberId
+        owner
+      }
+      nextToken
+      startedAt
     }
   }
 `;

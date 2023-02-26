@@ -16,31 +16,28 @@ export declare type ValidationFunction<T> = (value: T, validationResponse: Valid
 export declare type MemberUpdateFormInputValues = {
     forename?: string;
     surname?: string;
-    dateOfBirth?: string;
-    addressLine1?: string;
-    addressLine2?: string;
-    town?: string;
-    postCode?: string;
+    dateofbirth?: string;
+    ethnicity?: string;
+    instruments?: string[];
+    createdAt?: string;
 };
 export declare type MemberUpdateFormValidationValues = {
     forename?: ValidationFunction<string>;
     surname?: ValidationFunction<string>;
-    dateOfBirth?: ValidationFunction<string>;
-    addressLine1?: ValidationFunction<string>;
-    addressLine2?: ValidationFunction<string>;
-    town?: ValidationFunction<string>;
-    postCode?: ValidationFunction<string>;
+    dateofbirth?: ValidationFunction<string>;
+    ethnicity?: ValidationFunction<string>;
+    instruments?: ValidationFunction<string>;
+    createdAt?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type MemberUpdateFormOverridesProps = {
     MemberUpdateFormGrid?: PrimitiveOverrideProps<GridProps>;
     forename?: PrimitiveOverrideProps<TextFieldProps>;
     surname?: PrimitiveOverrideProps<TextFieldProps>;
-    dateOfBirth?: PrimitiveOverrideProps<TextFieldProps>;
-    addressLine1?: PrimitiveOverrideProps<TextFieldProps>;
-    addressLine2?: PrimitiveOverrideProps<TextFieldProps>;
-    town?: PrimitiveOverrideProps<TextFieldProps>;
-    postCode?: PrimitiveOverrideProps<TextFieldProps>;
+    dateofbirth?: PrimitiveOverrideProps<TextFieldProps>;
+    ethnicity?: PrimitiveOverrideProps<TextFieldProps>;
+    instruments?: PrimitiveOverrideProps<TextFieldProps>;
+    createdAt?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type MemberUpdateFormProps = React.PropsWithChildren<{
     overrides?: MemberUpdateFormOverridesProps | undefined | null;

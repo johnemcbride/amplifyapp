@@ -1,48 +1,30 @@
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
-import { Link } from "react-router-dom";
-import NewMember from "./NewMember";
 import React, { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
 import TextField from "@mui/material/TextField";
 import FormControl, { formControlClasses } from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import InputLabel from "@mui/material/InputLabel";
 
 import CircularProgress from "@mui/material/CircularProgress";
-import { API } from "aws-amplify";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Checkbox from "@mui/material/Checkbox";
-import ToggleButton from "@mui/material/ToggleButton";
-import GroupAdd from "@mui/icons-material/GroupAdd";
 import { Formik, ErrorMessage, Field } from "formik";
 import { FormHelperText } from "@mui/material";
 import * as yup from "yup";
-import { Auth } from "aws-amplify";
 import { useNavigate } from "react-router-dom";
 
-import * as queries from "../graphql/queries";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import moment from "moment";
-import {
-  createMember as createMemberMutation,
-  updateMember as updateMemberMutation,
-} from "../graphql/mutations";
+
+import { Member } from "../models";
+import { DataStore } from "aws-amplify";
 
 String.prototype.capitalize = function (lower) {
   return (lower ? this.toLowerCase() : this).replace(
@@ -149,11 +131,23 @@ const instruments = [
   "Tubular Chimes",
 ];
 
-export default function ELCBMemberEnrol({ formObject, setFormObject }) {
+console.log("ping");
+export default function ELCBMemberEnrol() {
   const [mode, setMode] = useState("view");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [formObject, setFormObject] = useState({});
   const navigate = useNavigate();
+
+  // on mount - pre-fetch existing data
+  useEffect(() => {
+    DataStore.query(Member).then((result) => {
+      if (result.length > 0) {
+        setFormObject(result[0]);
+      }
+      setIsLoading(false);
+    });
+  }, []);
 
   async function createMember(values) {
     const data = {
@@ -164,14 +158,9 @@ export default function ELCBMemberEnrol({ formObject, setFormObject }) {
       instruments: values.instruments,
     };
     try {
-      await API.graphql({
-        query: createMemberMutation,
-        variables: { input: data },
-        authMode: "AMAZON_COGNITO_USER_POOLS",
-      });
+      await DataStore.save(new Member(data));
     } catch (e) {
       console.log(e);
-      // handler later
     }
   }
 
@@ -181,16 +170,18 @@ export default function ELCBMemberEnrol({ formObject, setFormObject }) {
       dateofbirth: values.dateofbirth.format("YYYY-MM-DDZ"),
     };
     try {
-      await API.graphql({
-        query: updateMemberMutation,
-        variables: { input: data },
-        authMode: "AMAZON_COGNITO_USER_POOLS",
-      }).then(() =>
-        setFormObject({
-          ...formObject,
-          ...values,
+      const result = await DataStore.save(
+        Member.copyOf(formObject, (updated) => {
+          updated.forename = data.forename;
+          updated.surname = data.surname;
+          updated.dateofbirth = data.dateofbirth;
+          updated.ethnicity = data.ethnicity;
+          updated.instruments = data.instruments;
+
+          console.log("updates is " + JSON.stringify(updated));
         })
       );
+      console.log(result);
     } catch (e) {
       console.log(e);
       // handler later
@@ -214,7 +205,7 @@ export default function ELCBMemberEnrol({ formObject, setFormObject }) {
   const handleBack = () => {};
   const updateProfile = () => {};
 
-  console.log(formObject);
+  //console.log(formObject);
 
   return (
     <Formik
