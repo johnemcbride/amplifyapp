@@ -13,6 +13,7 @@ import ELCBNewMember from "./components/ELCBNewMember"
 import ELCBMemberLanding from "./components/ELCBMemberLanding"
 import ELCBMemberEnrol from "./components/ELCBMemberEnrol"
 import ELCBSignIn from "./components/ELCBSignIn"
+import ELCBSignUp from "./components/ELCBSignUp"
 import ELCBMemberProfile from "./components/ELCBMemberProfile"
 import { Routes, Route } from "react-router-dom"
 import CssBaseline from "@mui/material/CssBaseline";
@@ -121,6 +122,7 @@ const App = ({ signOut }) => {
             <Routes>
 
             <Route path="/newmember" element={<ELCBNewMember />} />
+            <Route path="/signup" element={<ELCBSignUp />} />
             <Route path="/signin" element={<ELCBSignIn handleLogin={logIn} />} />
             <Route path="/landing" element={<PrivateRoute><ELCBMemberLanding /></PrivateRoute>} />
             <Route path="/enrol" element={<PrivateRoute><ELCBMemberEnrol user={user} /></PrivateRoute>} />

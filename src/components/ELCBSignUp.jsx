@@ -39,7 +39,7 @@ function Copyright(props) {
   );
 }
 
-export default function SignInSide() {
+export default function SignUpSide() {
   const [error, setError] = useState({ error: false, message: "" });
   const [formObject, setFormObject] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -73,7 +73,7 @@ export default function SignInSide() {
           md={7}
           sx={{
             backgroundImage:
-              "url(https://pbs.twimg.com/media/FBv9fhvXEGAfrKL?format=jpg&name=large)",
+              "url(https://pbs.twimg.com/media/E_31ryNVIAg0kxw?format=jpg&name=large)",
             backgroundRepeat: "no-repeat",
             backgroundColor: (t) =>
               t.palette.mode === "light"
@@ -148,7 +148,7 @@ export default function SignInSide() {
                     <LockOutlinedIcon />
                   </Avatar>
                   <Typography component="h1" variant="h5">
-                    Sign in
+                    Sign up
                   </Typography>
                   <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
                     <TextField
@@ -202,15 +202,10 @@ export default function SignInSide() {
                       ) : null}
                       Sign In
                     </Button>
-                    <Grid container>
-                      <Grid item xs>
-                        <Link href="#" variant="body2">
-                          Forgot password?
-                        </Link>
-                      </Grid>
+                    <Grid container justifyContent="flex-end">
                       <Grid item>
-                        <Link href="/signup" variant="body2">
-                          {"Don't have an account? Sign Up"}
+                        <Link href="/" variant="body2">
+                          {"Already have an account? Sign in"}
                         </Link>
                       </Grid>
                     </Grid>
