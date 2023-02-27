@@ -20,6 +20,12 @@ import { FormHelperText } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import moment from "moment";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
 function Copyright(props) {
   return (
@@ -46,8 +52,13 @@ export default function SignUpSide() {
   const navigate = useNavigate();
 
   const initialValues = {
-    username: formObject.username || "",
-    password: formObject.password || "",
+    forename: formObject.forename || "",
+    surname: formObject.surname || "",
+    dateofbirth:
+      formObject.dateofbirth != null
+        ? moment(formObject.dateofbirth, "YYYY-MM-DD")
+        : null,
+    ethnicity: formObject.ethnicity || "",
   };
 
   const handleClose = () => {
@@ -61,6 +72,10 @@ export default function SignUpSide() {
       navigate("/landing");
     })
     .catch(console.log);
+
+  const minDate = new Date(
+    new Date(new Date().setFullYear(new Date().getFullYear() - 100)).setDate(1)
+  );
 
   return (
     <>
@@ -85,10 +100,45 @@ export default function SignUpSide() {
         />
 
         <Formik
-          enableReinitialize
+          //enableReinitialize
           validationSchema={yup.object().shape({
-            username: yup.string().required("Required"),
-            password: yup.string().required("Required"),
+            username: yup
+              .string()
+              .required("Required")
+              .matches(
+                /[a-zA-Z0-9]/,
+                "Username can only contain non-special letters and numbers."
+              ),
+            password: yup
+              .string()
+              .required("No password provided.")
+              .min(8, "Password is too short - should be 8 chars minimum.")
+              .matches(
+                /[a-zA-Z0-9]/,
+                "Password can only contain non-special letters and numbers."
+              ),
+            confirmpassword: yup
+              .string()
+              .oneOf([yup.ref("password"), null], "Passwords must match"),
+            email: yup
+              .string()
+              .required("Please provide contact Email")
+              .email("Not a valid email"),
+            forename: yup.string().required("Required"),
+            surname: yup.string().required("Required"),
+            ethnicity: yup
+              .string()
+              .required(
+                "Please advise ethnic group for inclusion monitoring purposes"
+              ),
+            dateofbirth: yup
+              .date()
+              .max(new Date(), "Date must be in the past")
+              .min(minDate, "Check the year....")
+              .required("Required")
+              .typeError(
+                'Invalid Date - Expecting date in the format e.g "26th September 2001"'
+              ),
           })}
           initialValues={initialValues}
           onSubmit={(values) => {
@@ -151,36 +201,149 @@ export default function SignUpSide() {
                     Sign up
                   </Typography>
                   <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                    <TextField
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      margin="normal"
-                      name="username"
-                      label="User Name"
-                      value={values.username}
-                      autoFocus
-                      autoComplete="off"
-                      fullWidth
-                      error={errors.username && touched.username}
-                      type="text"
-                      helperText={<ErrorMessage name="username" />}
-                    />
+                    <Grid spacing={2} container>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          name="forename"
+                          margin="normal"
+                          label="Fore Name"
+                          value={values.forename}
+                          autoFocus
+                          autoComplete="off"
+                          fullWidth
+                          error={errors.forename && touched.forename}
+                          type="text"
+                          helperText={<ErrorMessage name="forename" />}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={6}>
+                        <TextField
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          margin="normal"
+                          name="surname"
+                          label="Surname"
+                          value={values.surname}
+                          autoComplete="off"
+                          fullWidth
+                          error={errors.surname && touched.surname}
+                          type="text"
+                          helperText={<ErrorMessage name="surname" />}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <LocalizationProvider dateAdapter={AdapterMoment}>
+                          <DatePicker
+                            onChange={(value) => {
+                              setFieldValue("dateofbirth", value, true);
+                              setFieldTouched("dateofbirth", true, false);
+                            }}
+                            inputFormat="DD/MM/yyyy"
+                            autocomplete="off"
+                            value={values.dateofbirth || null}
+                            fullWidth
+                            renderInput={(params) => (
+                              <TextField
+                                onBlur={(value) => {
+                                  setFieldTouched("dateofbirth", true, false);
+                                }}
+                                fullWidth
+                                name="dateofbirth"
+                                isInvalid={
+                                  errors.dateofbirth && touched.dateofbirth
+                                }
+                                {...params}
+                              />
+                            )}
+                          />
+                        </LocalizationProvider>
+                      </Grid>
 
-                    <TextField
-                      onChange={handleChange}
-                      margin="normal"
-                      onBlur={handleBlur}
-                      required
-                      name="password"
-                      label="Password"
-                      value={values.password}
-                      autoComplete="off"
-                      fullWidth
-                      error={errors.password && touched.password}
-                      type="password"
-                      helperText={<ErrorMessage name="password" />}
-                    />
-
+                      <Grid item xs={12} align="center">
+                        <ToggleButtonGroup
+                          fullWidth
+                          name="sex"
+                          color="primary"
+                          value={values.sex}
+                          exclusive
+                          onChange={(event, sex) => {
+                            setFieldValue("sex", sex);
+                          }}
+                        >
+                          <ToggleButton value="male">Male</ToggleButton>
+                          <ToggleButton value="female">Female</ToggleButton>
+                          <ToggleButton value="prefernotsay">
+                            Prefer Not Say
+                          </ToggleButton>
+                        </ToggleButtonGroup>
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          margin="normal"
+                          name="username"
+                          label="Pick A Username For Logging In"
+                          value={values.username}
+                          autoComplete="off"
+                          fullWidth
+                          error={errors.username && touched.username}
+                          type="text"
+                          helperText={<ErrorMessage name="username" />}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          margin="normal"
+                          name="email"
+                          label="Email Address"
+                          value={values.email}
+                          autoComplete="off"
+                          fullWidth
+                          error={errors.email && touched.email}
+                          type="email"
+                          helperText={<ErrorMessage name="email" />}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          onChange={handleChange}
+                          margin="normal"
+                          onBlur={handleBlur}
+                          required
+                          name="password"
+                          label="Password"
+                          value={values.password}
+                          autoComplete="off"
+                          fullWidth
+                          error={errors.password && touched.password}
+                          type="password"
+                          helperText={<ErrorMessage name="password" />}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          onChange={handleChange}
+                          margin="normal"
+                          onBlur={handleBlur}
+                          required
+                          name="confirmpassword"
+                          label="Confirm Password"
+                          value={values.confirmpassword}
+                          autoComplete="off"
+                          fullWidth
+                          error={
+                            errors.confirmpassword && touched.confirmpassword
+                          }
+                          type="password"
+                          helperText={<ErrorMessage name="confirmpassword" />}
+                        />
+                      </Grid>
+                    </Grid>
                     <Button
                       type="submit"
                       fullWidth
@@ -200,7 +363,7 @@ export default function SignUpSide() {
                           sx={{ marginX: "20px" }}
                         />
                       ) : null}
-                      Sign In
+                      Sign Up
                     </Button>
                     <Grid container justifyContent="flex-end">
                       <Grid item>
@@ -232,6 +395,7 @@ export default function SignUpSide() {
                   Login failed ({error.message})
                 </Alert>
               </Snackbar>
+              {console.log(JSON.stringify(errors))}
             </>
           )}
         </Formik>
