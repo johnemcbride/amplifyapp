@@ -118,10 +118,7 @@ const App = ({ signOut }) => {
     <>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Box height="100vh" display="flex" flexDirection="column">
-
-          <ELCBHeader signOut={signOut} isLoggedIn={isLoggedIn} userName={userName} />
-          <Routes>
+            <Routes>
 
             <Route path="/newmember" element={<ELCBNewMember />} />
             <Route path="/signin" element={<ELCBSignIn handleLogin={logIn} />} />
@@ -133,10 +130,8 @@ const App = ({ signOut }) => {
 
 
 
-          <ELCBFooter />
 
 
-        </Box>
       </ThemeProvider>
     </>
   );
