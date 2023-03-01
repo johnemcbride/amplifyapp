@@ -26,6 +26,16 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import StepWizard from "react-step-wizard";
+
+String.prototype.capitalize = function (lower) {
+  return (lower ? this.toLowerCase() : this).replace(
+    /(?:^|\s|['`‘’.-])[^\x00-\x60^\x7B-\xDF](?!(\s|$))/g,
+    function (a) {
+      return a.toUpperCase();
+    }
+  );
+};
 
 function Copyright(props) {
   return (
@@ -48,7 +58,8 @@ function Copyright(props) {
 export default function SignUpSide() {
   const [error, setError] = useState({ error: false, message: "" });
   const [formObject, setFormObject] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const [step, setStep] = useState(1);
   const navigate = useNavigate();
 
   const initialValues = {
@@ -59,6 +70,8 @@ export default function SignUpSide() {
         ? moment(formObject.dateofbirth, "YYYY-MM-DD")
         : null,
     ethnicity: formObject.ethnicity || "",
+    sex: "",
+    username: "",
   };
 
   const handleClose = () => {
@@ -68,7 +81,6 @@ export default function SignUpSide() {
   // if logged in redirect to real page
   Auth.currentAuthenticatedUser()
     .then((user) => {
-      console.log("logged in!");
       navigate("/landing");
     })
     .catch(console.log);
@@ -76,6 +88,10 @@ export default function SignUpSide() {
   const minDate = new Date(
     new Date(new Date().setFullYear(new Date().getFullYear() - 100)).setDate(1)
   );
+
+  const flashError = (error) => {
+    setError({ error: true, message: error.message });
+  };
 
   return (
     <>
@@ -119,6 +135,7 @@ export default function SignUpSide() {
               ),
             confirmpassword: yup
               .string()
+              .required("You must confirm your password")
               .oneOf([yup.ref("password"), null], "Passwords must match"),
             email: yup
               .string()
@@ -131,6 +148,7 @@ export default function SignUpSide() {
               .required(
                 "Please advise ethnic group for inclusion monitoring purposes"
               ),
+            sex: yup.string().required(),
             dateofbirth: yup
               .date()
               .max(new Date(), "Date must be in the past")
@@ -142,9 +160,6 @@ export default function SignUpSide() {
           })}
           initialValues={initialValues}
           onSubmit={(values) => {
-            console.log("Trying to log in");
-            console.log(values);
-            setIsSubmitting(true);
             setFormObject({
               ...formObject,
               ...values,
@@ -153,28 +168,14 @@ export default function SignUpSide() {
               Auth.signIn(values.username, values.password)
                 .then((user) => {
                   navigate("/landing");
-                  setIsSubmitting(false);
                 })
                 .catch((error) => {
                   setError({ error: true, message: error.message });
-                  setIsSubmitting(false);
-                  console.log("error signing in", error);
                 });
             } catch (error) {}
           }}
         >
-          {({
-            handleSubmit,
-            values,
-            touched,
-            isValid,
-            errors,
-            handleChange,
-            handleBlur,
-            setFieldValue,
-            setFieldTouched,
-            resetForm,
-          }) => (
+          {(props) => (
             <>
               <Grid
                 item
@@ -200,178 +201,17 @@ export default function SignUpSide() {
                   <Typography component="h1" variant="h5">
                     Sign up
                   </Typography>
-                  <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-                    <Grid spacing={2} container>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          name="forename"
-                          margin="normal"
-                          label="Fore Name"
-                          value={values.forename}
-                          autoFocus
-                          autoComplete="off"
-                          fullWidth
-                          error={errors.forename && touched.forename}
-                          type="text"
-                          helperText={<ErrorMessage name="forename" />}
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <TextField
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          margin="normal"
-                          name="surname"
-                          label="Surname"
-                          value={values.surname}
-                          autoComplete="off"
-                          fullWidth
-                          error={errors.surname && touched.surname}
-                          type="text"
-                          helperText={<ErrorMessage name="surname" />}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <LocalizationProvider dateAdapter={AdapterMoment}>
-                          <DatePicker
-                            onChange={(value) => {
-                              setFieldValue("dateofbirth", value, true);
-                              setFieldTouched("dateofbirth", true, false);
-                            }}
-                            inputFormat="DD/MM/yyyy"
-                            autocomplete="off"
-                            value={values.dateofbirth || null}
-                            fullWidth
-                            renderInput={(params) => (
-                              <TextField
-                                onBlur={(value) => {
-                                  setFieldTouched("dateofbirth", true, false);
-                                }}
-                                fullWidth
-                                name="dateofbirth"
-                                isInvalid={
-                                  errors.dateofbirth && touched.dateofbirth
-                                }
-                                {...params}
-                              />
-                            )}
-                          />
-                        </LocalizationProvider>
-                      </Grid>
+                  <Box
+                    component="form"
+                    onSubmit={props.handleSubmit}
+                    sx={{ mt: 1 }}
+                  >
+                    <StepWizard>
+                      <Step1 {...props} />
+                      <Step2 {...props} />
+                      <Step3 {...props} flashError={flashError} />
+                    </StepWizard>
 
-                      <Grid item xs={12} align="center">
-                        <ToggleButtonGroup
-                          fullWidth
-                          name="sex"
-                          color="primary"
-                          value={values.sex}
-                          exclusive
-                          onChange={(event, sex) => {
-                            setFieldValue("sex", sex);
-                          }}
-                        >
-                          <ToggleButton value="male">Male</ToggleButton>
-                          <ToggleButton value="female">Female</ToggleButton>
-                          <ToggleButton value="prefernotsay">
-                            Prefer Not Say
-                          </ToggleButton>
-                        </ToggleButtonGroup>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          margin="normal"
-                          name="username"
-                          label="Pick A Username For Logging In"
-                          value={values.username}
-                          autoComplete="off"
-                          fullWidth
-                          error={errors.username && touched.username}
-                          type="text"
-                          helperText={<ErrorMessage name="username" />}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                          margin="normal"
-                          name="email"
-                          label="Email Address"
-                          value={values.email}
-                          autoComplete="off"
-                          fullWidth
-                          error={errors.email && touched.email}
-                          type="email"
-                          helperText={<ErrorMessage name="email" />}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          onChange={handleChange}
-                          margin="normal"
-                          onBlur={handleBlur}
-                          required
-                          name="password"
-                          label="Password"
-                          value={values.password}
-                          autoComplete="off"
-                          fullWidth
-                          error={errors.password && touched.password}
-                          type="password"
-                          helperText={<ErrorMessage name="password" />}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          onChange={handleChange}
-                          margin="normal"
-                          onBlur={handleBlur}
-                          required
-                          name="confirmpassword"
-                          label="Confirm Password"
-                          value={values.confirmpassword}
-                          autoComplete="off"
-                          fullWidth
-                          error={
-                            errors.confirmpassword && touched.confirmpassword
-                          }
-                          type="password"
-                          helperText={<ErrorMessage name="confirmpassword" />}
-                        />
-                      </Grid>
-                    </Grid>
-                    <Button
-                      type="submit"
-                      fullWidth
-                      variant="contained"
-                      sx={{ mt: 3, mb: 2 }}
-                      disabled={
-                        !isValid ||
-                        (Object.keys(touched).length === 0 &&
-                          touched.constructor === Object) ||
-                        isSubmitting
-                      }
-                    >
-                      {isSubmitting ? (
-                        <CircularProgress
-                          size={20}
-                          color="secondary"
-                          sx={{ marginX: "20px" }}
-                        />
-                      ) : null}
-                      Sign Up
-                    </Button>
-                    <Grid container justifyContent="flex-end">
-                      <Grid item>
-                        <Link href="/" variant="body2">
-                          {"Already have an account? Sign in"}
-                        </Link>
-                      </Grid>
-                    </Grid>
                     <Copyright sx={{ mt: 5 }} />
                   </Box>
                 </Box>
@@ -382,7 +222,7 @@ export default function SignUpSide() {
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 onClose={() => {
                   handleClose();
-                  resetForm(initialValues);
+                  props.resetForm(initialValues);
                 }}
               >
                 <Alert
@@ -395,11 +235,305 @@ export default function SignUpSide() {
                   Login failed ({error.message})
                 </Alert>
               </Snackbar>
-              {console.log(JSON.stringify(errors))}
             </>
           )}
         </Formik>
       </Grid>
+    </>
+  );
+}
+
+function Step1({
+  handleBlur,
+  handleChange,
+  values,
+  touched,
+  errors,
+  setFieldValue,
+  setFieldTouched,
+  isValid,
+  ...props
+}) {
+  return (
+    <>
+      <Grid spacing={2} container>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            onChange={handleChange}
+            onBlur={handleBlur}
+            name="forename"
+            label="Forename"
+            value={values.forename.capitalize()}
+            autoComplete="off"
+            fullWidth
+            error={errors.forename && touched.forename}
+            type="text"
+            helperText={<ErrorMessage name="forename" />}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <TextField
+            onChange={handleChange}
+            onBlur={handleBlur}
+            name="surname"
+            label="Surname"
+            value={values.surname.capitalize()}
+            autoComplete="off"
+            fullWidth
+            error={errors.surname && touched.surname}
+            type="text"
+            helperText={<ErrorMessage name="surname" />}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <LocalizationProvider dateAdapter={AdapterMoment}>
+            <DatePicker
+              onChange={(value) => {
+                setFieldValue("dateofbirth", value, true);
+                setFieldTouched("dateofbirth", true, false);
+              }}
+              inputFormat="DD/MM/yyyy"
+              autocomplete="off"
+              label="Date Of Birth"
+              value={values.dateofbirth || null}
+              fullWidth
+              renderInput={(params) => (
+                <TextField
+                  onBlur={(value) => {
+                    setFieldTouched("dateofbirth", true, false);
+                  }}
+                  fullWidth
+                  name="dateofbirth"
+                  isInvalid={errors.dateofbirth && touched.dateofbirth}
+                  {...params}
+                />
+              )}
+            />
+          </LocalizationProvider>
+          <FormHelperText error={true}>
+            <ErrorMessage name="dateofbirth" />
+          </FormHelperText>
+        </Grid>
+
+        <Grid item xs={12} align="center">
+          <ToggleButtonGroup
+            fullWidth
+            name="sex"
+            color="primary"
+            value={values.sex}
+            exclusive
+            onChange={(event, sex) => {
+              setFieldValue("sex", sex);
+            }}
+          >
+            <ToggleButton value="male">Male</ToggleButton>
+            <ToggleButton value="female">Female</ToggleButton>
+            <ToggleButton value="other">Other</ToggleButton>
+          </ToggleButtonGroup>
+          <FormHelperText error={true}>
+            <ErrorMessage name="sex" />
+          </FormHelperText>
+        </Grid>
+      </Grid>
+      <Button
+        onClick={props.nextStep}
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+        disabled={
+          errors.forename ||
+          errors.surname ||
+          errors.dateofbirth ||
+          errors.sex ||
+          (Object.keys(touched).length === 0 && touched.constructor === Object)
+        }
+      >
+        Next
+      </Button>
+      <Grid container justifyContent="flex-end">
+        <Grid item>
+          <Link href="/" variant="body2">
+            {"Already have an account? Sign in"}
+          </Link>
+        </Grid>
+      </Grid>
+    </>
+  );
+}
+
+function Step2({
+  handleBlur,
+  handleChange,
+  values,
+  touched,
+  errors,
+  setFieldValue,
+  setFieldTouched,
+  ...props
+}) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  console.log("steo 2 - erorrs");
+  console.log(JSON.stringify(errors));
+  console.log("steo 2 - values");
+  console.log(JSON.stringify(values));
+
+  function handleRegisterUser() {
+    Auth.signUp({
+      username: values.username,
+      password: values.password,
+      attributes: {
+        email: values.email,
+        gender: values.sex,
+        birthdate: values.dateofbirth.format("MM/DD/yyyy"),
+        name: values.forename,
+        family_name: values.surname,
+      },
+      autoSignIn: {
+        // optional - enables auto sign in after user is confirmed
+        enabled: true,
+      },
+    }).then(() => {
+      props.nextStep();
+    });
+  }
+  return (
+    <>
+      <Grid spacing={2} container>
+        <Grid item xs={12}>
+          <TextField
+            onChange={handleChange}
+            onBlur={handleBlur}
+            margin="normal"
+            name="username"
+            label="Username"
+            value={values.username}
+            autoComplete="off"
+            fullWidth
+            error={errors.username && touched.username}
+            type="text"
+            helperText={<ErrorMessage name="username" />}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            onChange={handleChange}
+            onBlur={handleBlur}
+            margin="normal"
+            name="email"
+            label="Email Address"
+            value={values.email}
+            autoComplete="off"
+            fullWidth
+            error={errors.email && touched.email}
+            type="email"
+            helperText={<ErrorMessage name="email" />}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            onChange={handleChange}
+            margin="normal"
+            onBlur={handleBlur}
+            required
+            name="password"
+            label="Password"
+            value={values.password}
+            autoComplete="off"
+            fullWidth
+            error={errors.password && touched.password}
+            type="password"
+            helperText={<ErrorMessage name="password" />}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            onChange={handleChange}
+            margin="normal"
+            onBlur={handleBlur}
+            required
+            name="confirmpassword"
+            label="Confirm Password"
+            value={values.confirmpassword}
+            autoComplete="off"
+            fullWidth
+            error={errors.confirmpassword && touched.confirmpassword}
+            type="password"
+            helperText={<ErrorMessage name="confirmpassword" />}
+          />
+        </Grid>
+      </Grid>
+      <Button
+        onClick={handleRegisterUser}
+        fullWidth
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+        disabled={
+          errors.username ||
+          errors.email ||
+          errors.password ||
+          errors.confirmpassword ||
+          (Object.keys(touched).length === 0 && touched.constructor === Object)
+        }
+      >
+        Next
+      </Button>
+    </>
+  );
+}
+
+function Step3({
+  handleBlur,
+  handleChange,
+  values,
+  touched,
+  errors,
+  setFieldValue,
+  setFieldTouched,
+  flashError,
+  ...props
+}) {
+  const navigate = useNavigate();
+  function handleConfirmCode() {
+    Auth.confirmSignUp(values.username, values.code)
+      .then(() => {
+        navigate("/landing");
+      })
+      .catch((error) => {
+        console.log("grrrrr");
+        flashError(error);
+      });
+  }
+  return (
+    <>
+      <Grid spacing={2} container>
+        <Grid item xs={12}>
+          <TextField
+            onChange={handleChange}
+            onBlur={handleBlur}
+            margin="normal"
+            name="code"
+            label="Verification Code"
+            value={values.code}
+            autoComplete="off"
+            fullWidth
+            error={errors.code && touched.code}
+            type="text"
+            helperText={<ErrorMessage name="code" />}
+          />
+        </Grid>
+      </Grid>
+      <Button
+        fullWidth
+        onClick={handleConfirmCode}
+        variant="contained"
+        sx={{ mt: 3, mb: 2 }}
+        disabled={
+          errors.code ||
+          (Object.keys(touched).length === 0 && touched.constructor === Object)
+        }
+      >
+        Sign Up
+      </Button>
     </>
   );
 }

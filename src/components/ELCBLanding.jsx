@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -30,7 +29,7 @@ function Copyright(props) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" href="https://www.eastlondoncommunityband.co.uk">
+      <Link color="inherit" to="https://www.eastlondoncommunityband.co.uk">
         East London Community Band
       </Link>{" "}
       {new Date().getFullYear()}
@@ -158,7 +157,6 @@ export default function SignInSide() {
                       name="username"
                       label="User Name"
                       value={values.username}
-                      autoFocus
                       autoComplete="off"
                       fullWidth
                       error={errors.username && touched.username}
@@ -202,20 +200,20 @@ export default function SignInSide() {
                       ) : null}
                       Sign In
                     </Button>
-                    <Grid container>
-                      <Grid item xs>
-                        <Link href="#" variant="body2">
-                          Forgot password?
-                        </Link>
-                      </Grid>
-                      <Grid item>
-                        <Link href="/signup" variant="body2">
-                          {"Don't have an account? Sign Up"}
-                        </Link>
-                      </Grid>
-                    </Grid>
-                    <Copyright sx={{ mt: 5 }} />
                   </Box>
+                  <Grid container>
+                    <Grid item xs>
+                      <Link href="#" variant="body2">
+                        Forgot password?
+                      </Link>
+                    </Grid>
+                    <Grid item>
+                      <Link to="/signup" variant="body2">
+                        {"Don't have an account? Sign Up"}
+                      </Link>
+                    </Grid>
+                  </Grid>
+                  <Copyright sx={{ mt: 5 }} />
                 </Box>
               </Grid>
               <Snackbar
