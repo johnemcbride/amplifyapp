@@ -6,6 +6,7 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
+import Switch from "@mui/material/Switch";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
 import StarIcon from "@mui/icons-material/StarBorder";
@@ -15,8 +16,16 @@ import Link from "@mui/material/Link";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import Container from "@mui/material/Container";
 import { Auth } from "aws-amplify";
+
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
+import { useNavigate, Navigate } from "react-router-dom";
 import Snackbar from "@mui/material/Snackbar";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import PeopleIcon from "@mui/icons-material/PeopleOutlined";
 import Avatar from "@mui/material/Avatar";
 import { Formik, ErrorMessage, Field } from "formik";
 
@@ -52,24 +61,6 @@ function Copyright(props) {
   );
 }
 
-const tiers = [
-  {
-    title: "Full",
-    subheader: "Most popular",
-    price: "105.00",
-    description: ["Any band included"],
-    buttonText: "Get started",
-    buttonVariant: "contained",
-  },
-  {
-    title: "Limited",
-    price: "52.50",
-    description: ["Access to one small band only"],
-    buttonText: "Get started",
-    buttonVariant: "outlined",
-  },
-];
-
 const footers = [
   {
     title: "Company",
@@ -101,9 +92,49 @@ const footers = [
 ];
 
 export default function PricingContent() {
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const navigate = useNavigate();
   const handleClose = () => {
     setError({ error: false });
   };
+
+  const age = (birthdate) => {
+    return moment().diff(birthdate, "years");
+  };
+  const handleSaveProfile = (values) => {
+    setIsSubmitting(true);
+    console.log("handle svae profile" + JSON.stringify(values));
+    const updated = {
+      ...values,
+      birthdate: moment(values.birthdate).format("MM/DD/YYYY"),
+    };
+    delete updated.sibling;
+    Auth.updateUserAttributes(user, updated)
+      .then((user) => {
+        setIsSubmitting(false);
+        navigate(0);
+      })
+      .catch((error) => {
+        setError({ error: true, message: error.message });
+        setIsSubmitting(false);
+      });
+  };
+
+  const toggleSiblings = () => {
+    console.log("toggling" + JSON.stringify(user));
+    Auth.updateUserAttributes(user, {
+      profile: user.attributes.profile === "siblings" ? "" : "siblings",
+    })
+      .then(() => {
+        console.log("toggled successfully");
+        navigate(0);
+      })
+      .catch((error) => {
+        setError({ error: true, message: error.message });
+        setIsSubmitting(false);
+      });
+  };
+
   const minDate = new Date(
     new Date(new Date().setFullYear(new Date().getFullYear() - 100)).setDate(1)
   );
@@ -121,8 +152,9 @@ export default function PricingContent() {
   const initialValues = {
     name: user.attributes?.name || "",
     family_name: user.attributes?.family_name || "",
-    dateofbirth: user.attributes?.birthdate || "",
-    sex: user.attributes?.gender || "",
+    birthdate: user.attributes?.birthdate || "",
+    gender: user.attributes?.gender || "",
+    sibling: user.attributes?.profile === "siblings" ? true : false,
   };
   console.log(initialValues);
 
@@ -257,130 +289,201 @@ export default function PricingContent() {
                       alignItems: "center",
                     }}
                   >
-                    <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                      <AccountCircleOutlinedIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
-                      Manage Profile
-                    </Typography>
-                    <Box
-                      component="form"
-                      onSubmit={handleSubmit}
-                      sx={{ mt: 1 }}
-                    >
-                      <Grid spacing={2} container>
-                        <Grid item xs={12} sm={6}>
-                          <TextField
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            name="name"
-                            label="Forename"
-                            value={values.name.capitalize()}
-                            autoComplete="off"
-                            fullWidth
-                            error={errors.name && touched.name}
-                            type="text"
-                            helperText={<ErrorMessage name="name" />}
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                          <TextField
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            name="family_name"
-                            label="Surname"
-                            value={values.family_name.capitalize()}
-                            autoComplete="off"
-                            fullWidth
-                            error={errors.surname && touched.surname}
-                            type="text"
-                            helperText={<ErrorMessage name="surname" />}
-                          />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <LocalizationProvider dateAdapter={AdapterMoment}>
-                            <DatePicker
-                              onChange={(value) => {
-                                setFieldValue("dateofbirth", value, true);
-                                setFieldTouched("dateofbirth", true, false);
-                              }}
-                              inputFormat="DD/MM/yyyy"
-                              autocomplete="off"
-                              label="Date Of Birth"
-                              value={values.dateofbirth || null}
-                              fullWidth
-                              renderInput={(params) => (
-                                <TextField
-                                  onBlur={(value) => {
-                                    setFieldTouched("dateofbirth", true, false);
+                    <Accordion>
+                      <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                      >
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                            <AccountCircleOutlinedIcon />
+                          </Avatar>
+                          <Typography alignItems={"center"}>
+                            Manage Profile
+                          </Typography>
+                        </Box>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                        <Box
+                          component="form"
+                          onSubmit={handleSubmit}
+                          sx={{ mt: 1 }}
+                        >
+                          <Grid spacing={2} container>
+                            <Grid item xs={12} sm={6}>
+                              <TextField
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                name="name"
+                                label="Forename"
+                                value={values.name.capitalize()}
+                                autoComplete="off"
+                                fullWidth
+                                error={errors.name && touched.name}
+                                type="text"
+                                helperText={<ErrorMessage name="name" />}
+                              />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                              <TextField
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                name="family_name"
+                                label="Surname"
+                                value={values.family_name.capitalize()}
+                                autoComplete="off"
+                                fullWidth
+                                error={errors.surname && touched.surname}
+                                type="text"
+                                helperText={<ErrorMessage name="surname" />}
+                              />
+                            </Grid>
+                            <Grid item xs={12}>
+                              <LocalizationProvider dateAdapter={AdapterMoment}>
+                                <DatePicker
+                                  onChange={(value) => {
+                                    setFieldValue("birthdate", value, true);
+                                    setFieldTouched("birthdate", true, false);
                                   }}
+                                  inputFormat="DD/MM/yyyy"
+                                  autocomplete="off"
+                                  label="Date Of Birth"
+                                  value={values.birthdate || null}
                                   fullWidth
-                                  name="dateofbirth"
-                                  isInvalid={
-                                    errors.dateofbirth && touched.dateofbirth
-                                  }
-                                  {...params}
+                                  renderInput={(params) => (
+                                    <TextField
+                                      onBlur={(value) => {
+                                        setFieldTouched(
+                                          "birthdate",
+                                          true,
+                                          false
+                                        );
+                                      }}
+                                      fullWidth
+                                      name="birthdate"
+                                      error={
+                                        errors.birthdate && touched.birthdate
+                                      }
+                                      {...params}
+                                    />
+                                  )}
                                 />
-                              )}
-                            />
-                          </LocalizationProvider>
-                          <FormHelperText error={true}>
-                            <ErrorMessage name="dateofbirth" />
-                          </FormHelperText>
-                        </Grid>
+                              </LocalizationProvider>
+                              <FormHelperText error={true}>
+                                <ErrorMessage name="birthdate" />
+                              </FormHelperText>
+                            </Grid>
 
-                        <Grid item xs={12} align="center">
-                          <ToggleButtonGroup
-                            fullWidth
-                            name="sex"
-                            color="primary"
-                            value={values.sex}
-                            exclusive
-                            onChange={(event, sex) => {
-                              setFieldValue("sex", sex);
+                            <Grid item xs={12} align="center">
+                              <ToggleButtonGroup
+                                fullWidth
+                                name="gender"
+                                color="primary"
+                                value={values.gender}
+                                exclusive
+                                onChange={(event, sex) => {
+                                  setFieldValue("gender", sex);
+                                }}
+                              >
+                                <ToggleButton value="male">Male</ToggleButton>
+                                <ToggleButton value="female">
+                                  Female
+                                </ToggleButton>
+                                <ToggleButton value="other">Other</ToggleButton>
+                              </ToggleButtonGroup>
+                              <FormHelperText error={true}>
+                                <ErrorMessage name="gender" />
+                              </FormHelperText>
+                            </Grid>
+
+                            <Grid item xs={12}>
+                              {" "}
+                              <Button
+                                fullWidth
+                                onClick={() => {
+                                  handleSaveProfile(values);
+                                }}
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                                disabled={
+                                  errors.code ||
+                                  (Object.keys(touched).length === 0 &&
+                                    touched.constructor === Object)
+                                }
+                              >
+                                {isSubmitting ? (
+                                  <CircularProgress
+                                    size={20}
+                                    color="secondary"
+                                    sx={{ marginX: "20px" }}
+                                  />
+                                ) : null}
+                                Save
+                              </Button>
+                            </Grid>
+                          </Grid>
+                        </Box>
+                      </AccordionDetails>
+                    </Accordion>
+                    {age(user.attributes?.birthdate) < 30 ? (
+                      <Accordion>
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="panel1a-content"
+                          id="panel1a-header"
+                        >
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
                             }}
                           >
-                            <ToggleButton value="male">Male</ToggleButton>
-                            <ToggleButton value="female">Female</ToggleButton>
-                            <ToggleButton value="other">Other</ToggleButton>
-                          </ToggleButtonGroup>
-                          <FormHelperText error={true}>
-                            <ErrorMessage name="sex" />
-                          </FormHelperText>
-                        </Grid>
-
-                        <Grid item xs={12}>
-                          <TextField
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            name="username"
-                            label="Username"
-                            value={values.username}
-                            autoComplete="off"
-                            fullWidth
-                            error={errors.username && touched.username}
-                            type="text"
-                            helperText={<ErrorMessage name="username" />}
-                          />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <TextField
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            name="email"
-                            label="Email Address"
-                            value={values.email}
-                            autoComplete="off"
-                            fullWidth
-                            error={errors.email && touched.email}
-                            type="email"
-                            helperText={<ErrorMessage name="email" />}
-                          />
-                        </Grid>
-                      </Grid>
-                    </Box>
+                            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+                              <PeopleIcon />
+                            </Avatar>
+                            <Typography alignItems={"center"}>
+                              Manage Siblings
+                            </Typography>
+                          </Box>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          <Box
+                            component="form"
+                            onSubmit={handleSubmit}
+                            sx={{ mt: 1 }}
+                          >
+                            <Grid spacing={2} container>
+                              <Grid item xs={12}>
+                                <FormControlLabel
+                                  onChange={() => {
+                                    values.sibling = !values.sibling;
+                                    toggleSiblings();
+                                  }}
+                                  control={
+                                    <Switch
+                                      checked={values.sibling}
+                                      inputProps={{
+                                        "aria-label": "controlled",
+                                      }}
+                                    />
+                                  }
+                                  label="I have at least one sibling under age 30 who is in the band"
+                                />
+                              </Grid>
+                            </Grid>
+                          </Box>
+                        </AccordionDetails>
+                      </Accordion>
+                    ) : null}
                   </Box>
                 </Grid>
+
                 <Snackbar
                   open={error.error}
                   autoHideDuration={6000}
@@ -397,7 +500,7 @@ export default function PricingContent() {
                     severity="error"
                     sx={{ width: "100%" }}
                   >
-                    Login failed ({error.message})
+                    Update failed ({error.message})
                   </Alert>
                 </Snackbar>
               </>

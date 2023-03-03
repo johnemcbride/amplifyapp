@@ -15,6 +15,7 @@ import Link from "@mui/material/Link";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import Container from "@mui/material/Container";
 import { Auth } from "aws-amplify";
+import moment from "moment";
 
 function Copyright(props) {
   return (
@@ -83,6 +84,9 @@ const footers = [
 ];
 
 export default function PricingContent() {
+  const age = (birthdate) => {
+    return moment().diff(birthdate, "years");
+  };
   const [user, setUser] = React.useState({});
   const [isLoaded, setIsLoaded] = React.useState(false);
   React.useEffect(() => {
@@ -163,8 +167,11 @@ export default function PricingContent() {
           color="text.secondary"
           component="p"
         >
-          Choose one of the membership tiers below to join one or more of our
+          Choose one of the membership options below to join one or more of our
           bands.
+          {age <= 30
+            ? "If you have any siblings in the band, please update your profile to avail of sibling discount."
+            : null}
         </Typography>
       </Container>
       {/* End hero unit */}
