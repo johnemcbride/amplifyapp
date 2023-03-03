@@ -11,11 +11,16 @@ import Grid from "@mui/material/Grid";
 import StarIcon from "@mui/icons-material/StarBorder";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import Chip from "@mui/material/Chip";
 import Link from "@mui/material/Link";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import Container from "@mui/material/Container";
 import { Auth } from "aws-amplify";
 import moment from "moment";
+
+const age = (birthdate) => {
+  return moment().diff(birthdate, "years");
+};
 
 function Copyright(props) {
   return (
@@ -34,24 +39,6 @@ function Copyright(props) {
     </Typography>
   );
 }
-
-const tiers = [
-  {
-    title: "Full",
-    subheader: "Most popular",
-    price: "105.00",
-    description: ["Any band included"],
-    buttonText: "Get started",
-    buttonVariant: "contained",
-  },
-  {
-    title: "Limited",
-    price: "52.50",
-    description: ["Access to one small band only"],
-    buttonText: "Get started",
-    buttonVariant: "outlined",
-  },
-];
 
 const footers = [
   {
@@ -84,9 +71,6 @@ const footers = [
 ];
 
 export default function PricingContent() {
-  const age = (birthdate) => {
-    return moment().diff(birthdate, "years");
-  };
   const [user, setUser] = React.useState({});
   const [isLoaded, setIsLoaded] = React.useState(false);
   React.useEffect(() => {
@@ -97,6 +81,46 @@ export default function PricingContent() {
       console.log(JSON.stringify(user.attributes.email));
     });
   }, []);
+
+  let tiers = [];
+  if (
+    user.attributes?.profile === "siblings" &&
+    age(user.attributes?.birthdate) < 30
+  ) {
+    tiers = [
+      {
+        title: "Full",
+        subheader: "Most popular",
+        price: "26.25",
+        description: ["Any band included"],
+        buttonText: "Get started",
+        buttonVariant: "contained",
+        discount: "Discount: Sibling Under 30",
+      },
+    ];
+  } else {
+    tiers = [
+      {
+        title: "Full",
+        subheader: "Most popular",
+        price: age(user.attributes?.birthdate) <= 30 ? "52.50" : "105.00",
+        description: ["Any band included"],
+        buttonText: "Get started",
+        buttonVariant: "contained",
+        discount:
+          age(user.attributes?.birthdate) <= 30 ? "Discount: Under 30" : "",
+      },
+      {
+        title: "Limited",
+        price: age(user.attributes?.birthdate) <= 30 ? "26.25" : "52.50",
+        description: ["Access to one small band only"],
+        buttonText: "Get started",
+        buttonVariant: "outlined",
+        discount:
+          age(user.attributes?.birthdate) <= 30 ? "Discount: Under 30" : "",
+      },
+    ];
+  }
 
   return (
     <>
@@ -169,8 +193,8 @@ export default function PricingContent() {
         >
           Choose one of the membership options below to join one or more of our
           bands.
-          {age <= 30
-            ? "If you have any siblings in the band, please update your profile to avail of sibling discount."
+          {age(user.attributes?.birthdate) <= 30
+            ? "  If you have any siblings in the band, please update your profile to avail of sibling discount."
             : null}
         </Typography>
       </Container>
@@ -179,12 +203,7 @@ export default function PricingContent() {
         <Grid container spacing={5} alignItems="flex-end">
           {tiers.map((tier) => (
             // Enterprise card is full width at sm breakpoint
-            <Grid
-              item
-              key={tier.title}
-              xs={12}
-              sm={tier.title === "Enterprise" ? 12 : 6}
-            >
+            <Grid item key={tier.title} xs={12} sm={12 / tiers.length}>
               <Card>
                 <CardHeader
                   title={tier.title}
@@ -233,6 +252,12 @@ export default function PricingContent() {
                       </Typography>
                     ))}
                   </ul>
+                  <Container align="center">
+                    {" "}
+                    {tier.discount !== "" ? (
+                      <Chip color="success" label={tier.discount} />
+                    ) : null}
+                  </Container>
                 </CardContent>
                 <CardActions>
                   <Button fullWidth variant={tier.buttonVariant}>

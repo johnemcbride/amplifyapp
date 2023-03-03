@@ -279,7 +279,7 @@ export default function PricingContent() {
             }) => (
               <>
                 {console.log(values)}
-                <Grid item xs={12} sm={8} md={5} elevation={6} square>
+                <Grid item xs={12} sm={8} elevation={6} square>
                   <Box
                     sx={{
                       my: 8,
@@ -289,7 +289,7 @@ export default function PricingContent() {
                       alignItems: "center",
                     }}
                   >
-                    <Accordion>
+                    <Accordion xs={12}>
                       <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
                         aria-controls="panel1a-content"
@@ -432,7 +432,7 @@ export default function PricingContent() {
                       </AccordionDetails>
                     </Accordion>
                     {age(user.attributes?.birthdate) < 30 ? (
-                      <Accordion>
+                      <Accordion fullWidth>
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="panel1a-content"
@@ -461,6 +461,7 @@ export default function PricingContent() {
                             <Grid spacing={2} container>
                               <Grid item xs={12}>
                                 <FormControlLabel
+                                  fullWidth
                                   onChange={() => {
                                     values.sibling = !values.sibling;
                                     toggleSiblings();
