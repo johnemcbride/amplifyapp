@@ -77,26 +77,11 @@ export const createEnrolment = /* GraphQL */ `
       ratedescription
       rate
       stripeRef
-      member {
-        id
-        forename
-        surname
-        dateofbirth
-        ethnicity
-        instruments
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        owner
-      }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      enrolmentMemberId
       owner
     }
   }
@@ -114,26 +99,11 @@ export const updateEnrolment = /* GraphQL */ `
       ratedescription
       rate
       stripeRef
-      member {
-        id
-        forename
-        surname
-        dateofbirth
-        ethnicity
-        instruments
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        owner
-      }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      enrolmentMemberId
       owner
     }
   }
@@ -151,26 +121,11 @@ export const deleteEnrolment = /* GraphQL */ `
       ratedescription
       rate
       stripeRef
-      member {
-        id
-        forename
-        surname
-        dateofbirth
-        ethnicity
-        instruments
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        owner
-      }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      enrolmentMemberId
       owner
     }
   }

@@ -17,6 +17,9 @@ import GlobalStyles from "@mui/material/GlobalStyles";
 import Container from "@mui/material/Container";
 import { Auth } from "aws-amplify";
 import moment from "moment";
+import { API } from "aws-amplify";
+
+import { useNavigate, Navigate } from "react-router-dom";
 
 const age = (birthdate) => {
   return moment().diff(birthdate, "years");
@@ -71,7 +74,9 @@ const footers = [
 ];
 
 export default function PricingContent() {
+  const navigate = useNavigate();
   const [user, setUser] = React.useState({});
+  const [session, setSession] = React.useState({});
   const [isLoaded, setIsLoaded] = React.useState(false);
   React.useEffect(() => {
     // Update the document title using the browser API
@@ -79,6 +84,11 @@ export default function PricingContent() {
       setUser(user);
       setIsLoaded(true);
       console.log(JSON.stringify(user.attributes.email));
+    });
+
+    Auth.currentSession().then((session) => {
+      setSession(session);
+      console.log(session);
     });
   }, []);
 
@@ -89,35 +99,39 @@ export default function PricingContent() {
   ) {
     tiers = [
       {
-        title: "Full",
-        subheader: "Most popular",
+        title: "All Bands - Without Tuition",
         price: "26.25",
         description: ["Any band included"],
         buttonText: "Get started",
         buttonVariant: "contained",
         discount: "Discount: Sibling Under 30",
+        bands: "big",
+        lessons: false,
       },
     ];
   } else {
     tiers = [
       {
-        title: "Full",
-        subheader: "Most popular",
+        title: "All Bands - Without Tuition",
         price: age(user.attributes?.birthdate) <= 30 ? "52.50" : "105.00",
         description: ["Any band included"],
         buttonText: "Get started",
         buttonVariant: "contained",
         discount:
           age(user.attributes?.birthdate) <= 30 ? "Discount: Under 30" : "",
+        bands: "big",
+        lessons: false,
       },
       {
-        title: "Limited",
+        title: "One Small Band Only - No Tuition",
         price: age(user.attributes?.birthdate) <= 30 ? "26.25" : "52.50",
         description: ["Access to one small band only"],
         buttonText: "Get started",
         buttonVariant: "outlined",
         discount:
           age(user.attributes?.birthdate) <= 30 ? "Discount: Under 30" : "",
+        bands: "small",
+        lessons: false,
       },
     ];
   }
@@ -136,8 +150,11 @@ export default function PricingContent() {
       >
         <Toolbar sx={{ flexWrap: "wrap" }}>
           <Typography variant="h6" color="inherit" sx={{ flexGrow: 1 }}>
-            East London Community Band
+            <Link color="text.primary" href="/" sx={{ my: 1, mx: 1.5 }}>
+              East London Community Band
+            </Link>
           </Typography>
+
           <nav>
             <Link
               variant="button"
@@ -147,22 +164,6 @@ export default function PricingContent() {
             >
               Profile
             </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              Membership
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              Attendance
-            </Link>
           </nav>
           <Button href="/signout" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
             Logout
@@ -171,7 +172,7 @@ export default function PricingContent() {
       </AppBar>
       {/* Hero unit */}
       <Container
-        disableGutters
+        // disableGutters
         maxWidth="sm"
         component="main"
         sx={{ pt: 8, pb: 6 }}
@@ -209,7 +210,7 @@ export default function PricingContent() {
                   title={tier.title}
                   subheader={tier.subheader}
                   titleTypographyProps={{ align: "center" }}
-                  action={tier.title === "Full" ? <StarIcon /> : null}
+                  action={null}
                   subheaderTypographyProps={{
                     align: "center",
                   }}
@@ -260,7 +261,21 @@ export default function PricingContent() {
                   </Container>
                 </CardContent>
                 <CardActions>
-                  <Button fullWidth variant={tier.buttonVariant}>
+                  <Button
+                    onClick={() => {
+                      API.post("checkout", "/checkout", {
+                        body: {
+                          accesskey: session.accessToken,
+                          bands: tier.bands,
+                          lessons: tier.lessons,
+                        },
+                      }).then((res) => {
+                        window.location.replace(res.url);
+                      });
+                    }}
+                    fullWidth
+                    variant={tier.buttonVariant}
+                  >
                     {tier.buttonText}
                   </Button>
                 </CardActions>
@@ -276,28 +291,10 @@ export default function PricingContent() {
         sx={{
           borderTop: (theme) => `1px solid ${theme.palette.divider}`,
           mt: 8,
-          py: [3, 6],
+          py: [1, 1],
         }}
       >
-        <Grid container spacing={4} justifyContent="space-evenly">
-          {footers.map((footer) => (
-            <Grid item xs={6} sm={3} key={footer.title}>
-              <Typography variant="h6" color="text.primary" gutterBottom>
-                {footer.title}
-              </Typography>
-              <ul>
-                {footer.description.map((item) => (
-                  <li key={item}>
-                    <Link href="#" variant="subtitle1" color="text.secondary">
-                      {item}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </Grid>
-          ))}
-        </Grid>
-        <Copyright sx={{ mt: 5 }} />
+        <Copyright sx={{ mt: 0 }} />
       </Container>
     </>
   );

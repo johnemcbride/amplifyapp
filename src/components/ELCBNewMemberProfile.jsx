@@ -172,32 +172,19 @@ export default function PricingContent() {
       >
         <Toolbar sx={{ flexWrap: "wrap" }}>
           <Typography variant="h6" color="inherit" sx={{ flexGrow: 1 }}>
-            East London Community Band
+            <Link color="text.primary" href="/" sx={{ my: 1, mx: 1.5 }}>
+              East London Community Band
+            </Link>
           </Typography>
+
           <nav>
             <Link
               variant="button"
               color="text.primary"
-              href="#"
+              href="/profile"
               sx={{ my: 1, mx: 1.5 }}
             >
               Profile
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              Membership
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="#"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              Attendance
             </Link>
           </nav>
           <Button href="/signout" variant="outlined" sx={{ my: 1, mx: 1.5 }}>

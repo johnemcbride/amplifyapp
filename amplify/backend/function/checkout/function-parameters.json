@@ -2,7 +2,15 @@
   "permissions": {
     "api": {
       "amplifyapp": [
-        "Query"
+        "Query",
+        "Mutation"
+      ]
+    },
+    "auth": {
+      "amplifyapp0cb91442": [
+        "create",
+        "read",
+        "update"
       ]
     }
   },

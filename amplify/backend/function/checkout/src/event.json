@@ -117,6 +117,7 @@
     "identity": {
       "cognitoIdentityPoolId": "eu-west-2:a9f056ac-44b7-4905-b801-079535dc062e",
       "accountId": "228447865234",
+      "accessKey": "ASIATKMENZGJPQORHQEI",
       "cognitoIdentityId": "eu-west-2:23d47942-2c39-4031-97da-d7d847d1cee1",
       "caller": "AROATKMENZGJDC633FUJC:CognitoIdentityCredentials",
       "sourceIp": "92.40.217.186",
@@ -130,6 +131,6 @@
     "domainName": "e1ko4yyc4m.execute-api.eu-west-2.amazonaws.com",
     "apiId": "e1ko4yyc4m"
   },
-  "body": "{\"id\":\"4328428a-f031-4e3c-8902-72af96bcbda2\"}",
+  "body": "{\"accesskey\":\"eyJraWQiOiJLQTh1QktTNDdMOExrMjVqbTVVQnQ2VE5STW5WK2lXRjhyS2NwMDEyVGtrPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIxNTUwYmRjNi1jYWM0LTQyNGUtYTI1ZC1kMDhlMTIzNjZmMGEiLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYmlydGhkYXRlIjoiMTJcLzEyXC8yMDAwIiwiZ2VuZGVyIjoibWFsZSIsInByb2ZpbGUiOiJzaWJsaW5ncyIsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC5ldS13ZXN0LTIuYW1hem9uYXdzLmNvbVwvZXUtd2VzdC0yX2I4enptS0piSSIsImNvZ25pdG86dXNlcm5hbWUiOiJqb2huYmFuZCIsIm9yaWdpbl9qdGkiOiJiNTMxZjYyMi0yMDVlLTRiYzItOWRiMy05MjBmN2EwMzMzZWMiLCJhdWQiOiJzbTF1bGFiM25lYnJ0M2E4YWI0Z3J0MDE2IiwiZXZlbnRfaWQiOiI0M2VhZmMwMy0wNThmLTRkOWUtYjc4NC1kZmYwMTcyZjllNzUiLCJ0b2tlbl91c2UiOiJpZCIsImF1dGhfdGltZSI6MTY3Nzg2MjE2OSwibmFtZSI6IkpvaG4iLCJleHAiOjE2Nzc5NjI3NTQsImlhdCI6MTY3Nzk1OTE1NCwiZmFtaWx5X25hbWUiOiJNY0JyaWRleSIsImp0aSI6ImU1YTNjYTM2LTE1NWUtNGYwNy05MTkyLTMyODJiMWUxMjkzNCIsImVtYWlsIjoiam9obi5lLm1jYnJpZGVAaWNsb3VkLmNvbSJ9.UQNJmFKe0J2uqk1sUddjEzOPeyw4DB8NZwzLbZ1yTEg8zV00P9BpimQ2_IIsz2IbEwWYAjKL5OmxSUyUMr_qvvt38nsK9agzh8vuMsY_I_vEuPjPC9J87EOVZwgX86_9w0sn-fDcu2I-gGO6CJxppok2DGBJpFyhvwwJT0QIilvWQlRKbVjbZGsR9UlQlCSpm-Z_w-zW5tKnmYq7JMGIPU_ZZqZ9X64135MYjuOYy8kuzRran5mPuKWuE10NhXrQ51xFgo8v9REnK6KEJPTyDUjIYkLjyYBdVyJE737UVcNZwUkfCcs8p-ZkveDa4_efY0si5yGXey3owXAymzvQLw\"}",
   "isBase64Encoded": false
 }

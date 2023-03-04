@@ -143,24 +143,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "member": {
-                    "name": "member",
-                    "isArray": false,
-                    "type": {
-                        "model": "Member"
-                    },
-                    "isRequired": false,
-                    "attributes": [],
-                    "association": {
-                        "connectionType": "HAS_ONE",
-                        "associatedWith": [
-                            "id"
-                        ],
-                        "targetNames": [
-                            "enrolmentMemberId"
-                        ]
-                    }
-                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -176,13 +158,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": [],
                     "isReadOnly": true
-                },
-                "enrolmentMemberId": {
-                    "name": "enrolmentMemberId",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
                 }
             },
             "syncable": true,
@@ -227,5 +202,5 @@ export const schema = {
     "enums": {},
     "nonModels": {},
     "codegenVersion": "3.3.5",
-    "version": "34312d46e3c81ed5055ceaa4b06c38d9"
+    "version": "96e2c218c52d6b9248198623abb1c445"
 };

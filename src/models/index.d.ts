@@ -1,6 +1,6 @@
 import { ModelInit, MutableModel, __modelMeta__, ManagedIdentifier } from "@aws-amplify/datastore";
 // @ts-ignore
-import { LazyLoading, LazyLoadingDisabled, AsyncItem } from "@aws-amplify/datastore";
+import { LazyLoading, LazyLoadingDisabled } from "@aws-amplify/datastore";
 
 
 
@@ -54,10 +54,8 @@ type EagerEnrolment = {
   readonly ratedescription?: string | null;
   readonly rate?: number | null;
   readonly stripeRef?: string | null;
-  readonly member?: Member | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  readonly enrolmentMemberId?: string | null;
 }
 
 type LazyEnrolment = {
@@ -72,10 +70,8 @@ type LazyEnrolment = {
   readonly ratedescription?: string | null;
   readonly rate?: number | null;
   readonly stripeRef?: string | null;
-  readonly member: AsyncItem<Member | undefined>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
-  readonly enrolmentMemberId?: string | null;
 }
 
 export declare type Enrolment = LazyLoading extends LazyLoadingDisabled ? EagerEnrolment : LazyEnrolment

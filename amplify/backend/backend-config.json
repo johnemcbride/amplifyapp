@@ -97,6 +97,13 @@
           ],
           "category": "api",
           "resourceName": "amplifyapp"
+        },
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "amplifyapp0cb91442"
         }
       ],
       "providerPlugin": "awscloudformation",

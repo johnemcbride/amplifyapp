@@ -87,26 +87,11 @@ export const getEnrolment = /* GraphQL */ `
       ratedescription
       rate
       stripeRef
-      member {
-        id
-        forename
-        surname
-        dateofbirth
-        ethnicity
-        instruments
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        owner
-      }
       createdAt
       updatedAt
       _version
       _deleted
       _lastChangedAt
-      enrolmentMemberId
       owner
     }
   }
@@ -131,7 +116,6 @@ export const listEnrolments = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        enrolmentMemberId
         owner
       }
       nextToken
@@ -165,7 +149,6 @@ export const syncEnrolments = /* GraphQL */ `
         _version
         _deleted
         _lastChangedAt
-        enrolmentMemberId
         owner
       }
       nextToken
