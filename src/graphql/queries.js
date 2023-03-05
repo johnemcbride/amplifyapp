@@ -1,82 +1,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getMember = /* GraphQL */ `
-  query GetMember($id: ID!) {
-    getMember(id: $id) {
-      id
-      forename
-      surname
-      dateofbirth
-      ethnicity
-      instruments
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      owner
-    }
-  }
-`;
-export const listMembers = /* GraphQL */ `
-  query ListMembers(
-    $filter: ModelMemberFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listMembers(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        forename
-        surname
-        dateofbirth
-        ethnicity
-        instruments
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        owner
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
-export const syncMembers = /* GraphQL */ `
-  query SyncMembers(
-    $filter: ModelMemberFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncMembers(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        forename
-        surname
-        dateofbirth
-        ethnicity
-        instruments
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        owner
-      }
-      nextToken
-      startedAt
-    }
-  }
-`;
 export const getEnrolment = /* GraphQL */ `
   query GetEnrolment($id: ID!) {
     getEnrolment(id: $id) {
@@ -84,8 +8,11 @@ export const getEnrolment = /* GraphQL */ `
       bands
       status
       term
-      ratedescription
-      rate
+      bandDesc
+      bandRate
+      lessons
+      lessonDesc
+      lessonRate
       stripeRef
       createdAt
       updatedAt
@@ -108,8 +35,11 @@ export const listEnrolments = /* GraphQL */ `
         bands
         status
         term
-        ratedescription
-        rate
+        bandDesc
+        bandRate
+        lessons
+        lessonDesc
+        lessonRate
         stripeRef
         createdAt
         updatedAt
@@ -141,8 +71,11 @@ export const syncEnrolments = /* GraphQL */ `
         bands
         status
         term
-        ratedescription
-        rate
+        bandDesc
+        bandRate
+        lessons
+        lessonDesc
+        lessonRate
         stripeRef
         createdAt
         updatedAt

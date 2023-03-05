@@ -30,7 +30,5 @@ export { default as Features2x2 } from "./Features2x2";
 export { default as NavBar } from "./NavBar";
 export { default as Features2x3 } from "./Features2x3";
 export { default as studioTheme } from "./studioTheme";
-export { default as MemberCreateForm } from "./MemberCreateForm";
-export { default as MemberUpdateForm } from "./MemberUpdateForm";
 export { default as EnrolmentCreateForm } from "./EnrolmentCreateForm";
 export { default as EnrolmentUpdateForm } from "./EnrolmentUpdateForm";

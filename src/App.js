@@ -53,7 +53,7 @@ let theme = createTheme({
     palette: {
 
       primary: {
-        main: '#353535',
+        main: '#46AD8D',
       },
       secondary: {
         main: green,
@@ -69,23 +69,6 @@ let theme = createTheme({
   }
 });
 
-async function getProfile() {
-  try{
-    return API.graphql({
-      query: queries.listMembers,
-      variables: {
-        limit: 1,
-        order: [['createdAt', 'ASC']]
-      },
-      authMode: "AMAZON_COGNITO_USER_POOLS"
-    })
-  }
-  catch{
-    console.log("Not logged in")
-  }
- 
-}
-
 
 const App = ({ signOut }) => {
   const [members, setMembers] = useState([]);
@@ -100,20 +83,7 @@ const App = ({ signOut }) => {
 
 
   useEffect(() => {
-    getProfile().then(
-      d => {
-        console.log('got profile');
-        setUser(
-          {
-            ...user,
-            ...d.data.listMembers.items[0]
-
-          })
-
-
-      }).catch(
-      
-      console.log)
+   
   }, []);
 
   return (

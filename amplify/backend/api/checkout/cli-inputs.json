@@ -1,6 +1,13 @@
 {
   "version": 1,
   "paths": {
+    "/checkout/response": {
+      "name": "/checkout/response",
+      "lambdaFunction": "stripeHandler",
+      "permissions": {
+        "setting": "open"
+      }
+    },
     "/checkout": {
       "name": "/checkout",
       "lambdaFunction": "checkout",
@@ -10,13 +17,6 @@
           "create",
           "read"
         ]
-      }
-    },
-    "/checkout/response": {
-      "name": "/checkout/response",
-      "lambdaFunction": "stripeHandler",
-      "permissions": {
-        "setting": "open"
       }
     }
   }

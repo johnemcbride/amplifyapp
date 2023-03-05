@@ -44,7 +44,7 @@
             "Arn"
           ],
           "category": "function",
-          "resourceName": "checkout"
+          "resourceName": "stripeHandler"
         },
         {
           "attributes": [
@@ -52,7 +52,7 @@
             "Arn"
           ],
           "category": "function",
-          "resourceName": "stripeHandler"
+          "resourceName": "checkout"
         }
       ],
       "providerPlugin": "awscloudformation",

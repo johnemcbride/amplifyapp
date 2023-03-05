@@ -99,7 +99,8 @@ export default function PricingContent() {
   ) {
     tiers = [
       {
-        title: "All Bands - Without Tuition",
+        title: "All Bands",
+        subheader: "Without Tuition",
         price: "26.25",
         description: ["Any band included"],
         buttonText: "Get started",
@@ -112,7 +113,8 @@ export default function PricingContent() {
   } else {
     tiers = [
       {
-        title: "All Bands - Without Tuition",
+        title: "All Bands",
+        subheader: "Without Tuition",
         price: age(user.attributes?.birthdate) <= 30 ? "52.50" : "105.00",
         description: ["Any band included"],
         buttonText: "Get started",
@@ -123,7 +125,8 @@ export default function PricingContent() {
         lessons: false,
       },
       {
-        title: "One Small Band Only - No Tuition",
+        title: "One Small Band Only",
+        subheader: "Without Tuition",
         price: age(user.attributes?.birthdate) <= 30 ? "26.25" : "52.50",
         description: ["Access to one small band only"],
         buttonText: "Get started",

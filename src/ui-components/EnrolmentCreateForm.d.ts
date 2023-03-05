@@ -5,7 +5,7 @@
  **************************************************************************/
 
 import * as React from "react";
-import { GridProps, TextFieldProps } from "@aws-amplify/ui-react";
+import { GridProps, SwitchFieldProps, TextFieldProps } from "@aws-amplify/ui-react";
 import { EscapeHatchProps } from "@aws-amplify/ui-react/internal";
 export declare type ValidationResponse = {
     hasError: boolean;
@@ -16,16 +16,22 @@ export declare type EnrolmentCreateFormInputValues = {
     bands?: string[];
     status?: string;
     term?: string;
-    ratedescription?: string;
-    rate?: number;
+    bandDesc?: string;
+    bandRate?: number;
+    lessons?: boolean;
+    lessonDesc?: number;
+    lessonRate?: string;
     stripeRef?: string;
 };
 export declare type EnrolmentCreateFormValidationValues = {
     bands?: ValidationFunction<string>;
     status?: ValidationFunction<string>;
     term?: ValidationFunction<string>;
-    ratedescription?: ValidationFunction<string>;
-    rate?: ValidationFunction<number>;
+    bandDesc?: ValidationFunction<string>;
+    bandRate?: ValidationFunction<number>;
+    lessons?: ValidationFunction<boolean>;
+    lessonDesc?: ValidationFunction<number>;
+    lessonRate?: ValidationFunction<string>;
     stripeRef?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
@@ -34,8 +40,11 @@ export declare type EnrolmentCreateFormOverridesProps = {
     bands?: PrimitiveOverrideProps<TextFieldProps>;
     status?: PrimitiveOverrideProps<TextFieldProps>;
     term?: PrimitiveOverrideProps<TextFieldProps>;
-    ratedescription?: PrimitiveOverrideProps<TextFieldProps>;
-    rate?: PrimitiveOverrideProps<TextFieldProps>;
+    bandDesc?: PrimitiveOverrideProps<TextFieldProps>;
+    bandRate?: PrimitiveOverrideProps<TextFieldProps>;
+    lessons?: PrimitiveOverrideProps<SwitchFieldProps>;
+    lessonDesc?: PrimitiveOverrideProps<TextFieldProps>;
+    lessonRate?: PrimitiveOverrideProps<TextFieldProps>;
     stripeRef?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type EnrolmentCreateFormProps = React.PropsWithChildren<{

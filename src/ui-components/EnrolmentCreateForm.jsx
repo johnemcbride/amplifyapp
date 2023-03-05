@@ -14,6 +14,7 @@ import {
   Grid,
   Icon,
   ScrollView,
+  SwitchField,
   Text,
   TextField,
   useTheme,
@@ -184,17 +185,21 @@ export default function EnrolmentCreateForm(props) {
     bands: [],
     status: "",
     term: "",
-    ratedescription: "",
-    rate: "",
+    bandDesc: "",
+    bandRate: "",
+    lessons: false,
+    lessonDesc: "",
+    lessonRate: "",
     stripeRef: "",
   };
   const [bands, setBands] = React.useState(initialValues.bands);
   const [status, setStatus] = React.useState(initialValues.status);
   const [term, setTerm] = React.useState(initialValues.term);
-  const [ratedescription, setRatedescription] = React.useState(
-    initialValues.ratedescription
-  );
-  const [rate, setRate] = React.useState(initialValues.rate);
+  const [bandDesc, setBandDesc] = React.useState(initialValues.bandDesc);
+  const [bandRate, setBandRate] = React.useState(initialValues.bandRate);
+  const [lessons, setLessons] = React.useState(initialValues.lessons);
+  const [lessonDesc, setLessonDesc] = React.useState(initialValues.lessonDesc);
+  const [lessonRate, setLessonRate] = React.useState(initialValues.lessonRate);
   const [stripeRef, setStripeRef] = React.useState(initialValues.stripeRef);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
@@ -202,8 +207,11 @@ export default function EnrolmentCreateForm(props) {
     setCurrentBandsValue("");
     setStatus(initialValues.status);
     setTerm(initialValues.term);
-    setRatedescription(initialValues.ratedescription);
-    setRate(initialValues.rate);
+    setBandDesc(initialValues.bandDesc);
+    setBandRate(initialValues.bandRate);
+    setLessons(initialValues.lessons);
+    setLessonDesc(initialValues.lessonDesc);
+    setLessonRate(initialValues.lessonRate);
     setStripeRef(initialValues.stripeRef);
     setErrors({});
   };
@@ -213,8 +221,11 @@ export default function EnrolmentCreateForm(props) {
     bands: [],
     status: [],
     term: [],
-    ratedescription: [],
-    rate: [],
+    bandDesc: [],
+    bandRate: [],
+    lessons: [],
+    lessonDesc: [],
+    lessonRate: [],
     stripeRef: [],
   };
   const runValidationTasks = async (
@@ -245,8 +256,11 @@ export default function EnrolmentCreateForm(props) {
           bands,
           status,
           term,
-          ratedescription,
-          rate,
+          bandDesc,
+          bandRate,
+          lessons,
+          lessonDesc,
+          lessonRate,
           stripeRef,
         };
         const validationResponses = await Promise.all(
@@ -301,8 +315,11 @@ export default function EnrolmentCreateForm(props) {
               bands: values,
               status,
               term,
-              ratedescription,
-              rate,
+              bandDesc,
+              bandRate,
+              lessons,
+              lessonDesc,
+              lessonRate,
               stripeRef,
             };
             const result = onChange(modelFields);
@@ -351,8 +368,11 @@ export default function EnrolmentCreateForm(props) {
               bands,
               status: value,
               term,
-              ratedescription,
-              rate,
+              bandDesc,
+              bandRate,
+              lessons,
+              lessonDesc,
+              lessonRate,
               stripeRef,
             };
             const result = onChange(modelFields);
@@ -380,8 +400,11 @@ export default function EnrolmentCreateForm(props) {
               bands,
               status,
               term: value,
-              ratedescription,
-              rate,
+              bandDesc,
+              bandRate,
+              lessons,
+              lessonDesc,
+              lessonRate,
               stripeRef,
             };
             const result = onChange(modelFields);
@@ -398,10 +421,10 @@ export default function EnrolmentCreateForm(props) {
         {...getOverrideProps(overrides, "term")}
       ></TextField>
       <TextField
-        label="Ratedescription"
+        label="Band desc"
         isRequired={false}
         isReadOnly={false}
-        value={ratedescription}
+        value={bandDesc}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -409,30 +432,33 @@ export default function EnrolmentCreateForm(props) {
               bands,
               status,
               term,
-              ratedescription: value,
-              rate,
+              bandDesc: value,
+              bandRate,
+              lessons,
+              lessonDesc,
+              lessonRate,
               stripeRef,
             };
             const result = onChange(modelFields);
-            value = result?.ratedescription ?? value;
+            value = result?.bandDesc ?? value;
           }
-          if (errors.ratedescription?.hasError) {
-            runValidationTasks("ratedescription", value);
+          if (errors.bandDesc?.hasError) {
+            runValidationTasks("bandDesc", value);
           }
-          setRatedescription(value);
+          setBandDesc(value);
         }}
-        onBlur={() => runValidationTasks("ratedescription", ratedescription)}
-        errorMessage={errors.ratedescription?.errorMessage}
-        hasError={errors.ratedescription?.hasError}
-        {...getOverrideProps(overrides, "ratedescription")}
+        onBlur={() => runValidationTasks("bandDesc", bandDesc)}
+        errorMessage={errors.bandDesc?.errorMessage}
+        hasError={errors.bandDesc?.hasError}
+        {...getOverrideProps(overrides, "bandDesc")}
       ></TextField>
       <TextField
-        label="Rate"
+        label="Band rate"
         isRequired={false}
         isReadOnly={false}
         type="number"
         step="any"
-        value={rate}
+        value={bandRate}
         onChange={(e) => {
           let value = isNaN(parseFloat(e.target.value))
             ? e.target.value
@@ -442,22 +468,125 @@ export default function EnrolmentCreateForm(props) {
               bands,
               status,
               term,
-              ratedescription,
-              rate: value,
+              bandDesc,
+              bandRate: value,
+              lessons,
+              lessonDesc,
+              lessonRate,
               stripeRef,
             };
             const result = onChange(modelFields);
-            value = result?.rate ?? value;
+            value = result?.bandRate ?? value;
           }
-          if (errors.rate?.hasError) {
-            runValidationTasks("rate", value);
+          if (errors.bandRate?.hasError) {
+            runValidationTasks("bandRate", value);
           }
-          setRate(value);
+          setBandRate(value);
         }}
-        onBlur={() => runValidationTasks("rate", rate)}
-        errorMessage={errors.rate?.errorMessage}
-        hasError={errors.rate?.hasError}
-        {...getOverrideProps(overrides, "rate")}
+        onBlur={() => runValidationTasks("bandRate", bandRate)}
+        errorMessage={errors.bandRate?.errorMessage}
+        hasError={errors.bandRate?.hasError}
+        {...getOverrideProps(overrides, "bandRate")}
+      ></TextField>
+      <SwitchField
+        label="Lessons"
+        defaultChecked={false}
+        isDisabled={false}
+        isChecked={lessons}
+        onChange={(e) => {
+          let value = e.target.checked;
+          if (onChange) {
+            const modelFields = {
+              bands,
+              status,
+              term,
+              bandDesc,
+              bandRate,
+              lessons: value,
+              lessonDesc,
+              lessonRate,
+              stripeRef,
+            };
+            const result = onChange(modelFields);
+            value = result?.lessons ?? value;
+          }
+          if (errors.lessons?.hasError) {
+            runValidationTasks("lessons", value);
+          }
+          setLessons(value);
+        }}
+        onBlur={() => runValidationTasks("lessons", lessons)}
+        errorMessage={errors.lessons?.errorMessage}
+        hasError={errors.lessons?.hasError}
+        {...getOverrideProps(overrides, "lessons")}
+      ></SwitchField>
+      <TextField
+        label="Lesson desc"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={lessonDesc}
+        onChange={(e) => {
+          let value = isNaN(parseFloat(e.target.value))
+            ? e.target.value
+            : parseFloat(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              bands,
+              status,
+              term,
+              bandDesc,
+              bandRate,
+              lessons,
+              lessonDesc: value,
+              lessonRate,
+              stripeRef,
+            };
+            const result = onChange(modelFields);
+            value = result?.lessonDesc ?? value;
+          }
+          if (errors.lessonDesc?.hasError) {
+            runValidationTasks("lessonDesc", value);
+          }
+          setLessonDesc(value);
+        }}
+        onBlur={() => runValidationTasks("lessonDesc", lessonDesc)}
+        errorMessage={errors.lessonDesc?.errorMessage}
+        hasError={errors.lessonDesc?.hasError}
+        {...getOverrideProps(overrides, "lessonDesc")}
+      ></TextField>
+      <TextField
+        label="Lesson rate"
+        isRequired={false}
+        isReadOnly={false}
+        value={lessonRate}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              bands,
+              status,
+              term,
+              bandDesc,
+              bandRate,
+              lessons,
+              lessonDesc,
+              lessonRate: value,
+              stripeRef,
+            };
+            const result = onChange(modelFields);
+            value = result?.lessonRate ?? value;
+          }
+          if (errors.lessonRate?.hasError) {
+            runValidationTasks("lessonRate", value);
+          }
+          setLessonRate(value);
+        }}
+        onBlur={() => runValidationTasks("lessonRate", lessonRate)}
+        errorMessage={errors.lessonRate?.errorMessage}
+        hasError={errors.lessonRate?.hasError}
+        {...getOverrideProps(overrides, "lessonRate")}
       ></TextField>
       <TextField
         label="Stripe ref"
@@ -471,8 +600,11 @@ export default function EnrolmentCreateForm(props) {
               bands,
               status,
               term,
-              ratedescription,
-              rate,
+              bandDesc,
+              bandRate,
+              lessons,
+              lessonDesc,
+              lessonRate,
               stripeRef: value,
             };
             const result = onChange(modelFields);

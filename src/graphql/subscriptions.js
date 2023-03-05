@@ -1,69 +1,6 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const onCreateMember = /* GraphQL */ `
-  subscription OnCreateMember(
-    $filter: ModelSubscriptionMemberFilterInput
-    $owner: String
-  ) {
-    onCreateMember(filter: $filter, owner: $owner) {
-      id
-      forename
-      surname
-      dateofbirth
-      ethnicity
-      instruments
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      owner
-    }
-  }
-`;
-export const onUpdateMember = /* GraphQL */ `
-  subscription OnUpdateMember(
-    $filter: ModelSubscriptionMemberFilterInput
-    $owner: String
-  ) {
-    onUpdateMember(filter: $filter, owner: $owner) {
-      id
-      forename
-      surname
-      dateofbirth
-      ethnicity
-      instruments
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      owner
-    }
-  }
-`;
-export const onDeleteMember = /* GraphQL */ `
-  subscription OnDeleteMember(
-    $filter: ModelSubscriptionMemberFilterInput
-    $owner: String
-  ) {
-    onDeleteMember(filter: $filter, owner: $owner) {
-      id
-      forename
-      surname
-      dateofbirth
-      ethnicity
-      instruments
-      createdAt
-      updatedAt
-      _version
-      _deleted
-      _lastChangedAt
-      owner
-    }
-  }
-`;
 export const onCreateEnrolment = /* GraphQL */ `
   subscription OnCreateEnrolment(
     $filter: ModelSubscriptionEnrolmentFilterInput
@@ -74,8 +11,11 @@ export const onCreateEnrolment = /* GraphQL */ `
       bands
       status
       term
-      ratedescription
-      rate
+      bandDesc
+      bandRate
+      lessons
+      lessonDesc
+      lessonRate
       stripeRef
       createdAt
       updatedAt
@@ -96,8 +36,11 @@ export const onUpdateEnrolment = /* GraphQL */ `
       bands
       status
       term
-      ratedescription
-      rate
+      bandDesc
+      bandRate
+      lessons
+      lessonDesc
+      lessonRate
       stripeRef
       createdAt
       updatedAt
@@ -118,8 +61,11 @@ export const onDeleteEnrolment = /* GraphQL */ `
       bands
       status
       term
-      ratedescription
-      rate
+      bandDesc
+      bandRate
+      lessons
+      lessonDesc
+      lessonRate
       stripeRef
       createdAt
       updatedAt

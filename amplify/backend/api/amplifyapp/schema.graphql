@@ -1,21 +1,17 @@
-type Member @model @auth(rules: [{ allow: owner }]) {
-  id: ID!
-  forename: String
-  surname: String
-  dateofbirth: AWSDate
-  ethnicity: String
-  instruments: [String]
-  createdAt: String!
-}
-
+input AMPLIFY {
+  globalAuthRule: AuthRule = { allow: public }
+} # FOR TESTING ONLY!
 type Enrolment
   @model
-  @auth(rules: [{ allow: owner }, { allow: public, provider: iam }]) {
+  @auth(rules: [{ allow: owner }, { allow: private, provider: iam }]) {
   id: ID!
   bands: [String]
   status: String
   term: String
-  ratedescription: String
-  rate: Float
+  bandDesc: String
+  bandRate: Float
+  lessons: Boolean
+  lessonDesc: Float
+  lessonRate: String
   stripeRef: String
 }

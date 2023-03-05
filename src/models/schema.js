@@ -1,95 +1,5 @@
 export const schema = {
     "models": {
-        "Member": {
-            "name": "Member",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "forename": {
-                    "name": "forename",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "surname": {
-                    "name": "surname",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "dateofbirth": {
-                    "name": "dateofbirth",
-                    "isArray": false,
-                    "type": "AWSDate",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "ethnicity": {
-                    "name": "ethnicity",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "instruments": {
-                    "name": "instruments",
-                    "isArray": true,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                }
-            },
-            "syncable": true,
-            "pluralName": "Members",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "provider": "userPools",
-                                "ownerField": "owner",
-                                "allow": "owner",
-                                "identityClaim": "cognito:username",
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
         "Enrolment": {
             "name": "Enrolment",
             "fields": {
@@ -122,17 +32,38 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "ratedescription": {
-                    "name": "ratedescription",
+                "bandDesc": {
+                    "name": "bandDesc",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "rate": {
-                    "name": "rate",
+                "bandRate": {
+                    "name": "bandRate",
                     "isArray": false,
                     "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "lessons": {
+                    "name": "lessons",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "lessonDesc": {
+                    "name": "lessonDesc",
+                    "isArray": false,
+                    "type": "Float",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "lessonRate": {
+                    "name": "lessonRate",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -184,7 +115,7 @@ export const schema = {
                                 ]
                             },
                             {
-                                "allow": "public",
+                                "allow": "private",
                                 "provider": "iam",
                                 "operations": [
                                     "create",
@@ -202,5 +133,5 @@ export const schema = {
     "enums": {},
     "nonModels": {},
     "codegenVersion": "3.3.5",
-    "version": "96e2c218c52d6b9248198623abb1c445"
+    "version": "d36e076de3b399bb64e9aa8a72b9b426"
 };
