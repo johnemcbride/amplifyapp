@@ -179,7 +179,7 @@ exports.handler = async (event) => {
           bandRate: bandPrice,
           lessons: false,
           term: "Summer Term - 2023",
-          stripeRef: "",
+          stripeRef: stripeRef,
         },
       };
       const requestToBeSigned = new HttpRequest({
