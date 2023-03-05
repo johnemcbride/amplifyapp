@@ -191,20 +191,20 @@ exports.handler = async (event) => {
   });
 
   const signed = await signer.sign(requestToBeSigned);
-  const request = new Request(endpoint, signed);
+  //const request = new Request(endpoint, signed);
 
   let statusCode = 200;
   let body;
   let response;
   let swiperesp;
 
-  try {
-    response = await fetch(request);
-    body = await response.json();
-    console.log(body)
-  } catch (error) {
-    console.log(error)
-  }
+  // try {
+  //   response = await fetch(request);
+  //   body = await response.json();
+  //   console.log(body)
+  // } catch (error) {
+  //   console.log(error)
+  // }
 
 
     //----
