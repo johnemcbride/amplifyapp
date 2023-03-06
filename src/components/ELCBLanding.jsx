@@ -53,13 +53,17 @@ export default function SignInSide() {
     setError({ error: false });
     setFormObject({ username: "", password: "" });
   };
-  // if logged in redirect to real page
-  Auth.currentAuthenticatedUser()
-    .then((user) => {
-      console.log("logged in!");
-      navigate("/landing");
-    })
-    .catch(console.log);
+
+  // Similar to componentDidMount and componentDidUpdate:
+  useEffect(() => {
+    // if logged in redirect to real page
+    Auth.currentAuthenticatedUser()
+      .then((user) => {
+        console.log("logged in!");
+        navigate("/landing");
+      })
+      .catch(console.log);
+  });
 
   return (
     <>

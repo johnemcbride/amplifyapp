@@ -18,9 +18,9 @@ import Container from "@mui/material/Container";
 import { Auth } from "aws-amplify";
 import moment from "moment";
 import { API } from "aws-amplify";
-
+import * as queries from "../graphql/queries";
 import { useNavigate, Navigate } from "react-router-dom";
-
+import { createEnrolment as createEnrolmentMutation } from "../graphql/mutations";
 const age = (birthdate) => {
   return moment().diff(birthdate, "years");
 };
@@ -76,19 +76,23 @@ const footers = [
 export default function PricingContent() {
   const navigate = useNavigate();
   const [user, setUser] = React.useState({});
+  const [groups, setGroups] = React.useState([]);
   const [session, setSession] = React.useState({});
   const [isLoaded, setIsLoaded] = React.useState(false);
   React.useEffect(() => {
     // Update the document title using the browser API
+    console.log("heres all the enrolments I see");
+    API.graphql({ query: queries.listEnrolments }).then(console.log);
     Auth.currentAuthenticatedUser().then((user) => {
       setUser(user);
       setIsLoaded(true);
-      console.log(JSON.stringify(user.attributes.email));
+      console.log("user info");
+      console.log(user);
     });
 
     Auth.currentSession().then((session) => {
       setSession(session);
-      console.log(session);
+      setGroups(session.getIdToken().payload["cognito:groups"] || []);
     });
   }, []);
 
@@ -159,6 +163,16 @@ export default function PricingContent() {
           </Typography>
 
           <nav>
+            {groups.includes("Admin") ? (
+              <Link
+                variant="button"
+                color="text.primary"
+                href="/profile"
+                sx={{ my: 1, mx: 1.5 }}
+              >
+                Admin
+              </Link>
+            ) : null}
             <Link
               variant="button"
               color="text.primary"
@@ -182,8 +196,8 @@ export default function PricingContent() {
       >
         <Typography
           component="h1"
-          variant="h2"
-          align="center"
+          variant="h3"
+          align="left"
           color="text.primary"
           gutterBottom
         >
@@ -191,7 +205,7 @@ export default function PricingContent() {
         </Typography>
         <Typography
           variant="h5"
-          align="center"
+          align="left"
           color="text.secondary"
           component="p"
         >
@@ -204,7 +218,13 @@ export default function PricingContent() {
       </Container>
       {/* End hero unit */}
       <Container maxWidth="md" component="main">
-        <Grid container spacing={5} alignItems="flex-end">
+        <Grid
+          container
+          spacing={5}
+          direction="row"
+          alignItems="center"
+          justifyItems="center"
+        >
           {tiers.map((tier) => (
             // Enterprise card is full width at sm breakpoint
             <Grid item key={tier.title} xs={12} sm={12 / tiers.length}>
@@ -212,10 +232,12 @@ export default function PricingContent() {
                 <CardHeader
                   title={tier.title}
                   subheader={tier.subheader}
-                  titleTypographyProps={{ align: "center" }}
                   action={null}
+                  titleTypographyProps={{
+                    align: "left",
+                  }}
                   subheaderTypographyProps={{
-                    align: "center",
+                    align: "left",
                   }}
                   sx={{
                     backgroundColor: (theme) =>
@@ -228,7 +250,7 @@ export default function PricingContent() {
                   <Box
                     sx={{
                       display: "flex",
-                      justifyContent: "center",
+                      justifyContent: "left",
                       alignItems: "baseline",
                       mb: 2,
                     }}
@@ -249,14 +271,14 @@ export default function PricingContent() {
                       <Typography
                         component="li"
                         variant="subtitle1"
-                        align="center"
+                        align="left"
                         key={line}
                       >
                         {line}
                       </Typography>
                     ))}
                   </ul>
-                  <Container align="center">
+                  <Container align="left">
                     {" "}
                     {tier.discount !== "" ? (
                       <Chip color="success" label={tier.discount} />
@@ -266,14 +288,21 @@ export default function PricingContent() {
                 <CardActions>
                   <Button
                     onClick={() => {
-                      API.post("checkout", "/checkout", {
-                        body: {
-                          accesskey: session.accessToken,
-                          bands: tier.bands,
-                          lessons: tier.lessons,
+                      // create enrolment
+                      API.graphql({
+                        query: createEnrolmentMutation,
+                        variables: {
+                          input: { bands: tier.bands, lessons: tier.lessons },
                         },
                       }).then((res) => {
-                        window.location.replace(res.url);
+                        API.post("checkout", "/checkout", {
+                          body: {
+                            accesskey: session.accessToken,
+                            enrolmentId: res.data.createEnrolment.id,
+                          },
+                        }).then((res) => {
+                          window.location.replace(res.url);
+                        });
                       });
                     }}
                     fullWidth

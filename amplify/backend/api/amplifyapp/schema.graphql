@@ -1,8 +1,14 @@
 type Enrolment
   @model
-  @auth(rules: [{ allow: owner }, { allow: private, provider: iam }]) {
+  @auth(
+    rules: [
+      { allow: owner }
+      { allow: groups, groups: ["Admin"] }
+      { allow: private, provider: iam }
+    ]
+  ) {
   id: ID!
-  bands: [String]
+  bands: String
   status: String
   term: String
   bandDesc: String

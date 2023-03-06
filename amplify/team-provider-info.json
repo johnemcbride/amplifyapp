@@ -57,11 +57,11 @@
       "function": {
         "checkout": {
           "deploymentBucketName": "amplify-amplifyapp-dev-230900-deployment",
-          "s3Key": "amplify-builds/checkout-36314a53526b4f715859-build.zip"
+          "s3Key": "amplify-builds/checkout-462f6b6167586c306347-build.zip"
         },
         "stripeHandler": {
           "deploymentBucketName": "amplify-amplifyapp-dev-230900-deployment",
-          "s3Key": "amplify-builds/stripeHandler-526f572f433954335276-build.zip"
+          "s3Key": "amplify-builds/stripeHandler-575a5332726d44344272-build.zip"
         },
         "amplifyapp": {},
         "amplifyapp0cb91442": {}

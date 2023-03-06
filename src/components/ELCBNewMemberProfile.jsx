@@ -392,6 +392,7 @@ export default function PricingContent() {
                             <Grid item xs={12}>
                               {" "}
                               <Button
+                                color={"primary"}
                                 fullWidth
                                 onClick={() => {
                                   handleSaveProfile(values);

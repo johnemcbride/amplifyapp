@@ -16,9 +16,6 @@ export const getEnrolment = /* GraphQL */ `
       stripeRef
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       owner
     }
   }
@@ -43,49 +40,9 @@ export const listEnrolments = /* GraphQL */ `
         stripeRef
         createdAt
         updatedAt
-        _version
-        _deleted
-        _lastChangedAt
         owner
       }
       nextToken
-      startedAt
-    }
-  }
-`;
-export const syncEnrolments = /* GraphQL */ `
-  query SyncEnrolments(
-    $filter: ModelEnrolmentFilterInput
-    $limit: Int
-    $nextToken: String
-    $lastSync: AWSTimestamp
-  ) {
-    syncEnrolments(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-      lastSync: $lastSync
-    ) {
-      items {
-        id
-        bands
-        status
-        term
-        bandDesc
-        bandRate
-        lessons
-        lessonDesc
-        lessonRate
-        stripeRef
-        createdAt
-        updatedAt
-        _version
-        _deleted
-        _lastChangedAt
-        owner
-      }
-      nextToken
-      startedAt
     }
   }
 `;

@@ -19,9 +19,6 @@ export const onCreateEnrolment = /* GraphQL */ `
       stripeRef
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       owner
     }
   }
@@ -44,9 +41,6 @@ export const onUpdateEnrolment = /* GraphQL */ `
       stripeRef
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       owner
     }
   }
@@ -69,9 +63,6 @@ export const onDeleteEnrolment = /* GraphQL */ `
       stripeRef
       createdAt
       updatedAt
-      _version
-      _deleted
-      _lastChangedAt
       owner
     }
   }
