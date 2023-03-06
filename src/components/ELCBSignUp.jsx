@@ -155,7 +155,7 @@ export default function SignUpSide() {
               .min(minDate, "Check the year....")
               .required("Required")
               .typeError(
-                'Invalid Date - Expecting date in the format e.g "26th September 2001"'
+                "Invalid Date - Expecting date in the format DD/MM/YYYY e.g. 31/08/2002"
               ),
           })}
           initialValues={initialValues}
@@ -208,7 +208,7 @@ export default function SignUpSide() {
                   >
                     <StepWizard>
                       <Step1 {...props} />
-                      <Step2 {...props} />
+                      <Step2 {...props} flashError={flashError} />
                       <Step3 {...props} flashError={flashError} />
                     </StepWizard>
 
@@ -232,7 +232,7 @@ export default function SignUpSide() {
                   severity="error"
                   sx={{ width: "100%" }}
                 >
-                  Login failed ({error.message})
+                  SignUp failed ({error.message})
                 </Alert>
               </Snackbar>
             </>
@@ -369,6 +369,7 @@ function Step2({
   errors,
   setFieldValue,
   setFieldTouched,
+  flashError,
   ...props
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -392,9 +393,11 @@ function Step2({
         // optional - enables auto sign in after user is confirmed
         enabled: true,
       },
-    }).then(() => {
-      props.nextStep();
-    });
+    })
+      .then(() => {
+        props.nextStep();
+      })
+      .catch(flashError);
   }
   return (
     <>
@@ -403,7 +406,6 @@ function Step2({
           <TextField
             onChange={handleChange}
             onBlur={handleBlur}
-            margin="normal"
             name="username"
             label="Username"
             value={values.username}
@@ -418,7 +420,6 @@ function Step2({
           <TextField
             onChange={handleChange}
             onBlur={handleBlur}
-            margin="normal"
             name="email"
             label="Email Address"
             value={values.email}
@@ -432,7 +433,6 @@ function Step2({
         <Grid item xs={12}>
           <TextField
             onChange={handleChange}
-            margin="normal"
             onBlur={handleBlur}
             required
             name="password"
@@ -448,7 +448,6 @@ function Step2({
         <Grid item xs={12}>
           <TextField
             onChange={handleChange}
-            margin="normal"
             onBlur={handleBlur}
             required
             name="confirmpassword"

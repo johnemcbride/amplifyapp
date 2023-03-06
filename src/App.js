@@ -95,7 +95,7 @@ const App = ({ signOut }) => {
         <Routes>
           <Route path="/newmember" element={<ELCBNewMember />} />
           <Route path="/signup" element={<ELCBSignUp />} />
-          <Route path="/signin" element={<ELCBSignIn handleLogin={logIn} />} />
+          <Route path="/signin" element={<ELCBLanding />} />
           <Route
             path="/landing"
             element={

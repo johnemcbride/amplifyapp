@@ -247,7 +247,7 @@ export default function PricingContent() {
                 .min(minDate, "Check the year....")
                 .required("Required")
                 .typeError(
-                  'Invalid Date - Expecting date in the format e.g "26th September 2001"'
+                  "Invalid Date - Expecting date in the format DD/MM/YYYY e.g. 31/08/2002"
                 ),
             })}
             initialValues={initialValues}

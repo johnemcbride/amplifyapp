@@ -42,6 +42,7 @@ export default function SignInSide() {
   const [error, setError] = useState({ error: false, message: "" });
   const [formObject, setFormObject] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
 
   const initialValues = {
@@ -62,10 +63,10 @@ export default function SignInSide() {
         console.log("logged in!");
         navigate("/landing");
       })
-      .catch(console.log);
+      .catch(setIsLoaded(true));
   });
 
-  return (
+  return isLoaded ? (
     <>
       <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
@@ -157,7 +158,6 @@ export default function SignInSide() {
                     <TextField
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      margin="normal"
                       name="username"
                       label="User Name"
                       value={values.username}
@@ -170,7 +170,6 @@ export default function SignInSide() {
 
                     <TextField
                       onChange={handleChange}
-                      margin="normal"
                       onBlur={handleBlur}
                       required
                       name="password"
@@ -204,20 +203,21 @@ export default function SignInSide() {
                       ) : null}
                       Sign In
                     </Button>
-                  </Box>
-                  <Grid container>
-                    <Grid item xs>
-                      <Link href="#" variant="body2">
+
+                    <Grid container>
+                      <Grid item xs>
+                        {/*<Link href="#" variant="body2">
                         Forgot password?
-                      </Link>
+                      </Link>*/}
+                      </Grid>
+                      <Grid item>
+                        <Link to="/signup" variant="body2">
+                          {"Don't have an account? Sign Up"}
+                        </Link>
+                      </Grid>
                     </Grid>
-                    <Grid item>
-                      <Link to="/signup" variant="body2">
-                        {"Don't have an account? Sign Up"}
-                      </Link>
-                    </Grid>
-                  </Grid>
-                  <Copyright sx={{ mt: 5 }} />
+                    <Copyright sx={{ mt: 5 }} />
+                  </Box>
                 </Box>
               </Grid>
               <Snackbar
@@ -226,7 +226,6 @@ export default function SignInSide() {
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 onClose={() => {
                   handleClose();
-                  resetForm(initialValues);
                 }}
               >
                 <Alert
@@ -244,5 +243,5 @@ export default function SignInSide() {
         </Formik>
       </Grid>
     </>
-  );
+  ) : null;
 }

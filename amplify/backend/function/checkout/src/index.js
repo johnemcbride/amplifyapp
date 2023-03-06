@@ -44,7 +44,13 @@ const { Sha256 } = crypto;
 // Derives Age
 // Derives Siblings
 
-const createStripe = async (referenceid, email, rate, ratedescription) => {
+const createStripe = async (
+  referenceid,
+  email,
+  rate,
+  ratedescription,
+  redirecthost
+) => {
   let url = "https://api.stripe.com/v1/checkout/sessions";
   const privatekey =
     "sk_test_51MPqHgHsYPcD7OHQied7QODzII5wiNOzL6LqzTBLDWyuxdEzTlvsLLUtmANmorVGJwS5yIemWOlW3hQzcut43kLF00RNmzxG8a";
@@ -63,8 +69,8 @@ const createStripe = async (referenceid, email, rate, ratedescription) => {
       },
     ],
     mode: "payment",
-    success_url: "http://localhost:3000",
-    cancel_url: "http://localhost:3000",
+    success_url: redirecthost,
+    cancel_url: redirecthost,
     client_reference_id: referenceid,
     customer_email: email,
   });
@@ -216,7 +222,7 @@ const updEnrolment = async (id, bandDesc, bandPrice, stripeRef) => {
 };
 
 exports.handler = async (event) => {
-  // console.log(`EVENT: ${JSON.stringify(event)}`);
+  console.log(`EVENT: ${JSON.stringify(event)}`);
   // console.log(JSON.stringify(JSON.parse(event.body)))
   // a client can be shared by different commands.
   const client = new CognitoIdentityProviderClient({ region: "eu-west-2" });
@@ -300,7 +306,8 @@ exports.handler = async (event) => {
       updEnrolResp.data.updateEnrolment.id,
       email,
       bandPrice,
-      bandDesc
+      bandDesc,
+      event.headers.Referer
     );
     console.log("Initiating session with Stripe:" + session);
     return {
