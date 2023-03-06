@@ -15,9 +15,12 @@ import Chip from "@mui/material/Chip";
 import Link from "@mui/material/Link";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
 import { Auth } from "aws-amplify";
 import moment from "moment";
 import { API } from "aws-amplify";
+
+import CircularProgress from "@mui/material/CircularProgress";
 import * as queries from "../graphql/queries";
 import { useNavigate, Navigate } from "react-router-dom";
 import { createEnrolment as createEnrolmentMutation } from "../graphql/mutations";
@@ -79,21 +82,38 @@ export default function PricingContent() {
   const [groups, setGroups] = React.useState([]);
   const [session, setSession] = React.useState({});
   const [isLoaded, setIsLoaded] = React.useState(false);
-  React.useEffect(() => {
-    // Update the document title using the browser API
-    console.log("heres all the enrolments I see");
-    API.graphql({ query: queries.listEnrolments }).then(console.log);
-    Auth.currentAuthenticatedUser().then((user) => {
-      setUser(user);
-      setIsLoaded(true);
-      console.log("user info");
-      console.log(user);
-    });
+  const [isEnrolled, setIsEnrolled] = React.useState(false);
+  const [enrolment, setEnrolment] = React.useState(false);
 
-    Auth.currentSession().then((session) => {
-      setSession(session);
-      setGroups(session.getIdToken().payload["cognito:groups"] || []);
+  React.useEffect(() => {
+    const fetchedEnrolments = API.graphql({
+      query: queries.listEnrolments,
+      variables: { filter: { status: { eq: "paid" } } },
     });
+    const fetchedUserDetails = Auth.currentAuthenticatedUser();
+    const fetchSession = Auth.currentSession();
+
+    Promise.all([fetchedEnrolments, fetchedUserDetails, fetchSession]).then(
+      (values) => {
+        const enrolments = values[0];
+        if (enrolments.data.listEnrolments.items.length > 0) {
+          setIsEnrolled(true);
+          setEnrolment(enrolments.data.listEnrolments.items[0]);
+          console.log("Is enrolled!");
+        }
+
+        const user = values[1];
+        setUser(user);
+
+        const session = values[2];
+        setSession(session);
+        setGroups(session.getIdToken().payload["cognito:groups"] || []);
+
+        setIsLoaded(true);
+        console.log("shoudl have loaded");
+        console.log(values);
+      }
+    );
   }, []);
 
   let tiers = [];
@@ -143,191 +163,323 @@ export default function PricingContent() {
     ];
   }
 
-  return (
+  return isLoaded ? (
     <>
       <GlobalStyles
         styles={{ ul: { margin: 0, padding: 0, listStyle: "none" } }}
       />
       <CssBaseline />
-      <AppBar
-        position="static"
-        color="default"
-        elevation={0}
-        sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
-      >
-        <Toolbar sx={{ flexWrap: "wrap" }}>
-          <Typography variant="h6" color="inherit" sx={{ flexGrow: 1 }}>
-            <Link color="text.primary" href="/" sx={{ my: 1, mx: 1.5 }}>
-              East London Community Band
-            </Link>
-          </Typography>
+      <Header groups={groups} />
+      {isEnrolled ? (
+        <>
+          <HeroEnrolled user={user} enrolment={enrolment} />
+          <MembershipSummary enrolment={enrolment} />
+        </>
+      ) : (
+        <>
+          <HeroUnenrolled user={user} />
+          <MemberShipPicker tiers={tiers} session={session} />
+        </>
+      )}
+      <Footer />
+    </>
+  ) : (
+    <Stack alignItems="center">
+      <CircularProgress size={120} />
+    </Stack>
+  );
+}
 
-          <nav>
-            {groups.includes("Admin") ? (
-              <Link
-                variant="button"
-                color="text.primary"
-                href="/profile"
-                sx={{ my: 1, mx: 1.5 }}
-              >
-                Admin
-              </Link>
-            ) : null}
+function Footer() {
+  return (
+    <Container
+      maxWidth="md"
+      component="footer"
+      sx={{
+        borderTop: (theme) => `1px solid ${theme.palette.divider}`,
+        mt: 8,
+        py: [1, 1],
+      }}
+    >
+      <Copyright sx={{ mt: 0 }} />
+    </Container>
+  );
+}
+
+function Header({ groups }) {
+  return (
+    <AppBar
+      position="static"
+      color="default"
+      elevation={0}
+      sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
+    >
+      <Toolbar sx={{ flexWrap: "wrap" }}>
+        <Typography variant="h6" color="inherit" sx={{ flexGrow: 1 }}>
+          <Link color="text.primary" href="/" sx={{ my: 1, mx: 1.5 }}>
+            East London Community Band
+          </Link>
+        </Typography>
+
+        <nav>
+          {groups.includes("Admin") ? (
             <Link
               variant="button"
               color="text.primary"
               href="/profile"
               sx={{ my: 1, mx: 1.5 }}
             >
-              Profile
+              Admin
             </Link>
-          </nav>
-          <Button href="/signout" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
-            Logout
-          </Button>
-        </Toolbar>
-      </AppBar>
-      {/* Hero unit */}
-      <Container
-        // disableGutters
-        maxWidth="sm"
-        component="main"
-        sx={{ pt: 8, pb: 6 }}
+          ) : null}
+          <Link
+            variant="button"
+            color="text.primary"
+            href="/profile"
+            sx={{ my: 1, mx: 1.5 }}
+          >
+            Profile
+          </Link>
+        </nav>
+        <Button href="/signout" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
+          Logout
+        </Button>
+      </Toolbar>
+    </AppBar>
+  );
+}
+
+function HeroUnenrolled({ user }) {
+  return (
+    <Container
+      // disableGutters
+      maxWidth="sm"
+      component="main"
+      sx={{ pt: 8, pb: 6 }}
+    >
+      <Typography
+        component="h1"
+        variant="h3"
+        align="left"
+        color="text.primary"
+        gutterBottom
       >
-        <Typography
-          component="h1"
-          variant="h3"
-          align="left"
-          color="text.primary"
-          gutterBottom
-        >
-          {isLoaded ? user.attributes.name + ", " : ""} Sign Up For Term
-        </Typography>
-        <Typography
-          variant="h5"
-          align="left"
-          color="text.secondary"
-          component="p"
-        >
-          Choose one of the membership options below to join one or more of our
-          bands.
-          {age(user.attributes?.birthdate) <= 30
-            ? "  If you have any siblings in the band, please update your profile to avail of sibling discount."
-            : null}
-        </Typography>
-      </Container>
-      {/* End hero unit */}
-      <Container maxWidth="md" component="main">
-        <Grid
-          container
-          spacing={5}
-          direction="row"
-          alignItems="center"
-          justifyItems="center"
-        >
-          {tiers.map((tier) => (
-            // Enterprise card is full width at sm breakpoint
-            <Grid item key={tier.title} xs={12} sm={12 / tiers.length}>
-              <Card>
-                <CardHeader
-                  title={tier.title}
-                  subheader={tier.subheader}
-                  action={null}
-                  titleTypographyProps={{
-                    align: "left",
-                  }}
-                  subheaderTypographyProps={{
-                    align: "left",
-                  }}
+        {user.attributes.name}, Sign Up For Term
+      </Typography>
+      <Typography
+        variant="h5"
+        align="left"
+        color="text.secondary"
+        component="p"
+      >
+        Choose one of the membership options below to join one or more of our
+        bands.
+        {age(user.attributes?.birthdate) <= 30
+          ? "  If you have any siblings in the band, please update your profile to avail of sibling discount."
+          : null}
+      </Typography>
+    </Container>
+  );
+}
+
+function HeroEnrolled({ user, enrolment }) {
+  return (
+    <Container
+      // disableGutters
+      maxWidth="sm"
+      component="main"
+      sx={{ pt: 8, pb: 6 }}
+    >
+      <Typography
+        component="h1"
+        variant="h3"
+        align="left"
+        color="text.primary"
+        gutterBottom
+      >
+        {user.attributes.name}, You've signed up!
+      </Typography>
+      <Typography
+        variant="h5"
+        align="left"
+        color="text.secondary"
+        component="p"
+      >
+        Your enrolment details are below for the term "{enrolment.term}"
+      </Typography>
+    </Container>
+  );
+}
+
+function MemberShipPicker({ tiers, session }) {
+  return (
+    <Container maxWidth="md" component="main">
+      <Grid
+        container
+        spacing={5}
+        direction="row"
+        alignItems="center"
+        justifyItems="center"
+      >
+        {tiers.map((tier) => (
+          // Enterprise card is full width at sm breakpoint
+          <Grid item key={tier.title} xs={12} sm={12 / tiers.length}>
+            <Card>
+              <CardHeader
+                title={tier.title}
+                subheader={tier.subheader}
+                action={null}
+                titleTypographyProps={{
+                  align: "left",
+                }}
+                subheaderTypographyProps={{
+                  align: "left",
+                }}
+                sx={{
+                  backgroundColor: (theme) =>
+                    theme.palette.mode === "light"
+                      ? theme.palette.grey[200]
+                      : theme.palette.grey[700],
+                }}
+              />
+              <CardContent>
+                <Box
                   sx={{
-                    backgroundColor: (theme) =>
-                      theme.palette.mode === "light"
-                        ? theme.palette.grey[200]
-                        : theme.palette.grey[700],
+                    display: "flex",
+                    justifyContent: "left",
+                    alignItems: "baseline",
+                    mb: 2,
                   }}
-                />
-                <CardContent>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "left",
-                      alignItems: "baseline",
-                      mb: 2,
-                    }}
-                  >
+                >
+                  <Typography component="h2" variant="h3" color="text.primary">
+                    £{tier.price}
+                  </Typography>
+                  <Typography variant="h6" color="text.secondary">
+                    /term
+                  </Typography>
+                </Box>
+                <ul>
+                  {tier.description.map((line) => (
                     <Typography
-                      component="h2"
-                      variant="h3"
-                      color="text.primary"
+                      component="li"
+                      variant="subtitle1"
+                      align="left"
+                      key={line}
                     >
-                      £{tier.price}
+                      {line}
                     </Typography>
-                    <Typography variant="h6" color="text.secondary">
-                      /term
-                    </Typography>
-                  </Box>
-                  <ul>
-                    {tier.description.map((line) => (
-                      <Typography
-                        component="li"
-                        variant="subtitle1"
-                        align="left"
-                        key={line}
-                      >
-                        {line}
-                      </Typography>
-                    ))}
-                  </ul>
-                  <Container align="left">
-                    {" "}
-                    {tier.discount !== "" ? (
-                      <Chip color="success" label={tier.discount} />
-                    ) : null}
-                  </Container>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    onClick={() => {
-                      // create enrolment
-                      API.graphql({
-                        query: createEnrolmentMutation,
-                        variables: {
-                          input: { bands: tier.bands, lessons: tier.lessons },
-                        },
-                      }).then((res) => {
-                        API.post("checkout", "/checkout", {
-                          body: {
-                            accesskey: session.accessToken,
-                            enrolmentId: res.data.createEnrolment.id,
-                          },
-                        }).then((res) => {
-                          window.location.replace(res.url);
-                        });
-                      });
-                    }}
-                    fullWidth
-                    variant={tier.buttonVariant}
-                  >
-                    {tier.buttonText}
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
-      {/* Footer */}
-      <Container
-        maxWidth="md"
-        component="footer"
-        sx={{
-          borderTop: (theme) => `1px solid ${theme.palette.divider}`,
-          mt: 8,
-          py: [1, 1],
-        }}
+                  ))}
+                </ul>
+                <Container align="left">
+                  {" "}
+                  {tier.discount !== "" ? (
+                    <Chip color="success" label={tier.discount} />
+                  ) : null}
+                </Container>
+              </CardContent>
+              <CardActions>
+                <LoadingButton tier={tier} session={session} />
+              </CardActions>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
+  );
+}
+
+function LoadingButton({ session, tier }) {
+  const [isLoading, setIsloading] = React.useState(false);
+  return (
+    <Button
+      disabled={isLoading}
+      onClick={() => {
+        setIsloading(true);
+        // create enrolment
+        API.graphql({
+          query: createEnrolmentMutation,
+          variables: {
+            input: { bands: tier.bands, lessons: tier.lessons },
+          },
+        }).then((res) => {
+          API.post("checkout", "/checkout", {
+            body: {
+              accesskey: session.accessToken,
+              enrolmentId: res.data.createEnrolment.id,
+            },
+          }).then((res) => {
+            window.location.replace(res.url);
+          });
+        });
+      }}
+      fullWidth
+      variant={tier.buttonVariant}
+    >
+      {isLoading ? (
+        <>
+          <CircularProgress size={12} /> &nbsp;
+        </>
+      ) : null}
+      {tier.buttonText}
+    </Button>
+  );
+}
+function MembershipSummary({ enrolment }) {
+  return (
+    <Container maxWidth="md" component="main">
+      <Grid
+        container
+        spacing={5}
+        direction="row"
+        alignItems="center"
+        justifyItems="center"
       >
-        <Copyright sx={{ mt: 0 }} />
-      </Container>
-    </>
+        <Grid item xs={12}>
+          <Card>
+            <CardHeader
+              title={enrolment.bandDesc}
+              subheader={enrolment.lessons}
+              action={null}
+              titleTypographyProps={{
+                align: "left",
+              }}
+              subheaderTypographyProps={{
+                align: "left",
+              }}
+              sx={{
+                backgroundColor: (theme) =>
+                  theme.palette.mode === "light"
+                    ? theme.palette.grey[200]
+                    : theme.palette.grey[700],
+              }}
+            />
+            <CardContent>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "left",
+                  alignItems: "baseline",
+                  mb: 2,
+                }}
+              >
+                <Typography component="h2" variant="h3" color="text.primary">
+                  £{enrolment.bandRate}
+                </Typography>
+                <Typography variant="h6" color="text.secondary">
+                  /term
+                </Typography>
+              </Box>
+
+              <Container align="left"> </Container>
+            </CardContent>
+            <CardActions>
+              <Button fullWidth variant="contained">
+                Mark Attendance (TODO)
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+      </Grid>
+    </Container>
   );
 }

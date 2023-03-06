@@ -244,6 +244,9 @@ exports.handler = async (event) => {
   try {
     data = await client.send(command);
     console.log(data);
+    console.log(
+      data.UserAttributes.filter((attr) => attr.Name === "birthdate")[0].Value
+    );
     const age = moment().diff(
       moment(
         data.UserAttributes.filter((attr) => attr.Name === "birthdate")[0]
@@ -252,17 +255,18 @@ exports.handler = async (event) => {
       ),
       "years"
     );
+    console.log("After age = " + age);
     const hasSiblings =
-      data.UserAttributes.filter((attr) => attr.Name === "profile")[0].Value ===
-      "siblings"
+      data.UserAttributes.filter((attr) => attr.Name === "profile")[0]
+        ?.Value === "siblings"
         ? true
         : false;
+
+    console.log("Has siblings = " + hasSiblings);
     const email = data.UserAttributes.filter((attr) => attr.Name === "email")[0]
       .Value;
-    console.log(
-      data.UserAttributes.filter((attr) => attr.Name === "birthdate")[0].Value
-    );
 
+    console.log("Email = " + email);
     const bandDesc =
       bands === "big"
         ? "Full band membership"
@@ -282,13 +286,18 @@ exports.handler = async (event) => {
       }
     }
 
-    const resp = await updEnrolment(enrolmentId, bandDesc, bandPrice, "TODO");
+    const updEnrolResp = await updEnrolment(
+      enrolmentId,
+      bandDesc,
+      bandPrice,
+      "TODO"
+    );
 
     console.log("Just updated enrolment - here is the response in line 217");
-    console.log(resp);
+    console.log(updEnrolResp);
     // todo - handle if that doesn't happen!
     const session = await createStripe(
-      resp.data.createEnrolment.id,
+      updEnrolResp.data.updateEnrolment.id,
       email,
       bandPrice,
       bandDesc
