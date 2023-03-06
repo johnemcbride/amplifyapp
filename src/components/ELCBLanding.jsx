@@ -171,6 +171,7 @@ export default function SignInSide() {
                     <TextField
                       onChange={handleChange}
                       onBlur={handleBlur}
+                      margin="normal"
                       required
                       name="password"
                       label="Password"

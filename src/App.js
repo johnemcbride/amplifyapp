@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import ELCBHeader from "./components/ELCBHeader";
 import ELCBFooter from "./components/ELCBFooter";
 import ELCBLanding from "./components/ELCBLanding";
+import ELCBAdminLanding from "./components/ELCBAdminLanding";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -101,6 +102,14 @@ const App = ({ signOut }) => {
             element={
               <PrivateRoute>
                 <ELCBNewMemberLanding />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <PrivateRoute>
+                <ELCBAdminLanding />
               </PrivateRoute>
             }
           />
