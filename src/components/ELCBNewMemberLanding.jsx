@@ -88,22 +88,32 @@ export default function PricingContent() {
   React.useEffect(() => {
     const fetchedEnrolments = API.graphql({
       query: queries.listEnrolments,
-      variables: { filter: { status: { eq: "paid" } } },
+      variables: {
+        filter: { status: { eq: "paid" } },
+      },
     });
     const fetchedUserDetails = Auth.currentAuthenticatedUser();
     const fetchSession = Auth.currentSession();
 
     Promise.all([fetchedEnrolments, fetchedUserDetails, fetchSession]).then(
       (values) => {
-        const enrolments = values[0];
-        if (enrolments.data.listEnrolments.items.length > 0) {
-          setIsEnrolled(true);
-          setEnrolment(enrolments.data.listEnrolments.items[0]);
-          console.log("Is enrolled!");
-        }
-
         const user = values[1];
         setUser(user);
+
+        const enrolments = values[0];
+        if (
+          enrolments.data.listEnrolments.items.filter(
+            (item) => item.owner === user.username
+          ).length > 0
+        ) {
+          setIsEnrolled(true);
+          setEnrolment(
+            enrolments.data.listEnrolments.items.filter(
+              (item) => item.owner === user.username
+            )[0]
+          );
+          console.log("Is enrolled!");
+        }
 
         const session = values[2];
         setSession(session);
