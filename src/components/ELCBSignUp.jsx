@@ -502,6 +502,13 @@ function Step3({
         flashError(error);
       });
   }
+
+  function handleResendCode() {
+    Auth.resendSignUp(values.username).catch((error) => {
+      console.log("grrrrr");
+      flashError(error);
+    });
+  }
   return (
     <>
       <Grid spacing={2} container>
@@ -532,6 +539,18 @@ function Step3({
         }
       >
         Sign Up
+      </Button>
+      <Button
+        fullWidth
+        onClick={handleResendCode}
+        variant="outlined"
+        sx={{ mt: 3, mb: 2 }}
+        disabled={
+          errors.code ||
+          (Object.keys(touched).length === 0 && touched.constructor === Object)
+        }
+      >
+        RESEND Verification Code
       </Button>
     </>
   );
