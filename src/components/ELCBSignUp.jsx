@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
+
+import Toolbar from "@mui/material/Toolbar";
+import Link from "@mui/material/Link";
+import AppBar from "@mui/material/AppBar";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -14,7 +17,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Formik, ErrorMessage, Field } from "formik";
-import { Auth } from "aws-amplify";
+import { Auth, Hub } from "aws-amplify";
 import * as yup from "yup";
 import { FormHelperText } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -62,6 +65,15 @@ export default function SignUpSide() {
   const [step, setStep] = useState(1);
   const navigate = useNavigate();
 
+  Hub.listen("auth", ({ payload }) => {
+    const { event } = payload;
+    if (event === "autoSignIn") {
+      console.log("hub got giddy");
+      navigate("/landing");
+    } else if (event === "autoSignIn_failure") {
+      // redirect to sign in page
+    }
+  });
   const initialValues = {
     forename: formObject.forename || "",
     surname: formObject.surname || "",
@@ -190,6 +202,25 @@ export default function SignUpSide() {
                 elevation={6}
                 square
               >
+                <AppBar
+                  position="static"
+                  color="default"
+                  elevation={0}
+                  sx={{
+                    borderBottom: (theme) =>
+                      `1px solid ${theme.palette.divider}`,
+                  }}
+                >
+                  <Toolbar sx={{ flexWrap: "wrap" }}>
+                    <Typography
+                      variant="h6"
+                      color="inherit"
+                      sx={{ flexGrow: 1 }}
+                    >
+                      East London Community Band
+                    </Typography>
+                  </Toolbar>
+                </AppBar>
                 <Box
                   sx={{
                     my: 8,
@@ -199,9 +230,16 @@ export default function SignUpSide() {
                     alignItems: "center",
                   }}
                 >
-                  <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-                    <LockOutlinedIcon />
-                  </Avatar>
+                  <Box
+                    component="img"
+                    sx={{
+                      height: 73,
+                      width: 80,
+                      my: 1,
+                    }}
+                    alt="The house from the offer."
+                    src="/elcblogo.png"
+                  />
                   <Typography component="h1" variant="h5">
                     Sign up
                   </Typography>
@@ -499,7 +537,9 @@ function Step3({
   function handleConfirmCode() {
     Auth.confirmSignUp(values.username, values.code)
       .then(() => {
-        navigate("/landing");
+        console.log(
+          "SIgn up confirmed, Hub listenign for event before navigating on"
+        );
       })
       .catch((error) => {
         console.log("grrrrr");

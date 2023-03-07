@@ -1,18 +1,11 @@
 import React, { useState, useEffect } from "react";
 
-import ELCBHeader from "./components/ELCBHeader";
-import ELCBFooter from "./components/ELCBFooter";
-import ELCBLanding from "./components/ELCBLanding";
+import ELCBLanding from "./components/ELCBSignIn";
 import ELCBAdminLanding from "./components/ELCBAdminLanding";
-import Container from "@mui/material/Container";
-import Box from "@mui/material/Box";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import "@fontsource/josefin-sans";
-import { API, Amplify } from "aws-amplify";
-import { listMembers } from "./graphql/queries";
-import ELCBNewMember from "./components/ELCBNewMember";
+import { Amplify } from "aws-amplify";
 import ELCBNewMemberLanding from "./components/ELCBNewMemberLanding";
-import ELCBMemberEnrol from "./components/ELCBMemberEnrol";
 import ELCBSignIn from "./components/ELCBSignIn";
 import ELCBSignUp from "./components/ELCBSignUp";
 import ELCBSignOut from "./components/ELCBSignOut";
@@ -94,9 +87,8 @@ const App = ({ signOut }) => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Routes>
-          <Route path="/newmember" element={<ELCBNewMember />} />
           <Route path="/signup" element={<ELCBSignUp />} />
-          <Route path="/signin" element={<ELCBLanding />} />
+          <Route path="/signin" element={<ELCBSignIn />} />
           <Route
             path="/landing"
             element={
@@ -113,14 +105,7 @@ const App = ({ signOut }) => {
               </PrivateRoute>
             }
           />
-          <Route
-            path="/enrol"
-            element={
-              <PrivateRoute>
-                <ELCBMemberEnrol user={user} />
-              </PrivateRoute>
-            }
-          />
+
           <Route
             path="/profile"
             element={

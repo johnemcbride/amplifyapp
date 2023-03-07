@@ -8,7 +8,6 @@ import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
-import StarIcon from "@mui/icons-material/StarBorder";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
@@ -19,7 +18,7 @@ import Stack from "@mui/material/Stack";
 import { Auth } from "aws-amplify";
 import moment from "moment";
 import { API } from "aws-amplify";
-
+import ELCBLoading from "./ELCBLoading";
 import CircularProgress from "@mui/material/CircularProgress";
 import * as queries from "../graphql/queries";
 import { useNavigate, Navigate } from "react-router-dom";
@@ -46,38 +45,7 @@ function Copyright(props) {
   );
 }
 
-const footers = [
-  {
-    title: "Company",
-    description: ["Team", "History", "Contact us", "Locations"],
-  },
-  {
-    title: "Features",
-    description: [
-      "Cool stuff",
-      "Random feature",
-      "Team feature",
-      "Developer stuff",
-      "Another one",
-    ],
-  },
-  {
-    title: "Resources",
-    description: [
-      "Resource",
-      "Resource name",
-      "Another resource",
-      "Final resource",
-    ],
-  },
-  {
-    title: "Legal",
-    description: ["Privacy policy", "Terms of use"],
-  },
-];
-
 export default function PricingContent() {
-  const navigate = useNavigate();
   const [user, setUser] = React.useState({});
   const [groups, setGroups] = React.useState([]);
   const [session, setSession] = React.useState({});
@@ -86,17 +54,20 @@ export default function PricingContent() {
   const [enrolment, setEnrolment] = React.useState(false);
 
   React.useEffect(() => {
+    console.log("Landing Page mountee");
     const fetchedEnrolments = API.graphql({
       query: queries.listEnrolments,
       variables: {
         filter: { status: { eq: "paid" } },
       },
     });
-    const fetchedUserDetails = Auth.currentAuthenticatedUser();
+    const fetchedUserDetails = Auth.currentAuthenticatedUser().catch(
+      console.log("jamaim")
+    );
     const fetchSession = Auth.currentSession();
 
-    Promise.all([fetchedEnrolments, fetchedUserDetails, fetchSession]).then(
-      (values) => {
+    Promise.all([fetchedEnrolments, fetchedUserDetails, fetchSession])
+      .then((values) => {
         const user = values[1];
         setUser(user);
 
@@ -122,8 +93,8 @@ export default function PricingContent() {
         setIsLoaded(true);
         console.log("shoudl have loaded");
         console.log(values);
-      }
-    );
+      })
+      .catch(console.log);
   }, []);
 
   let tiers = [];
@@ -194,9 +165,7 @@ export default function PricingContent() {
       <Footer />
     </>
   ) : (
-    <Stack alignItems="center">
-      <CircularProgress size={120} />
-    </Stack>
+    <ELCBLoading />
   );
 }
 
