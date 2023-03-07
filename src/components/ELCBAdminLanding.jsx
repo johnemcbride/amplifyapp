@@ -16,6 +16,8 @@ import Link from "@mui/material/Link";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
+
+import Header from "./ELCBHeader";
 import { Auth } from "aws-amplify";
 import moment from "moment";
 import { API } from "aws-amplify";
@@ -151,49 +153,6 @@ function Footer() {
     >
       <Copyright sx={{ mt: 0 }} />
     </Container>
-  );
-}
-
-function Header({ groups }) {
-  return (
-    <AppBar
-      position="static"
-      color="default"
-      elevation={0}
-      sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
-    >
-      <Toolbar sx={{ flexWrap: "wrap" }}>
-        <Typography variant="h6" color="inherit" sx={{ flexGrow: 1 }}>
-          <Link color="text.primary" href="/" sx={{ my: 1, mx: 1.5 }}>
-            East London Community Band
-          </Link>
-        </Typography>
-
-        <nav>
-          {groups.includes("Admin") ? (
-            <Link
-              variant="button"
-              color="text.primary"
-              href="/admin"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              Admin
-            </Link>
-          ) : null}
-          <Link
-            variant="button"
-            color="text.primary"
-            href="/profile"
-            sx={{ my: 1, mx: 1.5 }}
-          >
-            Profile
-          </Link>
-        </nav>
-        <Button href="/signout" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
-          Logout
-        </Button>
-      </Toolbar>
-    </AppBar>
   );
 }
 

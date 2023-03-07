@@ -48,16 +48,6 @@ export default function ELCBSignIn() {
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
 
-  Hub.listen("auth", ({ payload }) => {
-    const { event } = payload;
-    if (event === "autoSignIn") {
-      console.log("hub got giddy");
-      navigate("/landing");
-    } else if (event === "autoSignIn_failure") {
-      // redirect to sign in page
-    }
-  });
-
   const initialValues = {
     username: formObject.username || "",
     password: formObject.password || "",

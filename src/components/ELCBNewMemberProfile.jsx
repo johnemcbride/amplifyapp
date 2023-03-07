@@ -16,7 +16,7 @@ import Link from "@mui/material/Link";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import Container from "@mui/material/Container";
 import { Auth } from "aws-amplify";
-
+import Header from "./ELCBHeader";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -61,39 +61,16 @@ function Copyright(props) {
   );
 }
 
-const footers = [
-  {
-    title: "Company",
-    description: ["Team", "History", "Contact us", "Locations"],
-  },
-  {
-    title: "Features",
-    description: [
-      "Cool stuff",
-      "Random feature",
-      "Team feature",
-      "Developer stuff",
-      "Another one",
-    ],
-  },
-  {
-    title: "Resources",
-    description: [
-      "Resource",
-      "Resource name",
-      "Another resource",
-      "Final resource",
-    ],
-  },
-  {
-    title: "Legal",
-    description: ["Privacy policy", "Terms of use"],
-  },
-];
-
 export default function PricingContent() {
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
   const navigate = useNavigate();
+  const [user, setUser] = React.useState({});
+  const [groups, setGroups] = React.useState([]);
+  const [session, setSession] = React.useState({});
+  const [isLoaded, setIsLoaded] = React.useState(false);
+  const [isEnrolled, setIsEnrolled] = React.useState(false);
+  const [enrolments, setEnrolments] = React.useState(false);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
   const handleClose = () => {
     setError({ error: false });
   };
@@ -139,16 +116,25 @@ export default function PricingContent() {
     new Date(new Date().setFullYear(new Date().getFullYear() - 100)).setDate(1)
   );
   const [error, setError] = React.useState({ error: false, message: "" });
-  const [user, setUser] = React.useState({});
-  const [isLoaded, setIsLoaded] = React.useState(false);
+
   React.useEffect(() => {
-    // Update the document title using the browser API
-    Auth.currentAuthenticatedUser().then((user) => {
+    const fetchedUserDetails = Auth.currentAuthenticatedUser();
+    const fetchSession = Auth.currentSession();
+
+    Promise.all([fetchedUserDetails, fetchSession]).then((values) => {
+      const user = values[0];
       setUser(user);
+
+      const session = values[1];
+      setSession(session);
+      setGroups(session.getIdToken().payload["cognito:groups"] || []);
+
       setIsLoaded(true);
-      console.log(JSON.stringify(user.attributes));
+      console.log("shoudl have loaded");
+      console.log(values);
     });
   }, []);
+
   const initialValues = {
     name: user.attributes?.name || "",
     family_name: user.attributes?.family_name || "",
@@ -164,34 +150,7 @@ export default function PricingContent() {
         styles={{ ul: { margin: 0, padding: 0, listStyle: "none" } }}
       />
       <CssBaseline />
-      <AppBar
-        position="static"
-        color="default"
-        elevation={0}
-        sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
-      >
-        <Toolbar sx={{ flexWrap: "wrap" }}>
-          <Typography variant="h6" color="inherit" sx={{ flexGrow: 1 }}>
-            <Link color="text.primary" href="/" sx={{ my: 1, mx: 1.5 }}>
-              East London Community Band
-            </Link>
-          </Typography>
-
-          <nav>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="/profile"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              Profile
-            </Link>
-          </nav>
-          <Button href="/signout" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
-            Logout
-          </Button>
-        </Toolbar>
-      </AppBar>
+      <Header groups={groups} />
       {/* Hero unit */}
       <Container
         disableGutters
