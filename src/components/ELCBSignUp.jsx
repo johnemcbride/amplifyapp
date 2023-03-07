@@ -72,6 +72,10 @@ export default function SignUpSide() {
     ethnicity: formObject.ethnicity || "",
     sex: "",
     username: "",
+    email: "",
+    password: "",
+    confirmpassword: "",
+    code: "",
   };
 
   const handleClose = () => {
@@ -304,7 +308,7 @@ function Step1({
                   }}
                   fullWidth
                   name="dateofbirth"
-                  isInvalid={errors.dateofbirth && touched.dateofbirth}
+                  error={errors.dateofbirth && touched.dateofbirth}
                   {...params}
                 />
               )}
@@ -346,6 +350,8 @@ function Step1({
           errors.dateofbirth ||
           errors.sex ||
           (Object.keys(touched).length === 0 && touched.constructor === Object)
+            ? true
+            : false
         }
       >
         Next
@@ -373,10 +379,6 @@ function Step2({
   ...props
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  console.log("steo 2 - erorrs");
-  console.log(JSON.stringify(errors));
-  console.log("steo 2 - values");
-  console.log(JSON.stringify(values));
 
   function handleRegisterUser() {
     Auth.signUp({
@@ -472,6 +474,8 @@ function Step2({
           errors.password ||
           errors.confirmpassword ||
           (Object.keys(touched).length === 0 && touched.constructor === Object)
+            ? true
+            : false
         }
       >
         Next
@@ -536,6 +540,8 @@ function Step3({
         disabled={
           errors.code ||
           (Object.keys(touched).length === 0 && touched.constructor === Object)
+            ? true
+            : false
         }
       >
         Sign Up
