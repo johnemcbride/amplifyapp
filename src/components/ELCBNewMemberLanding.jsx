@@ -23,6 +23,21 @@ import CircularProgress from "@mui/material/CircularProgress";
 import * as queries from "../graphql/queries";
 import { useNavigate, Navigate } from "react-router-dom";
 import { createEnrolment as createEnrolmentMutation } from "../graphql/mutations";
+
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import FolderIcon from "@mui/icons-material/Folder";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
 const age = (birthdate) => {
   return moment().diff(birthdate, "years");
 };
@@ -105,41 +120,109 @@ export default function PricingContent() {
     tiers = [
       {
         title: "All Bands",
-        subheader: "Without Tuition",
+        subheader: "",
         price: "26.25",
-        description: ["Any band included"],
+        description: ["Includes"],
         buttonText: "Get started",
         buttonVariant: "contained",
         discount: "Discount: Sibling Under 30",
         bands: "big",
         lessons: false,
+        included: [
+          "Drumline",
+          "Early Music",
+          "Jazz Stompers",
+          "Premier Band",
+          "Main Band",
+          "Big Band",
+          "Chamber Band",
+          "Jazz Combo",
+        ],
+      },
+      {
+        title: "Tuition Only",
+        subheader: "",
+        price: "26.25",
+        description: ["Includes"],
+        buttonText: "Get started",
+        buttonVariant: "outlined",
+        discount: "Discount: Sibling Under 30",
+        bands: "big",
+        lessons: true,
+        included: [],
+        notincluded: [
+          "Drumline",
+          "Early Music",
+          "Jazz Stompers",
+          "Premier Band",
+          "Main Band",
+          "Big Band",
+          "Chamber Band",
+          "Jazz Combo",
+        ],
       },
     ];
   } else {
     tiers = [
       {
         title: "All Bands",
-        subheader: "Without Tuition",
+        subheader: "",
         price: age(user.attributes?.birthdate) <= 30 ? "52.50" : "105.00",
-        description: ["Any band included"],
+        description: ["Includes"],
         buttonText: "Get started",
         buttonVariant: "contained",
         discount:
           age(user.attributes?.birthdate) <= 30 ? "Discount: Under 30" : "",
         bands: "big",
         lessons: false,
+        included: [
+          "Drumline",
+          "Early Music",
+          "Jazz Stompers",
+          "Premier Band",
+          "Main Band",
+          "Big Band",
+          "Chamber Band",
+          "Jazz Combo",
+        ],
+        notincluded: [],
       },
       {
-        title: "One Small Band Only",
-        subheader: "Without Tuition",
+        title: "One Small Band",
+        subheader: "",
         price: age(user.attributes?.birthdate) <= 30 ? "26.25" : "52.50",
-        description: ["Access to one small band only"],
+        description: ["Includes"],
         buttonText: "Get started",
         buttonVariant: "outlined",
         discount:
           age(user.attributes?.birthdate) <= 30 ? "Discount: Under 30" : "",
         bands: "small",
         lessons: false,
+        included: ["Drumline", "Early Music", "Jazz Stompers", "Premier Band"],
+        notincluded: ["Main Band", "Big Band", "Chamber Band", "Jazz Combo"],
+      },
+      {
+        title: "Tuition Only",
+        subheader: "",
+        price: age(user.attributes?.birthdate) <= 30 ? 52.5 * 2 : 105.0 * 2,
+        description: ["Includes"],
+        buttonText: "Get started",
+        buttonVariant: "outlined",
+        discount:
+          age(user.attributes?.birthdate) <= 30 ? "Discount: Under 30" : "",
+        bands: "big",
+        lessons: true,
+        included: [],
+        notincluded: [
+          "Drumline",
+          "Early Music",
+          "Jazz Stompers",
+          "Premier Band",
+          "Main Band",
+          "Big Band",
+          "Chamber Band",
+          "Jazz Combo",
+        ],
       },
     ];
   }
@@ -306,6 +389,46 @@ function MemberShipPicker({ tiers, session }) {
                     </Typography>
                   ))}
                 </ul>
+
+                <List dense={true} component="nav" aria-label="contacts">
+                  {tier.included.map((line) => (
+                    <ListItem button>
+                      <ListItemIcon>
+                        <CheckCircleIcon color="primary" />
+                      </ListItemIcon>
+                      <ListItemText primary={line} />
+                    </ListItem>
+                  ))}
+                  {tier.notincluded.map((line) => (
+                    <ListItem button>
+                      <ListItemIcon>
+                        <CancelIcon color="gray" />
+                      </ListItemIcon>
+                      <ListItemText primary={line} />
+                    </ListItem>
+                  ))}
+                </List>
+
+                <List dense={true} component="nav" aria-label="contacts">
+                  <ListItem
+                    button
+                    secondaryAction={
+                      <IconButton edge="end" aria-label="delete">
+                        <AddIcon color="primary" />
+                      </IconButton>
+                    }
+                  >
+                    <ListItemIcon>
+                      {tier.lessons ? (
+                        <CheckCircleIcon color="primary" />
+                      ) : (
+                        <CancelIcon color="gray" />
+                      )}
+                    </ListItemIcon>
+                    <ListItemText primary={"Private Tuition"} />
+                  </ListItem>
+                </List>
+
                 <Container align="left">
                   {" "}
                   {tier.discount !== "" ? (
