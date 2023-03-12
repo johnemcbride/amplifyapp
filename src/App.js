@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import ELCBLanding from "./components/ELCBSignIn";
+import ELCBTerms from "./components/ELCBTerms";
 import ELCBAdminLanding from "./components/ELCBAdminLanding";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import "@fontsource/josefin-sans";
@@ -88,6 +89,7 @@ const App = ({ signOut }) => {
         <CssBaseline />
         <Routes>
           <Route path="/signup" element={<ELCBSignUp />} />
+          <Route path="/termsofservice" element={<ELCBTerms />} />
           <Route path="/signin" element={<ELCBSignIn />} />
           <Route
             path="/landing"

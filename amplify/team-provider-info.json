@@ -57,7 +57,7 @@
       "function": {
         "checkout": {
           "deploymentBucketName": "amplify-amplifyapp-dev-230900-deployment",
-          "s3Key": "amplify-builds/checkout-51306f41746e385a6430-build.zip"
+          "s3Key": "amplify-builds/checkout-5a4f3964676b66347234-build.zip"
         },
         "stripeHandler": {
           "deploymentBucketName": "amplify-amplifyapp-dev-230900-deployment",

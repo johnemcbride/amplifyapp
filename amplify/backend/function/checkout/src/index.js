@@ -73,6 +73,22 @@ const createStripe = async (
     cancel_url: redirecthost,
     client_reference_id: referenceid,
     customer_email: email,
+    billing_address_collection: "required",
+    consent_collection: { terms_of_service: "required" },
+    custom_fields: [
+      {
+        key: "giftaid",
+        label: { custom: "Gift Aid Consent", type: "custom" },
+        type: "dropdown",
+        dropdown: {
+          options: [
+            { label: "I consent", value: true },
+            { label: "I do not consent", value: false },
+          ],
+        },
+        optional: false,
+      },
+    ],
   });
   return session;
 };
