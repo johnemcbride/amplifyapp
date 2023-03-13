@@ -187,10 +187,30 @@ function Hero({ user }) {
 
 function MembershipGrid({ enrolments }) {
   const columns: GridColDef[] = [
-    { field: "term", headerName: "Term", width: 250 },
-    { field: "bandDesc", headerName: "Band Membership Level", width: 200 },
-    { field: "bandRate", headerName: "Band Rate Paid (£)", width: 200 },
-    { field: "owner", headerName: "Member", width: 200 },
+    { field: "status", headerName: "Status", resizable: true, width: 100 },
+    { field: "term", headerName: "Term", resizable: true, width: 200 },
+    {
+      field: "bandDesc",
+      headerName: "Band Membership Level",
+      width: 300,
+      resizable: true,
+    },
+    {
+      field: "bandRate",
+      headerName: "Band Rate Paid (£)",
+      width: 200,
+      valueFormatter: (params) => "£" + Number(params.value).toFixed(2),
+      resizable: true,
+    },
+    { field: "lessonDesc", headerName: "Lessons", width: 200, resizable: true },
+    {
+      field: "lessonRate",
+      headerName: "Lesson rate paid (£)",
+      width: 200,
+      valueFormatter: (params) => "£" + Number(params.value).toFixed(2),
+      resizable: true,
+    },
+    { field: "owner", headerName: "Member", width: 200, resizable: true },
   ];
 
   const rows = enrolments;

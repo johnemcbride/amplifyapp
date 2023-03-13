@@ -339,9 +339,11 @@ function HeroEnrolled({ user, enrolment }) {
 }
 
 function MemberShipPicker({ tiers, session }) {
+  const [isLoading, setIsloading] = React.useState(false);
+
   const [value, setValue] = React.useState("");
   const [error, setError] = React.useState(false);
-  const [helperText, setHelperText] = React.useState("Choose wisely");
+  const [helperText, setHelperText] = React.useState("");
 
   const handleRadioChange = (event) => {
     setValue(event.target.value);
@@ -351,11 +353,38 @@ function MemberShipPicker({ tiers, session }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    setIsloading(true);
+    if (value == "") {
+      console.log("setting helper");
+      setHelperText(
+        "You must pick a band membership option before submitting."
+      );
+      setIsloading(false);
+    } else {
+      API.graphql({
+        query: createEnrolmentMutation,
+        variables: {
+          input: { bands: value, lessons: checked },
+        },
+      }).then((res) => {
+        API.post("checkout", "/checkout", {
+          body: {
+            accesskey: session.accessToken,
+            enrolmentId: res.data.createEnrolment.id,
+          },
+        }).then((res) => {
+          window.location.replace(res.url);
+        });
+      });
+    }
+
+    console.log(value + checked + isLoading);
   };
-  const [checked, setChecked] = React.useState(true);
+  const [checked, setChecked] = React.useState(false);
 
   const handleChange = (event) => {
-    setChecked(event.target.checked);
+    setChecked(!checked);
   };
   return (
     <Container
@@ -554,10 +583,16 @@ function MemberShipPicker({ tiers, session }) {
                       }}
                       value="all"
                       control={<Checkbox />}
+                      onClick={handleChange}
                     />
                   </td>
                   <td>
-                    <Typography component="p" variant="body" color="green">
+                    <Typography
+                      paddingY={2}
+                      component="p"
+                      variant="body"
+                      color="green"
+                    >
                       Select here to <b>Include Tuition</b> in addition to band
                       membership
                     </Typography>
@@ -565,9 +600,24 @@ function MemberShipPicker({ tiers, session }) {
                 </tr>
               </RadioGroup>
             </table>
-            <Button fullWidth type="submit" variant="contained">
+            <Button
+              marginTop={"15px"}
+              paddingY={2}
+              fullWidth
+              disabled={isLoading}
+              type="submit"
+              variant="contained"
+            >
+              {isLoading ? (
+                <>
+                  <CircularProgress size={20} /> &nbsp;
+                </>
+              ) : null}
               pay now
             </Button>
+            <Typography paddingY={2} component="p" variant="body" color="red">
+              {helperText}
+            </Typography>
           </FormControl>
         </form>
       </Grid>
@@ -614,13 +664,7 @@ function LoadingButton({ session, tier }) {
 function MembershipSummary({ enrolment }) {
   return (
     <Container maxWidth="md" component="main">
-      <Grid
-        container
-        spacing={5}
-        direction="row"
-        alignItems="center"
-        justifyItems="center"
-      >
+      <Grid container spacing={5} direction="row" alignItems="center">
         <Grid item xs={12}>
           <Card>
             <CardHeader

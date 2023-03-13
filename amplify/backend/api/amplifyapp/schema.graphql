@@ -14,7 +14,7 @@ type Enrolment
   bandDesc: String
   bandRate: Float
   lessons: Boolean
-  lessonDesc: Float
-  lessonRate: String
+  lessonDesc: String
+  lessonRate: Float
   stripeRef: String
 }

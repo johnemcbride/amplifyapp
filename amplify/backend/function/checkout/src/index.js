@@ -62,8 +62,10 @@ const { Sha256 } = crypto;
 const createStripe = async (
   referenceid,
   email,
-  rate,
-  ratedescription,
+  bandRate,
+  bandDescription,
+  lessonRate,
+  lessonDescription,
   redirecthost
 ) => {
   //
@@ -91,8 +93,16 @@ const createStripe = async (
         {
           price_data: {
             currency: "GBP",
-            unit_amount: (rate * 100).toString().split(".")[0],
-            product_data: { name: ratedescription },
+            unit_amount: (bandRate * 100).toString().split(".")[0],
+            product_data: { name: bandDescription },
+          },
+          quantity: 1,
+        },
+        {
+          price_data: {
+            currency: "GBP",
+            unit_amount: (lessonRate * 100).toString().split(".")[0],
+            product_data: { name: lessonDescription },
           },
           quantity: 1,
         },
@@ -193,7 +203,13 @@ const fetchEnrolment = async (id) => {
   }
 };
 
-const updEnrolment = async (id, bandDesc, bandPrice, stripeRef) => {
+const updEnrolment = async (
+  id,
+  bandDesc,
+  bandPrice,
+  lessonDesc,
+  lessonPrice
+) => {
   console.log("Startingupdatenrolment for " + id);
   const update = /* GraphQL */ `
     mutation UpdateEnrolment(
@@ -234,7 +250,8 @@ const updEnrolment = async (id, bandDesc, bandPrice, stripeRef) => {
       bandDesc: bandDesc,
       bandRate: bandPrice,
       term: "Summer Term - 2023",
-      stripeRef: stripeRef,
+      lessonDesc: lessonDesc,
+      lessonRate: lessonPrice,
     },
   };
   const requestToBeSigned = new HttpRequest({
@@ -324,22 +341,46 @@ exports.handler = async (event) => {
       .Value;
 
     console.log("Email = " + email);
-    const bandDesc =
-      bands === "big"
-        ? "Full band membership"
-        : "Limited band membership (one small band only)";
+    let bandDesc = "No band membership (tuition only)";
     let bandPrice = 0;
+
     if (age > 30) {
-      if (bands === "big") {
+      if (bands === "all") {
+        bandDesc = "All bands (over 30's rate)";
         bandPrice = 105.0;
       } else {
+        bandDesc = "One small band only (over 30's rate)";
         bandPrice = 52.5;
       }
-    } else {
-      if (hasSiblings || bands === "small") {
-        bandPrice = 26.25;
-      } else {
+    } else if (!hasSiblings) {
+      if (bands === "all") {
+        bandDesc = "All bands (under 30's rate)";
         bandPrice = 52.5;
+      } else {
+        bandDesc = "One small band only (under 30's rate)";
+        bandPrice = 26.25;
+      }
+    } else {
+      bandDesc = "All bands (siblings rate)";
+      bandPrice = 26.25;
+    }
+
+    if (bands === "none") {
+      bandPrice = 0;
+      bandDesc = "No band membership (tuition only)";
+    }
+    let lessonDesc = "No lessons included";
+    let lessonPrice = 0;
+    if (lessons) {
+      if (age > 30) {
+        lessonDesc = "Lessons (over 30's rate)";
+        lessonPrice = 105;
+      } else if (hasSiblings) {
+        lessonDesc = "Lessons (siblings rate)";
+        lessonPrice = 26.25;
+      } else {
+        lessonDesc = "Lessons (under 30's rate)";
+        lessonPrice = 52.5;
       }
     }
 
@@ -347,7 +388,8 @@ exports.handler = async (event) => {
       enrolmentId,
       bandDesc,
       bandPrice,
-      "TODO"
+      lessonDesc,
+      lessonPrice
     );
 
     console.log("Just updated enrolment - here is the response in line 217");
@@ -358,6 +400,8 @@ exports.handler = async (event) => {
       email,
       bandPrice,
       bandDesc,
+      lessonPrice,
+      lessonDesc,
       event.headers.Referer
     );
     console.log("Initiating session with Stripe:" + session);
