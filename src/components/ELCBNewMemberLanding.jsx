@@ -1,7 +1,15 @@
 import * as React from "react";
 import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
+
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
+import FormLabel from "@mui/material/FormLabel";
 import Button from "@mui/material/Button";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -11,6 +19,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
 import Link from "@mui/material/Link";
+import Divider from "@mui/material/Divider";
 import GlobalStyles from "@mui/material/GlobalStyles";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
@@ -27,7 +36,6 @@ import { createEnrolment as createEnrolmentMutation } from "../graphql/mutations
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import FormGroup from "@mui/material/FormGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import FolderIcon from "@mui/icons-material/Folder";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -38,6 +46,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { HorizontalRule } from "@mui/icons-material";
 const age = (birthdate) => {
   return moment().diff(birthdate, "years");
 };
@@ -274,16 +283,16 @@ function HeroUnenrolled({ user }) {
       // disableGutters
       maxWidth="sm"
       component="main"
-      sx={{ pt: 8, pb: 6 }}
+      sx={{ pt: 2, pb: 2 }}
     >
       <Typography
         component="h1"
-        variant="h3"
+        variant="h5"
         align="left"
         color="text.primary"
         gutterBottom
       >
-        {user.attributes.name}, Sign Up For Term
+        {user.attributes.name}, please pay your membership fees for the term
       </Typography>
       <Typography
         variant="h5"
@@ -291,11 +300,10 @@ function HeroUnenrolled({ user }) {
         color="text.secondary"
         component="p"
       >
-        Choose one of the membership options below to join one or more of our
-        bands.
         {age(user.attributes?.birthdate) <= 30
-          ? "  If you have any siblings in the band, please update your profile to avail of sibling discount."
+          ? "  Do you have a brother or sister in band?  Update your profile to make sure you pay the cheaper sibling rate.  "
           : null}
+        Choose from these options:
       </Typography>
     </Container>
   );
@@ -331,117 +339,237 @@ function HeroEnrolled({ user, enrolment }) {
 }
 
 function MemberShipPicker({ tiers, session }) {
+  const [value, setValue] = React.useState("");
+  const [error, setError] = React.useState(false);
+  const [helperText, setHelperText] = React.useState("Choose wisely");
+
+  const handleRadioChange = (event) => {
+    setValue(event.target.value);
+    setHelperText(" ");
+    setError(false);
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+  };
+  const [checked, setChecked] = React.useState(true);
+
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+  };
   return (
-    <Container maxWidth="md" component="main">
-      <Grid
-        container
-        spacing={5}
-        direction="row"
-        alignItems="center"
-        justifyItems="center"
-      >
-        {tiers.map((tier) => (
-          // Enterprise card is full width at sm breakpoint
-          <Grid item key={tier.title} xs={12} sm={12 / tiers.length}>
-            <Card>
-              <CardHeader
-                title={tier.title}
-                subheader={tier.subheader}
-                action={null}
-                titleTypographyProps={{
-                  align: "left",
-                }}
-                subheaderTypographyProps={{
-                  align: "left",
-                }}
-                sx={{
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === "light"
-                      ? theme.palette.grey[200]
-                      : theme.palette.grey[700],
-                }}
-              />
-              <CardContent>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "left",
-                    alignItems: "baseline",
-                    mb: 2,
-                  }}
-                >
-                  <Typography component="h2" variant="h3" color="text.primary">
-                    £{tier.price}
-                  </Typography>
-                  <Typography variant="h6" color="text.secondary">
-                    /term
-                  </Typography>
-                </Box>
-                <ul>
-                  {tier.description.map((line) => (
-                    <Typography
-                      component="li"
-                      variant="subtitle1"
-                      align="left"
-                      key={line}
-                    >
-                      {line}
+    <Container
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "baseline",
+        mb: 2,
+      }}
+      container
+      direction="column"
+      alignItems="center"
+      justifyItems="center"
+    >
+      <Grid disableGutters item xs={12}>
+        <form onSubmit={handleSubmit}>
+          <FormControl error={error} variant="standard">
+            <table width="100%">
+              <RadioGroup
+                aria-labelledby="demo-error-radios"
+                name="quiz"
+                value={value}
+                onChange={handleRadioChange}
+              >
+                <tr>
+                  <td>
+                    <FormControlLabel
+                      style={{
+                        paddingX: 0,
+                        marginX: 0,
+                        marginRight: 0,
+                      }}
+                      value="all"
+                      control={<Radio />}
+                    />
+                  </td>
+                  <td>
+                    <Typography component="p" variant="h6" color="green">
+                      <b>All Bands</b> includes <b>all</b> of:
                     </Typography>
-                  ))}
-                </ul>
+                    <table style={{}}>
+                      <tr>
+                        <td
+                          style={{
+                            verticalAlign: "top",
+                            width: "50%",
+                          }}
+                        >
+                          {" "}
+                          <List
+                            dense={true}
+                            component="nav"
+                            aria-label="contacts"
+                          >
+                            <ListItem>
+                              <ListItemText primary={"Percussion"} />
+                            </ListItem>
+                            <ListItem>
+                              <ListItemText primary={"Early Music"} />
+                            </ListItem>
+                            <ListItem>
+                              <ListItemText primary={"Premier Band"} />
+                            </ListItem>
+                            <ListItem>
+                              <ListItemText primary={"Jazz Stompers"} />
+                            </ListItem>
+                          </List>
+                        </td>
+                        <td
+                          style={{
+                            verticalAlign: "top",
+                            width: "50%",
+                            paddingLeft: "10px",
+                          }}
+                        >
+                          <Typography component="p" variant="body">
+                            <List
+                              dense={true}
+                              component="nav"
+                              aria-label="contacts"
+                            >
+                              <ListItem>
+                                <ListItemText primary={"Main Band"} />
+                              </ListItem>
+                              <ListItem>
+                                <ListItemText primary={"Big Band"} />
+                              </ListItem>
+                              <ListItem>
+                                <ListItemText primary={"Chamber Band"} />
+                              </ListItem>
+                              <ListItem>
+                                <ListItemText primary={"Jazz Combo"} />
+                              </ListItem>
+                            </List>
+                          </Typography>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    {" "}
+                    <FormControlLabel
+                      style={{
+                        paddingX: 0,
+                        marginX: 0,
+                        marginRight: 0,
+                      }}
+                      value="small"
+                      control={<Radio />}
+                    />
+                  </td>
+                  <td>
+                    <Typography component="p" variant="h6" color="green">
+                      <b>One Small Band Only</b> includes <b>one</b> of:
+                    </Typography>
+                    <table>
+                      <tr>
+                        <td
+                          style={{
+                            verticalAlign: "top",
+                            width: "50%",
+                          }}
+                        >
+                          <List
+                            dense={true}
+                            component="nav"
+                            aria-label="contacts"
+                          >
+                            <ListItem>
+                              <ListItemText primary={"Percussion"} />
+                            </ListItem>
+                            <ListItem>
+                              <ListItemText primary={"Early Music"} />
+                            </ListItem>
+                            <ListItem>
+                              <ListItemText primary={"Premier Band"} />
+                            </ListItem>
+                          </List>
+                        </td>
+                        <td
+                          align="top"
+                          style={{
+                            verticalAlign: "top",
+                            width: "50%",
+                            paddingLeft: "10px",
+                          }}
+                        >
+                          <List
+                            dense={true}
+                            component="nav"
+                            aria-label="contacts"
+                          >
+                            <ListItem>
+                              <ListItemText primary={"Jazz Stompers"} />
+                            </ListItem>
+                            <ListItem>
+                              <ListItemText primary={"Chamber Band"} />
+                            </ListItem>
+                            <ListItem>
+                              <ListItemText primary={"Jazz Combo"} />
+                            </ListItem>
+                          </List>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <FormControlLabel
+                      style={{
+                        paddingX: 0,
+                        marginX: 0,
+                        marginRight: 0,
+                      }}
+                      value="none"
+                      control={<Radio />}
+                    />
+                  </td>
+                  <td>
+                    <Typography component="p" variant="h6" color="green">
+                      <b>No Bands</b> (tuition only)
+                    </Typography>
+                  </td>
+                </tr>
 
-                <List dense={true} component="nav" aria-label="contacts">
-                  {tier.included.map((line) => (
-                    <ListItem button>
-                      <ListItemIcon>
-                        <CheckCircleIcon color="primary" />
-                      </ListItemIcon>
-                      <ListItemText primary={line} />
-                    </ListItem>
-                  ))}
-                  {tier.notincluded.map((line) => (
-                    <ListItem button>
-                      <ListItemIcon>
-                        <CancelIcon color="gray" />
-                      </ListItemIcon>
-                      <ListItemText primary={line} />
-                    </ListItem>
-                  ))}
-                </List>
-
-                <List dense={true} component="nav" aria-label="contacts">
-                  <ListItem
-                    button
-                    secondaryAction={
-                      <IconButton edge="end" aria-label="delete">
-                        <AddIcon color="primary" />
-                      </IconButton>
-                    }
-                  >
-                    <ListItemIcon>
-                      {tier.lessons ? (
-                        <CheckCircleIcon color="primary" />
-                      ) : (
-                        <CancelIcon color="gray" />
-                      )}
-                    </ListItemIcon>
-                    <ListItemText primary={"Private Tuition"} />
-                  </ListItem>
-                </List>
-
-                <Container align="left">
-                  {" "}
-                  {tier.discount !== "" ? (
-                    <Chip color="success" label={tier.discount} />
-                  ) : null}
-                </Container>
-              </CardContent>
-              <CardActions>
-                <LoadingButton tier={tier} session={session} />
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
+                <tr>
+                  <td>
+                    <FormControlLabel
+                      style={{
+                        paddingX: 0,
+                        marginX: 0,
+                        marginRight: 0,
+                      }}
+                      value="all"
+                      control={<Checkbox />}
+                    />
+                  </td>
+                  <td>
+                    <Typography component="p" variant="body" color="green">
+                      Select here to <b>Include Tuition</b> in addition to band
+                      membership
+                    </Typography>
+                  </td>
+                </tr>
+              </RadioGroup>
+            </table>
+            <Button fullWidth type="submit" variant="contained">
+              pay now
+            </Button>
+          </FormControl>
+        </form>
       </Grid>
     </Container>
   );
