@@ -256,8 +256,8 @@ export default function SignUpSide() {
                 </AppBar>
                 <Box
                   sx={{
-                    my: 8,
-                    mx: 4,
+                    my: 2,
+                    mx: 2,
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
@@ -336,7 +336,7 @@ function Step1({
             onChange={handleChange}
             onBlur={handleBlur}
             name="forename"
-            label="Forename"
+            label="First name"
             value={values.forename.capitalize()}
             autoComplete="off"
             fullWidth
@@ -350,7 +350,7 @@ function Step1({
             onChange={handleChange}
             onBlur={handleBlur}
             name="surname"
-            label="Surname"
+            label="Family name"
             value={values.surname.capitalize()}
             autoComplete="off"
             fullWidth
@@ -358,6 +358,11 @@ function Step1({
             type="text"
             helperText={<ErrorMessage name="surname" />}
           />
+        </Grid>
+        <Grid item xs={12}>
+          <Typography component="p" variant="body" color="green">
+            Data to support our funding applications
+          </Typography>
         </Grid>
         <Grid item xs={12}>
           <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -368,7 +373,7 @@ function Step1({
               }}
               inputFormat="DD/MM/yyyy"
               autocomplete="off"
-              label="Date Of Birth"
+              label="Date of birth"
               value={values.dateofbirth || null}
               fullWidth
               renderInput={(params) => (
@@ -403,7 +408,7 @@ function Step1({
             <ToggleButton value="male">Male</ToggleButton>
             <ToggleButton value="female">Female</ToggleButton>
             <ToggleButton value="other">Other</ToggleButton>
-            <ToggleButton value="prefernotsay">Prefer not say</ToggleButton>
+            <ToggleButton value="prefernotsay">Prefer not to say</ToggleButton>
           </ToggleButtonGroup>
           <FormHelperText error={true}>
             <ErrorMessage name="sex" />
@@ -490,10 +495,20 @@ function Step1({
       >
         Next
       </Button>
-      <Grid container justifyContent="flex-end">
+      <Grid
+        container
+        sx={{
+          my: 1,
+          mx: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+        justifyContent="flex-end"
+      >
         <Grid item>
           <Link href="/" variant="body2">
-            {"Already have an account? Sign in"}
+            {"Already have an account? Sign in here"}
           </Link>
         </Grid>
       </Grid>
@@ -558,7 +573,7 @@ function Step2({
             onChange={handleChange}
             onBlur={handleBlur}
             name="email"
-            label="Email Address"
+            label="Email"
             value={values.email}
             autoComplete="off"
             fullWidth
@@ -571,7 +586,6 @@ function Step2({
           <TextField
             onChange={handleChange}
             onBlur={handleBlur}
-            required
             name="password"
             label="Password"
             value={values.password}
@@ -586,7 +600,6 @@ function Step2({
           <TextField
             onChange={handleChange}
             onBlur={handleBlur}
-            required
             name="confirmpassword"
             label="Confirm Password"
             value={values.confirmpassword}
@@ -654,12 +667,18 @@ function Step3({
     <>
       <Grid spacing={2} container>
         <Grid item xs={12}>
+          <Typography component="p" variant="body" color="green">
+            We sent a code to your email to make sure it's you. Copy it here. No
+            code? Check junk.
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
           <TextField
             onChange={handleChange}
             onBlur={handleBlur}
             margin="normal"
             name="code"
-            label="Verification Code"
+            label="Verification code"
             value={values.code}
             autoComplete="off"
             fullWidth
@@ -693,7 +712,7 @@ function Step3({
           (Object.keys(touched).length === 0 && touched.constructor === Object)
         }
       >
-        RESEND Verification Code
+        Still no code? Resend Verification Code
       </Button>
     </>
   );

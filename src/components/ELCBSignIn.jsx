@@ -170,13 +170,16 @@ export default function ELCBSignIn() {
                 </AppBar>
                 <Box
                   sx={{
-                    my: 8,
-                    mx: 4,
+                    my: 2,
+                    mx: 2,
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
                   }}
                 >
+                  <Typography component="h1" variant="h5">
+                    Welcome to band!
+                  </Typography>
                   <Box
                     component="img"
                     sx={{
@@ -195,7 +198,7 @@ export default function ELCBSignIn() {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       name="username"
-                      label="User Name"
+                      label="Username"
                       value={values.username}
                       autoComplete="off"
                       fullWidth
@@ -208,7 +211,6 @@ export default function ELCBSignIn() {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       margin="normal"
-                      required
                       name="password"
                       label="Password"
                       value={values.password}
@@ -241,15 +243,24 @@ export default function ELCBSignIn() {
                       Sign In
                     </Button>
 
-                    <Grid container>
-                      <Grid item xs>
-                        {/*<Link href="#" variant="body2">
-                        Forgot password?
-                      </Link>*/}
-                      </Grid>
+                    <Grid
+                      container
+                      sx={{
+                        my: 1,
+                        mx: 0,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                      }}
+                    >
                       <Grid item>
-                        <Link href="/signup" variant="body2">
-                          {"Don't have an account? Sign Up"}
+                        <Link
+                          fullWidth
+                          align={"center"}
+                          href="/signup"
+                          variant="body2"
+                        >
+                          {"Don't have an account yet? Sign up here"}
                         </Link>
                       </Grid>
                     </Grid>

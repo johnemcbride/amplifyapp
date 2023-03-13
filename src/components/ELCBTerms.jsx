@@ -69,164 +69,8 @@ export default function PricingContent() {
   const [enrolment, setEnrolment] = React.useState(false);
 
   React.useEffect(() => {
-    console.log("Landing Page mountee");
-    const fetchedEnrolments = API.graphql({
-      query: queries.listEnrolments,
-      variables: {
-        filter: { status: { eq: "paid" } },
-      },
-    });
-    const fetchedUserDetails = Auth.currentAuthenticatedUser().catch(
-      console.log("jamaim")
-    );
-    const fetchSession = Auth.currentSession();
-
-    Promise.all([fetchedEnrolments, fetchedUserDetails, fetchSession])
-      .then((values) => {
-        const user = values[1];
-        setUser(user);
-
-        const enrolments = values[0];
-        if (
-          enrolments.data.listEnrolments.items.filter(
-            (item) => item.owner === user.username
-          ).length > 0
-        ) {
-          setIsEnrolled(true);
-          setEnrolment(
-            enrolments.data.listEnrolments.items.filter(
-              (item) => item.owner === user.username
-            )[0]
-          );
-          console.log("Is enrolled!");
-        }
-
-        const session = values[2];
-        setSession(session);
-        setGroups(session.getIdToken().payload["cognito:groups"] || []);
-
-        setIsLoaded(true);
-        console.log("shoudl have loaded");
-        console.log(values);
-      })
-      .catch(console.log);
+    setIsLoaded(true);
   }, []);
-
-  let tiers = [];
-  if (
-    user.attributes?.profile === "siblings" &&
-    age(user.attributes?.birthdate) < 30
-  ) {
-    tiers = [
-      {
-        title: "All Bands",
-        subheader: "",
-        price: "26.25",
-        description: ["Includes"],
-        buttonText: "Get started",
-        buttonVariant: "contained",
-        discount: "Discount: Sibling Under 30",
-        bands: "big",
-        lessons: false,
-        included: [
-          "Drumline",
-          "Early Music",
-          "Jazz Stompers",
-          "Premier Band",
-          "Main Band",
-          "Big Band",
-          "Chamber Band",
-          "Jazz Combo",
-        ],
-      },
-      {
-        title: "Tuition Only",
-        subheader: "",
-        price: "26.25",
-        description: ["Includes"],
-        buttonText: "Get started",
-        buttonVariant: "outlined",
-        discount: "Discount: Sibling Under 30",
-        bands: "big",
-        lessons: true,
-        included: [],
-        notincluded: [
-          "Drumline",
-          "Early Music",
-          "Jazz Stompers",
-          "Premier Band",
-          "Main Band",
-          "Big Band",
-          "Chamber Band",
-          "Jazz Combo",
-        ],
-      },
-    ];
-  } else {
-    tiers = [
-      {
-        title: "All Bands",
-        subheader: "",
-        price: age(user.attributes?.birthdate) <= 30 ? "52.50" : "105.00",
-        description: ["Includes"],
-        buttonText: "Get started",
-        buttonVariant: "contained",
-        discount:
-          age(user.attributes?.birthdate) <= 30 ? "Discount: Under 30" : "",
-        bands: "big",
-        lessons: false,
-        included: [
-          "Drumline",
-          "Early Music",
-          "Jazz Stompers",
-          "Premier Band",
-          "Main Band",
-          "Big Band",
-          "Chamber Band",
-          "Jazz Combo",
-        ],
-        notincluded: [],
-      },
-      {
-        title: "One Small Band",
-        subheader: "",
-        price: age(user.attributes?.birthdate) <= 30 ? "26.25" : "52.50",
-        description: ["Includes"],
-        buttonText: "Get started",
-        buttonVariant: "outlined",
-        discount:
-          age(user.attributes?.birthdate) <= 30 ? "Discount: Under 30" : "",
-        bands: "small",
-        lessons: false,
-        included: ["Drumline", "Early Music", "Jazz Stompers", "Premier Band"],
-        notincluded: ["Main Band", "Big Band", "Chamber Band", "Jazz Combo"],
-      },
-      {
-        title: "Tuition Only",
-        subheader: "",
-        price: age(user.attributes?.birthdate) <= 30 ? 52.5 * 2 : 105.0 * 2,
-        description: ["Includes"],
-        buttonText: "Get started",
-        buttonVariant: "outlined",
-        discount:
-          age(user.attributes?.birthdate) <= 30 ? "Discount: Under 30" : "",
-        bands: "big",
-        lessons: true,
-        included: [],
-        notincluded: [
-          "Drumline",
-          "Early Music",
-          "Jazz Stompers",
-          "Premier Band",
-          "Main Band",
-          "Big Band",
-          "Chamber Band",
-          "Jazz Combo",
-        ],
-      },
-    ];
-  }
-
   return isLoaded ? (
     <>
       <GlobalStyles
@@ -266,9 +110,9 @@ function HeroUnenrolled({ user }) {
       // disableGutters
       maxWidth="sm"
       component="main"
-      sx={{ pt: 8, pb: 6 }}
     >
       <Typography
+        sx={{ pt: 8 }}
         component="h1"
         variant="h3"
         align="left"
@@ -283,26 +127,112 @@ function HeroUnenrolled({ user }) {
         color="text.secondary"
         component="p"
       >
-        BAND INFORMATION Email communication East London Community Band sends
-        regular emails to its members and updates about special events or
-        rehearsals – we don’t share your email address with other organisations.
-        Photography and filming East London Community Band performs regularly in
-        public where we take photos and record our performances where possible.
-        We use these for promoting the band on social media, our website and in
-        print or to support funding applications. We assume that you consent to
-        this use unless you make it known to us otherwise. Safeguarding East
-        London Community Band has a safeguarding policy in place which all our
-        members should be aware of. Please read the policy document which is
+        BAND INFORMATION
+      </Typography>
+      <Typography
+        sx={{ pt: 4 }}
+        variant="h6"
+        align="left"
+        color="text.secondary"
+        component="p"
+      >
+        Email communication
+      </Typography>
+      <Typography
+        variant="body"
+        align="left"
+        color="text.secondary"
+        component="p"
+      >
+        East London Community Band sends regular emails to its members and
+        updates about special events or rehearsals – we don’t share your email
+        address with other organisations.
+      </Typography>
+      <Typography
+        sx={{ pt: 4 }}
+        variant="h6"
+        align="left"
+        color="text.secondary"
+        component="p"
+      >
+        Photography and filming
+      </Typography>
+      <Typography
+        variant="body"
+        align="left"
+        color="text.secondary"
+        component="p"
+      >
+        East London Community Band performs regularly in public where we take
+        photos and record our performances where possible. We use these for
+        promoting the band on social media, our website and in print or to
+        support funding applications. We assume that you consent to this use
+        unless you make it known to us otherwise.
+      </Typography>
+      <Typography
+        sx={{ pt: 4 }}
+        variant="h6"
+        align="left"
+        color="text.secondary"
+        component="p"
+      >
+        Safeguarding
+      </Typography>
+      <Typography
+        variant="body"
+        align="left"
+        color="text.secondary"
+        component="p"
+      >
+        East London Community Band has a safeguarding policy in place which all
+        our members should be aware of. Please read the policy document which is
         available on the band’s Google Drive. A link to the drive is included in
         the member’s weekly email which you will receive once you join band. Our
         contact details info@eastlondoncommunityband.co.uk
-        www.eastlondoncommunityband.co.uk Our bank details HSBC Whitechapel
-        Branch East London Community Band Sort Code: 40 02 20 Account: 11052640
-        Our organisation We are a volunteer-run charity overseen by a small
-        group of Trustees and a committee. We rely on membership fees and grant
-        funding to operate. We are always looking for members to help in various
-        roles and especially in identifying funding opportunities. Please let us
-        know if you can help.
+        www.eastlondoncommunityband.co.uk
+      </Typography>
+      <Typography
+        sx={{ pt: 4 }}
+        variant="h6"
+        align="left"
+        color="text.secondary"
+        component="p"
+      >
+        Our bank details
+      </Typography>
+      <Typography
+        variant="body"
+        align="left"
+        color="text.secondary"
+        component="p"
+      >
+        HSBC <br />
+        Whitechapel Branch <br />
+        East London Community Band <br />
+        Sort Code: 40 02 20
+        <br />
+        Account: 11052640 <br />
+      </Typography>
+      <Typography
+        sx={{ pt: 4 }}
+        variant="h6"
+        align="left"
+        color="text.secondary"
+        component="p"
+      >
+        Our organisation
+      </Typography>
+      <Typography
+        variant="body"
+        align="left"
+        color="text.secondary"
+        component="p"
+      >
+        We are a volunteer-run charity overseen by a small group of Trustees and
+        a committee. We rely on membership fees and grant funding to operate. We
+        are always looking for members to help in various roles and especially
+        in identifying funding opportunities. Please let us know if you can
+        help.
       </Typography>
     </Container>
   );
