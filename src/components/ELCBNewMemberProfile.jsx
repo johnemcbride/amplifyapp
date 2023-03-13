@@ -43,6 +43,12 @@ import * as yup from "yup";
 import { FormHelperText } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
+
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl, { formControlClasses } from "@mui/material/FormControl";
+
 function Copyright(props) {
   return (
     <Typography
@@ -60,6 +66,27 @@ function Copyright(props) {
     </Typography>
   );
 }
+
+const ethnicGroups = [
+  "Indian",
+  "Pakistani",
+  "Bangladeshi",
+  "Chinese",
+  "Any other Asian background",
+  "Caribbean",
+  "African",
+  "Any other Black, Black British, or Caribbean background",
+  "White and Black Caribbean",
+  "White and Black African",
+  "White and Asian",
+  "White - English, Welsh, Scottish, Northern Irish or British",
+  "White - Irish",
+  "White - Gypsy or Irish Traveller",
+  "White - Roma",
+  "Any other White background",
+  "Arab",
+  "Any other ethnic group",
+];
 
 export default function PricingContent() {
   const navigate = useNavigate();
@@ -84,8 +111,10 @@ export default function PricingContent() {
     const updated = {
       ...values,
       birthdate: moment(values.birthdate).format("MM/DD/YYYY"),
+      "custom:ethnicity": values.ethnicity,
     };
     delete updated.sibling;
+    delete updated.ethnicity;
     Auth.updateUserAttributes(user, updated)
       .then((user) => {
         setIsSubmitting(false);
@@ -141,6 +170,7 @@ export default function PricingContent() {
     birthdate: user.attributes?.birthdate || "",
     gender: user.attributes?.gender || "",
     sibling: user.attributes?.profile === "siblings" ? true : false,
+    ethnicity: user.attributes?.["custom:ethnicity"] || "",
   };
   console.log(initialValues);
 
@@ -342,10 +372,77 @@ export default function PricingContent() {
                                   Female
                                 </ToggleButton>
                                 <ToggleButton value="other">Other</ToggleButton>
+
+                                <ToggleButton value="prefernotsay">
+                                  Prefer not say
+                                </ToggleButton>
                               </ToggleButtonGroup>
                               <FormHelperText error={true}>
                                 <ErrorMessage name="gender" />
                               </FormHelperText>
+                            </Grid>
+
+                            <Grid
+                              item
+                              xs={12}
+                              style={{
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            >
+                              <FormControl
+                                style={{
+                                  whiteSpace: "unset",
+                                  wordBreak: "break-all",
+                                }}
+                                fullWidth
+                              >
+                                <InputLabel
+                                  id="ethnicitylabel"
+                                  style={{
+                                    whiteSpace: "unset",
+                                    wordBreak: "break-all",
+                                    width: "300px",
+                                  }}
+                                >
+                                  Which ethnic group you belong to?
+                                </InputLabel>
+
+                                <Select
+                                  component="TextAreaAutoSize"
+                                  style={{
+                                    whiteSpace: "unset",
+                                    wordBreak: "break-all",
+                                    width: "300px",
+                                  }}
+                                  labelId="ethnicitylabel"
+                                  label="Which ethnic group you belong to?"
+                                  name="ethnicity"
+                                  value={values.ethnicity}
+                                  // You need to set the new field value
+
+                                  onChange={handleChange}
+                                  onBlur={handleBlur("ethnicity")}
+                                  multiple={false}
+                                >
+                                  {ethnicGroups.map((s) => (
+                                    <MenuItem
+                                      style={{
+                                        whiteSpace: "unset",
+                                        wordBreak: "break-word",
+                                      }}
+                                      key={s}
+                                      value={s}
+                                    >
+                                      {s}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+
+                                <FormHelperText error="true" type="invalid">
+                                  <ErrorMessage name={"ethnicity"} />
+                                </FormHelperText>
+                              </FormControl>
                             </Grid>
 
                             <Grid item xs={12}>

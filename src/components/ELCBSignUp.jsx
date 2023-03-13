@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl, { formControlClasses } from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import RadioGroup from "@mui/material/RadioGroup";
+import Radio from "@mui/material/Radio";
 import Toolbar from "@mui/material/Toolbar";
 import Link from "@mui/material/Link";
 import AppBar from "@mui/material/AppBar";
@@ -8,7 +16,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -19,7 +26,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Formik, ErrorMessage, Field } from "formik";
 import { Auth, Hub } from "aws-amplify";
 import * as yup from "yup";
-import { FormHelperText } from "@mui/material";
+import { FormHelperText, TextareaAutosize } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
@@ -30,6 +37,27 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import StepWizard from "react-step-wizard";
+
+const ethnicGroups = [
+  "Indian",
+  "Pakistani",
+  "Bangladeshi",
+  "Chinese",
+  "Any other Asian background",
+  "Caribbean",
+  "African",
+  "Any other Black, Black British, or Caribbean background",
+  "White and Black Caribbean",
+  "White and Black African",
+  "White and Asian",
+  "White - English, Welsh, Scottish, Northern Irish or British",
+  "White - Irish",
+  "White - Gypsy or Irish Traveller",
+  "White - Roma",
+  "Any other White background",
+  "Arab",
+  "Any other ethnic group",
+];
 
 String.prototype.capitalize = function (lower) {
   return (lower ? this.toLowerCase() : this).replace(
@@ -92,7 +120,7 @@ export default function SignUpSide() {
 
   const handleClose = () => {
     setError({ error: false });
-    setFormObject({ username: "", password: "" });
+    //setFormObject({ username: "", password: "" });
   };
   // if logged in redirect to real page
   Auth.currentAuthenticatedUser()
@@ -165,6 +193,11 @@ export default function SignUpSide() {
                 "Please advise ethnic group for inclusion monitoring purposes"
               ),
             sex: yup.string().required(),
+            ethnicgroup: yup
+              .string()
+              .required(
+                "Please advise ethnic group for inclusion monitoring purposes"
+              ),
             dateofbirth: yup
               .date()
               .max(new Date(), "Date must be in the past")
@@ -237,7 +270,6 @@ export default function SignUpSide() {
                       width: 80,
                       my: 1,
                     }}
-                    alt="The house from the offer."
                     src="/elcblogo.png"
                   />
                   <Typography component="h1" variant="h5">
@@ -371,10 +403,74 @@ function Step1({
             <ToggleButton value="male">Male</ToggleButton>
             <ToggleButton value="female">Female</ToggleButton>
             <ToggleButton value="other">Other</ToggleButton>
+            <ToggleButton value="prefernotsay">Prefer not say</ToggleButton>
           </ToggleButtonGroup>
           <FormHelperText error={true}>
             <ErrorMessage name="sex" />
           </FormHelperText>
+        </Grid>
+
+        <Grid
+          item
+          xs={12}
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <FormControl
+            style={{
+              whiteSpace: "unset",
+              wordBreak: "break-all",
+            }}
+            fullWidth
+          >
+            <InputLabel
+              id="ethnicitylabel"
+              style={{
+                whiteSpace: "unset",
+                wordBreak: "break-all",
+                width: "300px",
+              }}
+            >
+              Which ethnic group you belong to?
+            </InputLabel>
+
+            <Select
+              component="TextAreaAutoSize"
+              style={{
+                whiteSpace: "unset",
+                wordBreak: "break-all",
+                width: "300px",
+              }}
+              labelId="ethnicitylabel"
+              label="Which ethnic group you belong to?"
+              name="ethnicity"
+              value={values.ethnicity}
+              // You need to set the new field value
+
+              onChange={handleChange}
+              onBlur={handleBlur("ethnicity")}
+              multiple={false}
+            >
+              {ethnicGroups.map((s) => (
+                <MenuItem
+                  style={{
+                    whiteSpace: "unset",
+                    wordBreak: "break-word",
+                  }}
+                  key={s}
+                  value={s}
+                >
+                  {s}
+                </MenuItem>
+              ))}
+            </Select>
+
+            <FormHelperText error="true" type="invalid">
+              <ErrorMessage name={"ethnicity"} />
+            </FormHelperText>
+          </FormControl>
         </Grid>
       </Grid>
       <Button
@@ -428,6 +524,7 @@ function Step2({
         birthdate: values.dateofbirth.format("MM/DD/yyyy"),
         name: values.forename,
         family_name: values.surname,
+        "custom:ethnicity": values.ethnicity,
       },
       autoSignIn: {
         // optional - enables auto sign in after user is confirmed
