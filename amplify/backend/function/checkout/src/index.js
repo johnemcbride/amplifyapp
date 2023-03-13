@@ -1,3 +1,17 @@
+/*
+Use the following code to retrieve configured secrets from SSM:
+
+const aws = require('aws-sdk');
+
+const { Parameters } = await (new aws.SSM())
+  .getParameters({
+    Names: ["stripe_pk"].map(secretName => process.env[secretName]),
+    WithDecryption: true,
+  })
+  .promise();
+
+Parameters will be of the form { Name: 'secretName', Value: 'secretValue', ... }[]
+*/
 /* Amplify Params - DO NOT EDIT
 	API_AMPLIFYAPP_GRAPHQLAPIENDPOINTOUTPUT
 	API_AMPLIFYAPP_GRAPHQLAPIIDOUTPUT
@@ -18,6 +32,7 @@ const { defaultProvider } = require("@aws-sdk/credential-provider-node");
 const { SignatureV4 } = require("@aws-sdk/signature-v4");
 const { HttpRequest } = require("@aws-sdk/protocol-http");
 
+const { SSMClient, GetParameterCommand } = require("@aws-sdk/client-ssm");
 const moment = require("moment");
 
 const {
@@ -51,46 +66,66 @@ const createStripe = async (
   ratedescription,
   redirecthost
 ) => {
-  let url = "https://api.stripe.com/v1/checkout/sessions";
-  const privatekey =
-    "sk_test_51MPqHgHsYPcD7OHQied7QODzII5wiNOzL6LqzTBLDWyuxdEzTlvsLLUtmANmorVGJwS5yIemWOlW3hQzcut43kLF00RNmzxG8a";
-  const stripe = Stripe(
-    "sk_test_51MPqHgHsYPcD7OHQied7QODzII5wiNOzL6LqzTBLDWyuxdEzTlvsLLUtmANmorVGJwS5yIemWOlW3hQzcut43kLF00RNmzxG8a"
-  );
-  const session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price_data: {
-          currency: "GBP",
-          unit_amount: (rate * 100).toString().split(".")[0],
-          product_data: { name: ratedescription },
+  //
+  // get secret
+
+  const ssmclient = new SSMClient({ region: "eu-west-2" });
+
+  console.log("stripe - env is " + JSON.stringify(process.env));
+  const params = {
+    Name: process.env["stripe_pk"],
+    WithDecryption: true,
+  };
+  const command = new GetParameterCommand(params);
+  try {
+    const data = await ssmclient.send(command);
+    console.log("getting secret");
+    console.log(data);
+    const privatekey = data.Parameter.Value;
+    // process data.
+
+    let url = "https://api.stripe.com/v1/checkout/sessions";
+    const stripe = Stripe(privatekey);
+    const session = await stripe.checkout.sessions.create({
+      line_items: [
+        {
+          price_data: {
+            currency: "GBP",
+            unit_amount: (rate * 100).toString().split(".")[0],
+            product_data: { name: ratedescription },
+          },
+          quantity: 1,
         },
-        quantity: 1,
-      },
-    ],
-    mode: "payment",
-    success_url: redirecthost,
-    cancel_url: redirecthost,
-    client_reference_id: referenceid,
-    customer_email: email,
-    billing_address_collection: "required",
-    consent_collection: { terms_of_service: "required" },
-    custom_fields: [
-      {
-        key: "giftaid",
-        label: { custom: "Gift Aid Consent", type: "custom" },
-        type: "dropdown",
-        dropdown: {
-          options: [
-            { label: "I consent", value: true },
-            { label: "I do not consent", value: false },
-          ],
+      ],
+      mode: "payment",
+      success_url: redirecthost,
+      cancel_url: redirecthost,
+      client_reference_id: referenceid,
+      customer_email: email,
+      billing_address_collection: "required",
+      consent_collection: { terms_of_service: "required" },
+      custom_fields: [
+        {
+          key: "giftaid",
+          label: { custom: "Gift Aid Consent", type: "custom" },
+          type: "dropdown",
+          dropdown: {
+            options: [
+              { label: "I consent", value: true },
+              { label: "I do not consent", value: false },
+            ],
+          },
+          optional: false,
         },
-        optional: false,
-      },
-    ],
-  });
-  return session;
+      ],
+    });
+    return session;
+  } catch (error) {
+    // error handling.
+    throw error;
+  } finally {
+    // finally.
+  }
 };
 
 const fetchEnrolment = async (id) => {

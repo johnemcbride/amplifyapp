@@ -143,6 +143,14 @@
         }
       ]
     },
+    "AMPLIFY_function_checkout_secretsPathAmplifyAppId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "checkout"
+        }
+      ]
+    },
     "AMPLIFY_function_stripeHandler_deploymentBucketName": {
       "usedBy": [
         {

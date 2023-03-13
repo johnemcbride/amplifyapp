@@ -15,5 +15,7 @@
     }
   },
   "lambdaLayers": [],
-  "secretNames": []
+  "secretNames": [
+    "stripe_pk"
+  ]
 }
