@@ -324,7 +324,7 @@ function HeroEnrolled({ user, enrolment }) {
         color="text.primary"
         gutterBottom
       >
-        {user.attributes.name}, You've signed up!
+        {user.attributes.name}, You've signed up! Thank you
       </Typography>
       <Typography
         variant="h5"
@@ -332,7 +332,10 @@ function HeroEnrolled({ user, enrolment }) {
         color="text.secondary"
         component="p"
       >
-        Your enrolment details are below for the term "{enrolment.term}"
+        Your enrolment details are below. Please make sure your profile is up to
+        date. Changed band? Started lessons? We need the correct information to
+        keep things running smoothly. Just click the profile button above and
+        check your details are correct. Thanks.
       </Typography>
     </Container>
   );

@@ -205,6 +205,7 @@ const fetchEnrolment = async (id) => {
 
 const updEnrolment = async (
   id,
+  bands,
   firstname,
   familyname,
   email,
@@ -251,6 +252,7 @@ const updEnrolment = async (
     input: {
       id: id,
       status: "pending",
+      bandMembershipType: bands,
       bandDesc: bandDesc,
       bandRate: bandPrice,
       term: "Summer Term - 2023",
@@ -394,6 +396,7 @@ exports.handler = async (event) => {
 
     const updEnrolResp = await updEnrolment(
       enrolmentId,
+      bands,
       data.UserAttributes.filter((attr) => attr.Name === "name")[0].Value,
       data.UserAttributes.filter((attr) => attr.Name === "family_name")[0]
         .Value,

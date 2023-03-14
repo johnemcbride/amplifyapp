@@ -11,6 +11,7 @@ type Enrolment
   bands: String
   status: String
   term: String
+  bandMembershipType: String
   bandDesc: String
   bandRate: Float
   lessons: Boolean
