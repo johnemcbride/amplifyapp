@@ -96,7 +96,8 @@
       "function": {
         "checkout": {
           "deploymentBucketName": "amplify-amplifyapp-pilot-130839-deployment",
-          "s3Key": "amplify-builds/checkout-72666379423438453032-build.zip"
+          "s3Key": "amplify-builds/checkout-49363032686631774b4d-build.zip",
+          "secretsPathAmplifyAppId": "d1unq6d9vt4zkd"
         },
         "stripeHandler": {
           "deploymentBucketName": "amplify-amplifyapp-pilot-130839-deployment",

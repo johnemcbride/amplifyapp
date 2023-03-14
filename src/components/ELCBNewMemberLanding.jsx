@@ -362,6 +362,7 @@ function MemberShipPicker({ tiers, session }) {
       );
       setIsloading(false);
     } else {
+      console.log("creating enrolment");
       API.graphql({
         query: createEnrolmentMutation,
         variables: {
