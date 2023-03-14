@@ -14,6 +14,25 @@ export const getEnrolment = /* GraphQL */ `
       lessonDesc
       lessonRate
       stripeRef
+      total
+      giftAidConsent
+      city
+      line1
+      line2
+      postCode
+      email
+      siblings
+      firstname
+      familyname
+      member {
+        Username
+        UserCreateDate
+        UserLastModifiedDate
+        Enabled
+        UserStatus
+        PreferredMfaSetting
+        UserMFASettingList
+      }
       createdAt
       updatedAt
       owner
@@ -38,6 +57,16 @@ export const listEnrolments = /* GraphQL */ `
         lessonDesc
         lessonRate
         stripeRef
+        total
+        giftAidConsent
+        city
+        line1
+        line2
+        postCode
+        email
+        siblings
+        firstname
+        familyname
         createdAt
         updatedAt
         owner

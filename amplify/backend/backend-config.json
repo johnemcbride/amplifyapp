@@ -109,6 +109,20 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "getUser": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "amplifyapp0cb91442"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "stripeHandler": {
       "build": true,
       "dependsOn": [
@@ -148,6 +162,22 @@
         {
           "category": "function",
           "resourceName": "checkout"
+        }
+      ]
+    },
+    "AMPLIFY_function_getUser_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getUser"
+        }
+      ]
+    },
+    "AMPLIFY_function_getUser_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getUser"
         }
       ]
     },

@@ -205,6 +205,10 @@ const fetchEnrolment = async (id) => {
 
 const updEnrolment = async (
   id,
+  firstname,
+  familyname,
+  email,
+  siblings,
   bandDesc,
   bandPrice,
   lessonDesc,
@@ -252,6 +256,10 @@ const updEnrolment = async (
       term: "Summer Term - 2023",
       lessonDesc: lessonDesc,
       lessonRate: lessonPrice,
+      firstname: firstname,
+      familyname: familyname,
+      siblings: siblings,
+      email: email,
     },
   };
   const requestToBeSigned = new HttpRequest({
@@ -386,6 +394,11 @@ exports.handler = async (event) => {
 
     const updEnrolResp = await updEnrolment(
       enrolmentId,
+      data.UserAttributes.filter((attr) => attr.Name === "name")[0].Value,
+      data.UserAttributes.filter((attr) => attr.Name === "family_name")[0]
+        .Value,
+      data.UserAttributes.filter((attr) => attr.Name === "email")[0].Value,
+      true,
       bandDesc,
       bandPrice,
       lessonDesc,

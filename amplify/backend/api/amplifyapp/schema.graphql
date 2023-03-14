@@ -17,4 +17,46 @@ type Enrolment
   lessonDesc: String
   lessonRate: Float
   stripeRef: String
+  total: Float
+  giftAidConsent: Boolean
+  city: String
+  line1: String
+  line2: String
+  postCode: String
+  email: String
+  siblings: Boolean
+  firstname: String
+  familyname: String
+
+  member: User @function(name: "getUser-${env}")
+}
+
+# These types derived from https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/CognitoIdentityServiceProvider.html#adminGetUser-property
+type User {
+  Username: String!
+  UserAttributes: [Value]
+  UserCreateDate: String
+  UserLastModifiedDate: String
+  Enabled: Boolean
+  UserStatus: UserStatus
+  MFAOptions: [MFAOption]
+  PreferredMfaSetting: String
+  UserMFASettingList: String
+}
+type Value {
+  Name: String!
+  Value: String
+}
+type MFAOption {
+  DeliveryMedium: String
+  AttributeName: String
+}
+enum UserStatus {
+  UNCONFIRMED
+  CONFIRMED
+  ARCHIVED
+  COMPROMISED
+  UNKNOWN
+  RESET_REQUIRED
+  FORCE_CHANGE_PASSWORD
 }

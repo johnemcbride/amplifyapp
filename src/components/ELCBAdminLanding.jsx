@@ -188,6 +188,35 @@ function Hero({ user }) {
 function MembershipGrid({ enrolments }) {
   const columns: GridColDef[] = [
     { field: "status", headerName: "Status", resizable: true, width: 100 },
+    {
+      field: "total",
+      headerName: "Total fees (£)",
+      width: 100,
+      valueFormatter: (params) => "£" + Number(params.value).toFixed(2),
+      resizable: true,
+    },
+    {
+      field: "firstname",
+      headerName: "First name",
+      width: 100,
+      resizable: true,
+    },
+    {
+      field: "familyname",
+      headerName: "Family name",
+      width: 100,
+      resizable: true,
+    },
+
+    { field: "email", headerName: "Email", width: 300 },
+    { field: "siblings", headerName: "Siblings", width: 100 },
+
+    { field: "line1", headerName: "Address Line 1", width: 150 },
+    { field: "line2", headerName: "Address Line 2", width: 150 },
+    { field: "city", headerName: "City", width: 100 },
+    { field: "postCode", headerName: "Post Code", width: 100 },
+
+    { field: "stripeRef", headerName: "Stripe", resizable: true, width: 250 },
     { field: "term", headerName: "Term", resizable: true, width: 200 },
     {
       field: "bandDesc",
@@ -210,7 +239,18 @@ function MembershipGrid({ enrolments }) {
       valueFormatter: (params) => "£" + Number(params.value).toFixed(2),
       resizable: true,
     },
-    { field: "owner", headerName: "Member", width: 200, resizable: true },
+
+    { field: "giftAidConsent", headerName: "Gift Aid Consent", width: 150 },
+    // total: Float
+    // giftAidConsent: Boolean
+    // city:String
+    // line1:String
+    // line2:String
+    // postCode:String
+    // email:String
+    // siblings: Boolean
+    // firstname:String
+    // familyname:String
   ];
 
   const rows = enrolments;

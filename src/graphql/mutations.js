@@ -17,6 +17,25 @@ export const createEnrolment = /* GraphQL */ `
       lessonDesc
       lessonRate
       stripeRef
+      total
+      giftAidConsent
+      city
+      line1
+      line2
+      postCode
+      email
+      siblings
+      firstname
+      familyname
+      member {
+        Username
+        UserCreateDate
+        UserLastModifiedDate
+        Enabled
+        UserStatus
+        PreferredMfaSetting
+        UserMFASettingList
+      }
       createdAt
       updatedAt
       owner
@@ -39,6 +58,25 @@ export const updateEnrolment = /* GraphQL */ `
       lessonDesc
       lessonRate
       stripeRef
+      total
+      giftAidConsent
+      city
+      line1
+      line2
+      postCode
+      email
+      siblings
+      firstname
+      familyname
+      member {
+        Username
+        UserCreateDate
+        UserLastModifiedDate
+        Enabled
+        UserStatus
+        PreferredMfaSetting
+        UserMFASettingList
+      }
       createdAt
       updatedAt
       owner
@@ -61,6 +99,25 @@ export const deleteEnrolment = /* GraphQL */ `
       lessonDesc
       lessonRate
       stripeRef
+      total
+      giftAidConsent
+      city
+      line1
+      line2
+      postCode
+      email
+      siblings
+      firstname
+      familyname
+      member {
+        Username
+        UserCreateDate
+        UserLastModifiedDate
+        Enabled
+        UserStatus
+        PreferredMfaSetting
+        UserMFASettingList
+      }
       createdAt
       updatedAt
       owner
