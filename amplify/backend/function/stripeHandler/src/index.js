@@ -58,11 +58,29 @@ exports.handler = async (event) => {
   //const id = "4ef8310e-05bf-4b28-ab76-90b649b4d57a";
   console.log(`ID: ${id} `);
 
+  // total: Float
+  // giftAidConsent: Boolean
+  // city:String
+  // line1:String
+  // line2:String
+  // postCode:String
+  // email:String
+  // siblings: Boolean
+  // firstname:String
+  // familyname:String
   const variables = {
     input: {
       id: id,
       status: "paid",
-      stripeRef: JSON.stringify(JSON.parse(event.body).data),
+      stripeRef: JSON.parse(event.body).data.object.payment_intent,
+      total: JSON.parse(event.body).data.object.amount_total / 100,
+      giftAidConsent: JSON.parse(event.body).data.object.custom_fields[0]
+        .dropdown.value,
+      city: JSON.parse(event.body).data.object.customer_details.address.city,
+      line1: JSON.parse(event.body).data.object.customer_details.address.line1,
+      line2: JSON.parse(event.body).data.object.customer_details.address.line2,
+      postCode: JSON.parse(event.body).data.object.customer_details.address
+        .postal_code,
     },
   };
   const endpoint = new URL(GRAPHQL_ENDPOINT);

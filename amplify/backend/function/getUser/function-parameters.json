@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "auth": {
+      "amplifyapp0cb91442": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}
