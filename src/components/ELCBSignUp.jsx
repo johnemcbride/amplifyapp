@@ -361,7 +361,7 @@ function Step1({
         </Grid>
         <Grid item xs={12}>
           <Typography component="p" variant="body" color="green">
-            Data to support our funding applications
+            Data to support our funding applications:
           </Typography>
         </Grid>
         <Grid item xs={12}>
@@ -438,7 +438,7 @@ function Step1({
                 width: "300px",
               }}
             >
-              Which ethnic group you belong to?
+              Which ethnic group do you belong to?
             </InputLabel>
 
             <Select

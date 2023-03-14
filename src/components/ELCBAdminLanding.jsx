@@ -209,7 +209,6 @@ function MembershipGrid({ enrolments }) {
     },
 
     { field: "email", headerName: "Email", width: 300 },
-    { field: "siblings", headerName: "Siblings", width: 100 },
 
     { field: "line1", headerName: "Address Line 1", width: 150 },
     { field: "line2", headerName: "Address Line 2", width: 150 },

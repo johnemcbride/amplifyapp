@@ -11,6 +11,7 @@ export const createEnrolment = /* GraphQL */ `
       bands
       status
       term
+      bandMembershipType
       bandDesc
       bandRate
       lessons
@@ -52,6 +53,7 @@ export const updateEnrolment = /* GraphQL */ `
       bands
       status
       term
+      bandMembershipType
       bandDesc
       bandRate
       lessons
@@ -93,6 +95,7 @@ export const deleteEnrolment = /* GraphQL */ `
       bands
       status
       term
+      bandMembershipType
       bandDesc
       bandRate
       lessons

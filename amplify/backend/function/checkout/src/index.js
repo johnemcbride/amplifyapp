@@ -356,30 +356,30 @@ exports.handler = async (event) => {
 
     if (age > 30) {
       if (bands === "all") {
-        bandDesc = "All bands (over 30's rate)";
+        bandDesc = "All Bands (over 30's rate)";
         bandPrice = 105.0;
       } else {
-        bandDesc = "One small band only (over 30's rate)";
+        bandDesc = "One Small Band Only (over 30's rate)";
         bandPrice = 52.5;
       }
     } else if (!hasSiblings) {
       if (bands === "all") {
-        bandDesc = "All bands (under 30's rate)";
+        bandDesc = "All Bands (under 30's rate)";
         bandPrice = 52.5;
       } else {
-        bandDesc = "One small band only (under 30's rate)";
+        bandDesc = "One Small Band Only (under 30's rate)";
         bandPrice = 26.25;
       }
     } else {
-      bandDesc = "All bands (siblings rate)";
+      bandDesc = "All Bands (siblings rate)";
       bandPrice = 26.25;
     }
 
     if (bands === "none") {
       bandPrice = 0;
-      bandDesc = "No band membership (tuition only)";
+      bandDesc = "Lessons only - No Bands";
     }
-    let lessonDesc = "No lessons included";
+    let lessonDesc = "No Lessons included";
     let lessonPrice = 0;
     if (lessons) {
       if (age > 30) {

@@ -292,7 +292,7 @@ function HeroUnenrolled({ user }) {
         color="text.primary"
         gutterBottom
       >
-        {user.attributes.name}, please pay your membership fees for the term
+        {user.attributes.name}, please pay your membership fees for the term.
       </Typography>
       <Typography
         variant="h5"
@@ -303,6 +303,7 @@ function HeroUnenrolled({ user }) {
         {age(user.attributes?.birthdate) <= 30
           ? "  Do you have a brother or sister in band?  Update your profile to make sure you pay the cheaper sibling rate.  "
           : null}
+        <br />
         Choose from these options:
       </Typography>
     </Container>
@@ -324,7 +325,7 @@ function HeroEnrolled({ user, enrolment }) {
         color="text.primary"
         gutterBottom
       >
-        {user.attributes.name}, You've signed up! Thank you
+        {user.attributes.name}, you've signed up. Thank you!
       </Typography>
       <Typography
         variant="h5"
@@ -402,148 +403,77 @@ function MemberShipPicker({ tiers, session }) {
       alignItems="center"
       justifyItems="center"
     >
-      <Grid disableGutters item xs={12}>
-        <form onSubmit={handleSubmit}>
-          <FormControl error={error} variant="standard">
-            <table width="100%">
-              <RadioGroup
-                aria-labelledby="demo-error-radios"
-                name="quiz"
-                value={value}
-                onChange={handleRadioChange}
-              >
-                <tr>
-                  <td>
-                    <FormControlLabel
-                      style={{
-                        paddingX: 0,
-                        marginX: 0,
-                        marginRight: 0,
-                      }}
-                      value="all"
-                      control={<Radio />}
-                    />
-                  </td>
-                  <td>
-                    <Typography component="p" variant="h6" color="green">
-                      <b>All Bands</b> includes <b>all</b> of:
-                    </Typography>
-                    <table style={{}}>
-                      <tr>
-                        <td
-                          style={{
-                            verticalAlign: "top",
-                            width: "50%",
-                          }}
+      <form onSubmit={handleSubmit}>
+        <FormControl error={error} variant="standard">
+          <table>
+            <RadioGroup
+              aria-labelledby="demo-error-radios"
+              name="quiz"
+              value={value}
+              onChange={handleRadioChange}
+            >
+              <tr>
+                <td>
+                  <FormControlLabel
+                    style={{
+                      paddingX: 0,
+                      marginX: 0,
+                      marginRight: 0,
+                    }}
+                    value="all"
+                    control={<Radio />}
+                  />
+                </td>
+                <td>
+                  <Typography component="p" variant="h6" color="green">
+                    <b>All Bands</b> includes <b>all</b> of:
+                  </Typography>
+                  <table style={{}}>
+                    <tr>
+                      <td
+                        style={{
+                          verticalAlign: "top",
+                          width: "50%",
+                        }}
+                      >
+                        {" "}
+                        <List
+                          dense={true}
+                          component="nav"
+                          aria-label="contacts"
                         >
-                          {" "}
+                          <ListItem>
+                            <ListItemText primary={"Percussion"} />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary={"Early Music"} />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary={"Premier Band"} />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary={"Jazz Stompers"} />
+                          </ListItem>
+                        </List>
+                      </td>
+                      <td
+                        style={{
+                          verticalAlign: "top",
+                          width: "50%",
+                          paddingLeft: "10px",
+                        }}
+                      >
+                        <Typography component="p" variant="body">
                           <List
                             dense={true}
                             component="nav"
                             aria-label="contacts"
                           >
                             <ListItem>
-                              <ListItemText primary={"Percussion"} />
+                              <ListItemText primary={"Main Band"} />
                             </ListItem>
                             <ListItem>
-                              <ListItemText primary={"Early Music"} />
-                            </ListItem>
-                            <ListItem>
-                              <ListItemText primary={"Premier Band"} />
-                            </ListItem>
-                            <ListItem>
-                              <ListItemText primary={"Jazz Stompers"} />
-                            </ListItem>
-                          </List>
-                        </td>
-                        <td
-                          style={{
-                            verticalAlign: "top",
-                            width: "50%",
-                            paddingLeft: "10px",
-                          }}
-                        >
-                          <Typography component="p" variant="body">
-                            <List
-                              dense={true}
-                              component="nav"
-                              aria-label="contacts"
-                            >
-                              <ListItem>
-                                <ListItemText primary={"Main Band"} />
-                              </ListItem>
-                              <ListItem>
-                                <ListItemText primary={"Big Band"} />
-                              </ListItem>
-                              <ListItem>
-                                <ListItemText primary={"Chamber Band"} />
-                              </ListItem>
-                              <ListItem>
-                                <ListItemText primary={"Jazz Combo"} />
-                              </ListItem>
-                            </List>
-                          </Typography>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    {" "}
-                    <FormControlLabel
-                      style={{
-                        paddingX: 0,
-                        marginX: 0,
-                        marginRight: 0,
-                      }}
-                      value="small"
-                      control={<Radio />}
-                    />
-                  </td>
-                  <td>
-                    <Typography component="p" variant="h6" color="green">
-                      <b>One Small Band Only</b> includes <b>one</b> of:
-                    </Typography>
-                    <table>
-                      <tr>
-                        <td
-                          style={{
-                            verticalAlign: "top",
-                            width: "50%",
-                          }}
-                        >
-                          <List
-                            dense={true}
-                            component="nav"
-                            aria-label="contacts"
-                          >
-                            <ListItem>
-                              <ListItemText primary={"Percussion"} />
-                            </ListItem>
-                            <ListItem>
-                              <ListItemText primary={"Early Music"} />
-                            </ListItem>
-                            <ListItem>
-                              <ListItemText primary={"Premier Band"} />
-                            </ListItem>
-                          </List>
-                        </td>
-                        <td
-                          align="top"
-                          style={{
-                            verticalAlign: "top",
-                            width: "50%",
-                            paddingLeft: "10px",
-                          }}
-                        >
-                          <List
-                            dense={true}
-                            component="nav"
-                            aria-label="contacts"
-                          >
-                            <ListItem>
-                              <ListItemText primary={"Jazz Stompers"} />
+                              <ListItemText primary={"Big Band"} />
                             </ListItem>
                             <ListItem>
                               <ListItemText primary={"Chamber Band"} />
@@ -552,78 +482,147 @@ function MemberShipPicker({ tiers, session }) {
                               <ListItemText primary={"Jazz Combo"} />
                             </ListItem>
                           </List>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <FormControlLabel
-                      style={{
-                        paddingX: 0,
-                        marginX: 0,
-                        marginRight: 0,
-                      }}
-                      value="none"
-                      control={<Radio />}
-                    />
-                  </td>
-                  <td>
-                    <Typography component="p" variant="h6" color="green">
-                      <b>No Bands</b> (tuition only)
-                    </Typography>
-                  </td>
-                </tr>
+                        </Typography>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  {" "}
+                  <FormControlLabel
+                    style={{
+                      paddingX: 0,
+                      marginX: 0,
+                      marginRight: 0,
+                    }}
+                    value="small"
+                    control={<Radio />}
+                  />
+                </td>
+                <td>
+                  <Typography component="p" variant="h6" color="green">
+                    <b>One Small Band Only</b> includes <b>one</b> of:
+                  </Typography>
+                  <table>
+                    <tr>
+                      <td
+                        style={{
+                          verticalAlign: "top",
+                          width: "50%",
+                        }}
+                      >
+                        <List
+                          dense={true}
+                          component="nav"
+                          aria-label="contacts"
+                        >
+                          <ListItem>
+                            <ListItemText primary={"Percussion"} />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary={"Early Music"} />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary={"Premier Band"} />
+                          </ListItem>
+                        </List>
+                      </td>
+                      <td
+                        align="top"
+                        style={{
+                          verticalAlign: "top",
+                          width: "50%",
+                          paddingLeft: "10px",
+                        }}
+                      >
+                        <List
+                          dense={true}
+                          component="nav"
+                          aria-label="contacts"
+                        >
+                          <ListItem>
+                            <ListItemText primary={"Jazz Stompers"} />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary={"Chamber Band"} />
+                          </ListItem>
+                          <ListItem>
+                            <ListItemText primary={"Jazz Combo"} />
+                          </ListItem>
+                        </List>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <FormControlLabel
+                    style={{
+                      paddingX: 0,
+                      marginX: 0,
+                      marginRight: 0,
+                    }}
+                    value="none"
+                    control={<Radio />}
+                  />
+                </td>
+                <td>
+                  <Typography component="p" variant="h6" color="green">
+                    <b>Lessons only</b> - No Bands
+                  </Typography>
+                </td>
+              </tr>
 
-                <tr>
-                  <td>
-                    <FormControlLabel
-                      style={{
-                        paddingX: 0,
-                        marginX: 0,
-                        marginRight: 0,
-                      }}
-                      value="all"
-                      control={<Checkbox />}
-                      onClick={handleChange}
-                    />
-                  </td>
-                  <td>
-                    <Typography
-                      paddingY={2}
-                      component="p"
-                      variant="body"
-                      color="green"
-                    >
-                      Select here to <b>Include Tuition</b> in addition to band
-                      membership
-                    </Typography>
-                  </td>
-                </tr>
-              </RadioGroup>
-            </table>
-            <Button
-              marginTop={"15px"}
-              paddingY={2}
-              fullWidth
-              disabled={isLoading}
-              type="submit"
-              variant="contained"
-            >
-              {isLoading ? (
-                <>
-                  <CircularProgress size={20} /> &nbsp;
-                </>
-              ) : null}
-              pay now
-            </Button>
-            <Typography paddingY={2} component="p" variant="body" color="red">
-              {helperText}
-            </Typography>
-          </FormControl>
-        </form>
-      </Grid>
+              <tr>
+                <td>
+                  <FormControlLabel
+                    style={{
+                      paddingX: 0,
+                      marginX: 0,
+                      marginRight: 0,
+                    }}
+                    value="all"
+                    control={<Checkbox />}
+                    onClick={handleChange}
+                  />
+                </td>
+                <td>
+                  <Typography
+                    paddingY={2}
+                    component="p"
+                    variant="body"
+                    color="green"
+                  >
+                    Select here to include <b>Lessons</b> in addition to band
+                    membership
+                  </Typography>
+                </td>
+              </tr>
+            </RadioGroup>
+          </table>
+          <Button
+            marginTop={"15px"}
+            paddingY={2}
+            fullWidth
+            disabled={isLoading}
+            type="submit"
+            variant="contained"
+          >
+            {isLoading ? (
+              <>
+                <CircularProgress size={20} /> &nbsp;
+              </>
+            ) : null}
+            pay now
+          </Button>
+          <Typography paddingY={2} component="p" variant="body" color="red">
+            {helperText}
+          </Typography>
+        </FormControl>
+      </form>
     </Container>
   );
 }
@@ -666,52 +665,145 @@ function LoadingButton({ session, tier }) {
 }
 function MembershipSummary({ enrolment }) {
   return (
-    <Container maxWidth="md" component="main">
-      <Grid container spacing={5} direction="row" alignItems="center">
-        <Grid item xs={12}>
-          <Card>
-            <CardHeader
-              title={enrolment.bandDesc}
-              subheader={enrolment.lessons}
-              action={null}
-              titleTypographyProps={{
-                align: "left",
-              }}
-              subheaderTypographyProps={{
-                align: "left",
-              }}
-              sx={{
-                backgroundColor: (theme) =>
-                  theme.palette.mode === "light"
-                    ? theme.palette.grey[200]
-                    : theme.palette.grey[700],
-              }}
-            />
-            <CardContent>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "left",
-                  alignItems: "baseline",
-                  mb: 2,
-                }}
-              >
-                <Typography component="h2" variant="h3" color="text.primary">
-                  £{enrolment.bandRate}
+    <Container maxWidth="sm" sx={{ pt: 2, pb: 2 }} component="main">
+      <Grid container spacing={5} direction="column" alignItems="center">
+        <Grid container direction="column" alignItems="center" xs={12}>
+          {enrolment.bands === "all" ? (
+            <>
+              <Grid item xs={12}>
+                <Typography component="p" variant="h6" color="green">
+                  You have signed up to <b>All Bands</b>, which includes{" "}
+                  <b>all</b> of:
                 </Typography>
-                <Typography variant="h6" color="text.secondary">
-                  /term
-                </Typography>
-              </Box>
+              </Grid>
 
-              <Container align="left"> </Container>
-            </CardContent>
-            <CardActions>
-              <Button fullWidth variant="contained">
-                Mark Attendance (TODO)
-              </Button>
-            </CardActions>
-          </Card>
+              <table>
+                <tr>
+                  <td
+                    style={{
+                      verticalAlign: "top",
+                      width: "50%",
+                    }}
+                  >
+                    {" "}
+                    <List dense={true} component="nav" aria-label="contacts">
+                      <ListItem>
+                        <ListItemText primary={"Percussion"} />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemText primary={"Early Music"} />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemText primary={"Premier Band"} />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemText primary={"Jazz Stompers"} />
+                      </ListItem>
+                    </List>
+                  </td>
+                  <td
+                    style={{
+                      verticalAlign: "top",
+                      width: "50%",
+                      paddingLeft: "10px",
+                    }}
+                  >
+                    <Typography component="p" variant="body">
+                      <List dense={true} component="nav" aria-label="contacts">
+                        <ListItem>
+                          <ListItemText primary={"Main Band"} />
+                        </ListItem>
+                        <ListItem>
+                          <ListItemText primary={"Big Band"} />
+                        </ListItem>
+                        <ListItem>
+                          <ListItemText primary={"Chamber Band"} />
+                        </ListItem>
+                        <ListItem>
+                          <ListItemText primary={"Jazz Combo"} />
+                        </ListItem>
+                      </List>
+                    </Typography>
+                  </td>
+                </tr>
+              </table>
+            </>
+          ) : null}
+          {enrolment.bands == "small" ? (
+            <>
+              <Typography component="p" variant="h6" color="green">
+                You have signed up to <b>One Small Band Only</b>, which includes{" "}
+                <b>one</b> of:
+              </Typography>
+              <table>
+                <tr>
+                  <td
+                    style={{
+                      verticalAlign: "top",
+                      width: "50%",
+                    }}
+                  >
+                    <List dense={true} component="nav" aria-label="contacts">
+                      <ListItem>
+                        <ListItemText primary={"Percussion"} />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemText primary={"Early Music"} />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemText primary={"Premier Band"} />
+                      </ListItem>
+                    </List>
+                  </td>
+                  <td
+                    align="top"
+                    style={{
+                      verticalAlign: "top",
+                      width: "50%",
+                      paddingLeft: "10px",
+                    }}
+                  >
+                    <List dense={true} component="nav" aria-label="contacts">
+                      <ListItem>
+                        <ListItemText primary={"Jazz Stompers"} />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemText primary={"Chamber Band"} />
+                      </ListItem>
+                      <ListItem>
+                        <ListItemText primary={"Jazz Combo"} />
+                      </ListItem>
+                    </List>
+                  </td>
+                </tr>
+              </table>
+            </>
+          ) : null}
+
+          {enrolment.bands == "none" ? (
+            <>
+              {" "}
+              <Typography component="p" variant="h6" color="green">
+                You have signed up for <b>Lessons only</b> - No bands
+              </Typography>
+            </>
+          ) : null}
+
+          {enrolment.lessons ? (
+            <Grid item xs={12}>
+              <Typography component="p" variant="h6" color="green">
+                You have signed up for <b>Lessons</b> as part of your
+                membership.
+              </Typography>
+            </Grid>
+          ) : (
+            <Grid item xs={12}>
+              <Typography component="p" variant="h6" color="green">
+                You have <b>not</b> signed up for <b>Lessons</b> as part of your
+                membership.
+              </Typography>
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </Container>

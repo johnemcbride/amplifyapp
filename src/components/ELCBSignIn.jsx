@@ -32,7 +32,7 @@ function Copyright(props) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" to="https://www.eastlondoncommunityband.co.uk">
+      <Link color="inherit" href="https://www.eastlondoncommunityband.co.uk">
         East London Community Band
       </Link>{" "}
       {new Date().getFullYear()}

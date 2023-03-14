@@ -405,7 +405,7 @@ export default function PricingContent() {
                                     width: "300px",
                                   }}
                                 >
-                                  Which ethnic group you belong to?
+                                  Which ethnic group do you belong to?
                                 </InputLabel>
 
                                 <Select

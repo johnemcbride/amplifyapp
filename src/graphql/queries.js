@@ -8,6 +8,7 @@ export const getEnrolment = /* GraphQL */ `
       bands
       status
       term
+      bandMembershipType
       bandDesc
       bandRate
       lessons
@@ -51,6 +52,7 @@ export const listEnrolments = /* GraphQL */ `
         bands
         status
         term
+        bandMembershipType
         bandDesc
         bandRate
         lessons
