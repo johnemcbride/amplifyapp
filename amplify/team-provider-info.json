@@ -100,15 +100,19 @@
       "function": {
         "checkout": {
           "deploymentBucketName": "amplify-amplifyapp-pilot-130839-deployment",
-          "s3Key": "amplify-builds/checkout-49363032686631774b4d-build.zip",
+          "s3Key": "amplify-builds/checkout-645278436d49696c676a-build.zip",
           "secretsPathAmplifyAppId": "d1unq6d9vt4zkd"
         },
         "stripeHandler": {
           "deploymentBucketName": "amplify-amplifyapp-pilot-130839-deployment",
-          "s3Key": "amplify-builds/stripeHandler-575a5332726d44344272-build.zip"
+          "s3Key": "amplify-builds/stripeHandler-62596a724f53666a374f-build.zip"
         },
         "amplifyapp": {},
-        "amplifyapp0cb91442": {}
+        "amplifyapp0cb91442": {},
+        "getUser": {
+          "deploymentBucketName": "amplify-amplifyapp-pilot-130839-deployment",
+          "s3Key": "amplify-builds/getUser-436266777653564d7369-build.zip"
+        }
       },
       "api": {
         "amplifyapp": {},
